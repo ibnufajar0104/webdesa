@@ -1,0 +1,49 @@
+# -------------------------
+# CodeIgniter 4 .gitignore
+# -------------------------
+
+# Environment file
+.env
+*.env
+
+# Composer vendor
+/vendor/
+
+# Node modules
+/node_modules/
+
+# IDE files
+/.idea/
+/.vscode/
+/nbproject/
+/*.sublime-project
+/*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# PHPUnit cache
+.phpunit.result.cache
+
+# User uploaded & runtime content in writable
+# (folder writable tetap di repo tapi isi runtime-nya di-ignore)
+writable/cache/*
+writable/logs/*
+writable/session/*
+writable/debugbar/*
+writable/uploads/*
+
+# Kecualikan file index.html agar direktori tetap terbentuk
+!writable/cache/index.html
+!writable/logs/index.html
+!writable/session/index.html
+!writable/debugbar/index.html
+!writable/uploads/index.html
+
+# Jika ada folder custom di writable, ignore isinya
+writable/*/ # ignore isi subfolder
+!writable/*/index.html
+
+# Allow your own custom files (opsional)
+# !writable/uploads/example.jpg

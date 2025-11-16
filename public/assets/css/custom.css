@@ -1,0 +1,139 @@
+/* ============================
+   DataTables - Light mode
+   ============================ */
+.dataTables_wrapper,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+table.dataTable {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-size: 0.75rem; /* ≈ text-xs */
+  color: #0f172a; /* slate-900 */
+}
+
+table.dataTable thead th {
+  background-color: #f8fafc; /* slate-50 */
+  color: #64748b; /* slate-500 */
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #e2e8f0; /* slate-200 */
+}
+
+table.dataTable tbody td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9; /* slate-100 */
+  vertical-align: middle;
+}
+
+/* Length & search */
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+  display: inline-block;
+  width: auto;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_filter label {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Pagination */
+.dataTables_wrapper .dataTables_paginate {
+  margin-top: 0.35rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  margin: 0 0.1rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border-color: #bfdbfe; /* primary-200 */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background-color: #dbeafe; /* primary-100 */
+  border-color: #3b82f6; /* primary-500 */
+  color: #1d4ed8;
+}
+
+/* Responsive row layout */
+.dataTables_wrapper .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .dataTables_wrapper .row > div {
+    width: 100%;
+    text-align: left !important;
+  }
+}
+
+/* ============================
+   DataTables - Dark mode
+   (Tailwind: html.dark ...)
+   ============================ */
+.dark .dataTables_wrapper,
+.dark table.dataTable {
+  color: #e5e7eb; /* slate-200 */
+}
+
+.dark table.dataTable thead th {
+  background-color: #020617; /* slate-950-ish */
+  color: #cbd5f5; /* slate-200/primary mix */
+  border-bottom-color: #1f2937; /* slate-800 */
+}
+
+.dark table.dataTable tbody td {
+  border-bottom-color: #1f2937; /* slate-800 */
+}
+
+.dark .dataTables_wrapper .dataTables_length select,
+.dark .dataTables_wrapper .dataTables_filter input {
+  border-color: #334155; /* slate-700 */
+  background-color: #020617; /* slate-950 */
+  color: #e5e7eb;
+}
+
+.dark .dataTables_wrapper .dataTables_length label,
+.dark .dataTables_wrapper .dataTables_filter label {
+  color: #9ca3af; /* gray-400 */
+}
+
+.dark .dataTables_wrapper .dataTables_paginate .paginate_button {
+  border-color: #1f2937;
+  background-color: #020617;
+  color: #e5e7eb;
+}
+
+.dark .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #111827;
+  color: #f9fafb;
+  border-color: #3b82f6;
+}
+
+.dark .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background-color: rgba(59, 130, 246, 0.12); /* primary-500/12 */
+  border-color: #3b82f6;
+  color: #bfdbfe;
+}

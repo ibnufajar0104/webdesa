@@ -1,0 +1,348 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class SeedPendudukDummy20 extends Migration
+{
+    public function up()
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $data = [
+            [
+                'id' => 34,
+                'nik' => '6372021001000034',
+                'no_kk' => '6372025001000034',
+                'nama_lengkap' => 'Ahmad Rifandi',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1992-04-11',
+                'rt_id' => 1,
+                'pendidikan_id' => 6,
+                'pekerjaan_id' => 6,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 35,
+                'nik' => '6372021002000035',
+                'no_kk' => '6372025002000035',
+                'nama_lengkap' => 'Siti Rohani',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '1989-08-01',
+                'rt_id' => 2,
+                'pendidikan_id' => 4,
+                'pekerjaan_id' => 4,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 36,
+                'nik' => '6372021003000036',
+                'no_kk' => '6372025003000036',
+                'nama_lengkap' => 'Budi Hartono',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '2000-10-22',
+                'rt_id' => 3,
+                'pendidikan_id' => 3,
+                'pekerjaan_id' => 1,
+                'status_penduduk' => 'Pendatang',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 37,
+                'nik' => '6372021004000037',
+                'no_kk' => '6372025004000037',
+                'nama_lengkap' => 'Maria Elisabeth',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '1996-02-14',
+                'rt_id' => 4,
+                'pendidikan_id' => 7,
+                'pekerjaan_id' => 5,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 2,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 38,
+                'nik' => '6372021005000038',
+                'no_kk' => '6372025005000038',
+                'nama_lengkap' => 'Ketut Aryana',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1978-06-07',
+                'rt_id' => 4,
+                'pendidikan_id' => 2,
+                'pekerjaan_id' => 3,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 4,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 39,
+                'nik' => '6372021006000039',
+                'no_kk' => '6372025006000039',
+                'nama_lengkap' => 'Yohanes Gamaliel',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1983-09-19',
+                'rt_id' => 5,
+                'pendidikan_id' => 6,
+                'pekerjaan_id' => 5,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 3,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 40,
+                'nik' => '6372021007000040',
+                'no_kk' => '6372025007000040',
+                'nama_lengkap' => 'Dewi Lestari',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '1994-11-03',
+                'rt_id' => 6,
+                'pendidikan_id' => 5,
+                'pekerjaan_id' => 2,
+                'status_penduduk' => 'Pendatang',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 41,
+                'nik' => '6372021008000041',
+                'no_kk' => '6372025008000041',
+                'nama_lengkap' => 'Gusti Ayu Pratiwi',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '1999-01-28',
+                'rt_id' => 2,
+                'pendidikan_id' => 4,
+                'pekerjaan_id' => 6,
+                'status_penduduk' => 'Pendatang',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 4,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 42,
+                'nik' => '6372021009000042',
+                'no_kk' => '6372025009000042',
+                'nama_lengkap' => 'Slamet Riyadi',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1985-12-12',
+                'rt_id' => 3,
+                'pendidikan_id' => 6,
+                'pekerjaan_id' => 6,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 43,
+                'nik' => '6372021010000043',
+                'no_kk' => '6372025010000043',
+                'nama_lengkap' => 'Paulus Andika',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1974-07-30',
+                'rt_id' => 6,
+                'pendidikan_id' => 4,
+                'pekerjaan_id' => 4,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 3,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+
+            // ---- 11–20 ----
+            [
+                'id' => 44,
+                'nik' => '6372021011000044',
+                'no_kk' => '6372025011000044',
+                'nama_lengkap' => 'Nur Aisyah',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '2002-03-21',
+                'rt_id' => 5,
+                'pendidikan_id' => 4,
+                'pekerjaan_id' => 2,
+                'status_penduduk' => 'Pendatang',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 45,
+                'nik' => '6372021012000045',
+                'no_kk' => '6372025012000045',
+                'nama_lengkap' => 'Adi Prasetyo',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1981-10-02',
+                'rt_id' => 4,
+                'pendidikan_id' => 2,
+                'pekerjaan_id' => 3,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 46,
+                'nik' => '6372021013000046',
+                'no_kk' => '6372025013000046',
+                'nama_lengkap' => 'Kartini Sari',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '1997-09-14',
+                'rt_id' => 5,
+                'pendidikan_id' => 6,
+                'pekerjaan_id' => 5,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 47,
+                'nik' => '6372021014000047',
+                'no_kk' => '6372025014000047',
+                'nama_lengkap' => 'Luh Putu Ayuni',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '1993-01-16',
+                'rt_id' => 2,
+                'pendidikan_id' => 4,
+                'pekerjaan_id' => 6,
+                'status_penduduk' => 'Pendatang',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 4,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 48,
+                'nik' => '6372021015000048',
+                'no_kk' => '6372025015000048',
+                'nama_lengkap' => 'Novita Anggreani',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '2001-12-09',
+                'rt_id' => 3,
+                'pendidikan_id' => 3,
+                'pekerjaan_id' => 2,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 49,
+                'nik' => '6372021016000049',
+                'no_kk' => '6372025016000049',
+                'nama_lengkap' => 'Herman Gunawan',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1980-05-05',
+                'rt_id' => 1,
+                'pendidikan_id' => 4,
+                'pekerjaan_id' => 6,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 2,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 50,
+                'nik' => '6372021017000050',
+                'no_kk' => '6372025017000050',
+                'nama_lengkap' => 'Nanda Oktaviani',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '1998-04-27',
+                'rt_id' => 6,
+                'pendidikan_id' => 7,
+                'pekerjaan_id' => 6,
+                'status_penduduk' => 'Pendatang',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 51,
+                'nik' => '6372021018000051',
+                'no_kk' => '6372025018000051',
+                'nama_lengkap' => 'Rama Wijaya',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1979-02-10',
+                'rt_id' => 4,
+                'pendidikan_id' => 5,
+                'pekerjaan_id' => 3,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 52,
+                'nik' => '6372021019000052',
+                'no_kk' => '6372025019000052',
+                'nama_lengkap' => 'Agus Maulana',
+                'jenis_kelamin' => 'L',
+                'tanggal_lahir' => '1991-09-17',
+                'rt_id' => 1,
+                'pendidikan_id' => 6,
+                'pekerjaan_id' => 6,
+                'status_penduduk' => 'Pendatang',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 53,
+                'nik' => '6372021020000053',
+                'no_kk' => '6372025020000053',
+                'nama_lengkap' => 'Mega Aprilia',
+                'jenis_kelamin' => 'P',
+                'tanggal_lahir' => '2003-07-18',
+                'rt_id' => 2,
+                'pendidikan_id' => 4,
+                'pekerjaan_id' => 2,
+                'status_penduduk' => 'Tetap',
+                'status_dasar' => 'Hidup',
+                'agama_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+        ];
+
+        $this->db->table('penduduk')->insertBatch($data);
+    }
+
+    public function down()
+    {
+        $this->db->table('penduduk')
+            ->where('id >=', 34)
+            ->where('id <=', 53)
+            ->delete();
+    }
+}
