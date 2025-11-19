@@ -137,3 +137,78 @@ table.dataTable tbody td {
   border-color: #3b82f6;
   color: #bfdbfe;
 }
+
+/* ======================================
+   SweetAlert2 – Fixed Light Style Only
+   ====================================== */
+
+/* Popup */
+.swal2-popup {
+  width: 24rem;
+  max-width: 90%;
+  border-radius: 0.9rem;
+  padding: 1.2rem 1.4rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0; /* slate-200 */
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.12); /* slate-900/12 */
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #0f172a; /* slate-900 */
+}
+
+/* Judul */
+.swal2-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  color: #0f172a; /* slate-900 */
+}
+
+/* Teks / deskripsi */
+.swal2-html-container {
+  font-size: 0.8rem; /* ≈ text-xs */
+  margin-top: 0.15rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.25rem;
+  color: #475569; /* slate-600 */
+}
+
+/* Area tombol */
+.swal2-actions {
+  margin-top: 0.7rem;
+}
+
+/* Tombol umum */
+.swal2-confirm,
+.swal2-cancel {
+  border-radius: 999px; /* pill */
+  padding: 0.4rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Tombol confirm (danger / hapus) */
+.swal2-confirm {
+  background-color: #dc2626; /* red-600 */
+  color: #ffffff;
+  border: 1px solid #dc2626;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.4);
+}
+
+.swal2-confirm:hover {
+  background-color: #b91c1c; /* red-700 */
+  border-color: #b91c1c;
+}
+
+/* Tombol cancel */
+.swal2-cancel {
+  background-color: #ffffff;
+  color: #475569; /* slate-600 */
+  border: 1px solid #e2e8f0; /* slate-200 */
+}
+
+.swal2-cancel:hover {
+  background-color: #f1f5f9; /* slate-100 */
+  color: #0f172a;
+  border-color: #bfdbfe; /* primary-200 */
+}

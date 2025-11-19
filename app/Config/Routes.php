@@ -105,4 +105,32 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('save',       'MasterAgama::save');
         $routes->post('delete',     'MasterAgama::delete');
     });
+
+
+    // Master Jabatan
+    $routes->group('master-jabatan', static function ($routes) {
+        $routes->get('/',           'MasterJabatan::index');
+        $routes->post('datatable',  'MasterJabatan::datatable');
+        $routes->post('save',       'MasterJabatan::save');
+        $routes->post('delete',     'MasterJabatan::delete');
+    });
+
+
+    // Sambutan Kepala Desa
+    $routes->group('sambutan-kades', static function ($routes) {
+        $routes->get('/',      'SambutanKades::index');
+        $routes->post('save',  'SambutanKades::save');
+    });
+
+    // Jam Pelayanan
+    $routes->group('jam-pelayanan', static function ($routes) {
+        $routes->get('/',      'JamPelayanan::index');
+        $routes->post('save',  'JamPelayanan::save');
+    });
+
+
+    $routes->group('kontak', static function ($routes) {
+        $routes->get('/',     'Kontak::index');
+        $routes->post('save', 'Kontak::save');
+    });
 });
