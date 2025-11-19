@@ -47,6 +47,78 @@ class FileHandler extends BaseController
     }
 
 
+    public function news($filename = null)
+    {
+        if (!$filename) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Sanitasi nama file untuk mencegah path traversal
+        $safeName = basename($filename); // buang path2 aneh
+        // Bisa tambah filter ketat kalau mau:
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $safeName)) {
+            return $this->response->setStatusCode(400, 'Invalid file name');
+        }
+
+        $filePath = WRITEPATH . 'uploads/news/' . $safeName;
+
+        if (!is_file($filePath)) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Deteksi mime type
+        $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+
+        // Hanya izinkan serve beberapa tipe gambar
+        $allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+        if (!in_array($mimeType, $allowed, true)) {
+            return $this->response->setStatusCode(403, 'Forbidden');
+        }
+
+        // Bisa tambahkan cache header
+        $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Cache-Control', 'public, max-age=604800'); // 7 hari
+
+        return $this->response->setBody(file_get_contents($filePath));
+    }
+
+    public function banner($filename = null)
+    {
+        if (!$filename) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Sanitasi nama file untuk mencegah path traversal
+        $safeName = basename($filename); // buang path2 aneh
+        // Bisa tambah filter ketat kalau mau:
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $safeName)) {
+            return $this->response->setStatusCode(400, 'Invalid file name');
+        }
+
+        $filePath = WRITEPATH . 'uploads/banner/' . $safeName;
+
+        if (!is_file($filePath)) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Deteksi mime type
+        $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+
+        // Hanya izinkan serve beberapa tipe gambar
+        $allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+        if (!in_array($mimeType, $allowed, true)) {
+            return $this->response->setStatusCode(403, 'Forbidden');
+        }
+
+        // Bisa tambahkan cache header
+        $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Cache-Control', 'public, max-age=604800'); // 7 hari
+
+        return $this->response->setBody(file_get_contents($filePath));
+    }
+
     public function ktp($filename = null)
     {
         if (!$filename) {

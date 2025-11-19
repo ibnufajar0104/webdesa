@@ -14,11 +14,14 @@ $routes->get('/', 'Home::index');
 // =======================
 // FILE HANDLER
 // =======================
+// routes file handler
 $routes->group('file', static function ($routes) {
-    $routes->get('pages/(:any)', 'FileHandler::pages/$1');
-    $routes->get('news/(:any)',  'FileHandler::news/$1');
-    $routes->get('ktp/(:any)',   'FileHandler::ktp/$1');
+    $routes->get('pages/(:any)',  'FileHandler::pages/$1');
+    $routes->get('news/(:any)',   'FileHandler::news/$1');
+    $routes->get('banner/(:any)', 'FileHandler::banner/$1');
+    $routes->get('ktp/(:any)',    'FileHandler::ktp/$1');
 });
+
 
 // =======================
 // ADMIN
@@ -132,5 +135,18 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
     $routes->group('kontak', static function ($routes) {
         $routes->get('/',     'Kontak::index');
         $routes->post('save', 'Kontak::save');
+    });
+
+
+    // Banner
+    $routes->group('banner', static function ($routes) {
+        $routes->get('/',           'Banner::index');
+        $routes->post('datatable',  'Banner::datatable');
+
+        $routes->get('create',      'Banner::create');
+        $routes->get('edit/(:num)', 'Banner::edit/$1');
+        $routes->post('save',       'Banner::save');
+
+        $routes->post('delete',     'Banner::delete');
     });
 });
