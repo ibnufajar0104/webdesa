@@ -16,11 +16,15 @@ $routes->get('/', 'Home::index');
 // =======================
 // routes file handler
 $routes->group('file', static function ($routes) {
-    $routes->get('pages/(:any)',  'FileHandler::pages/$1');
-    $routes->get('news/(:any)',   'FileHandler::news/$1');
-    $routes->get('banner/(:any)', 'FileHandler::banner/$1');
-    $routes->get('ktp/(:any)',    'FileHandler::ktp/$1');
+    $routes->get('pages/(:any)',    'FileHandler::pages/$1');
+    $routes->get('news/(:any)',     'FileHandler::news/$1');
+    $routes->get('banner/(:any)',   'FileHandler::banner/$1');
+    $routes->get('ktp/(:any)',      'FileHandler::ktp/$1');
+    $routes->get('perangkat/(:any)', 'FileHandler::perangkat/$1');
+    $routes->get('ijazah/(:any)',   'FileHandler::ijazah/$1');
+    $routes->get('sk/(:any)',       'FileHandler::sk/$1');
 });
+
 
 
 // =======================
@@ -148,5 +152,29 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('save',       'Banner::save');
 
         $routes->post('delete',     'Banner::delete');
+    });
+
+
+    // =======================
+    // PERANGKAT DESA
+    // =======================
+    $routes->group('perangkat-desa', static function ($routes) {
+        $routes->get('/',             'PerangkatDesa::index');
+        $routes->post('datatable',    'PerangkatDesa::datatable');
+
+        $routes->get('create',        'PerangkatDesa::create');
+        $routes->get('edit/(:num)',   'PerangkatDesa::edit/$1');
+        $routes->get('detail/(:num)', 'PerangkatDesa::detail/$1');
+
+        $routes->post('save',         'PerangkatDesa::save');
+        $routes->post('delete',       'PerangkatDesa::delete');
+
+        // CRUD Riwayat Pendidikan
+        $routes->post('pendidikan/save',   'PerangkatDesa::savePendidikanHistory');
+        $routes->post('pendidikan/delete', 'PerangkatDesa::deletePendidikanHistory');
+
+        // CRUD Riwayat Jabatan
+        $routes->post('jabatan/save',   'PerangkatDesa::saveJabatanHistory');
+        $routes->post('jabatan/delete', 'PerangkatDesa::deleteJabatanHistory');
     });
 });

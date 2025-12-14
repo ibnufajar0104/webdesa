@@ -219,6 +219,91 @@
                         </a>
                     </li>
 
+
+                    <!-- BPD -->
+                    <li>
+                        <a href="<?= base_url('admin/bpd') ?>"
+                            class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition
+                           <?= $activeMenu === 'bpd'
+                                ? 'bg-primary-700 text-white shadow-inner'
+                                : 'text-primary-100/90 hover:bg-primary-800 hover:text-white' ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                                <!-- Icon People / Council -->
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="8" cy="9" r="2.1" />
+                                    <circle cx="16" cy="9" r="2.1" />
+                                    <path d="M4.5 17.5c.7-2 2-3 3.5-3s2.8 1 3.5 3" />
+                                    <path d="M12.5 17.5c.7-2 2-3 3.5-3s2.8 1 3.5 3" />
+                                </svg>
+                            </span>
+                            <span>BPD</span>
+                        </a>
+                    </li>
+
+                    <!-- Karang Taruna -->
+                    <li>
+                        <a href="<?= base_url('admin/karang-taruna') ?>"
+                            class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition
+                           <?= $activeMenu === 'karang_taruna'
+                                ? 'bg-primary-700 text-white shadow-inner'
+                                : 'text-primary-100/90 hover:bg-primary-800 hover:text-white' ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                                <!-- Icon Community / Youth -->
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="2.3" />
+                                    <path d="M6 18.5c.8-2.5 2.9-4 6-4s5.2 1.5 6 4" />
+                                    <path d="M5 9.5l2-1.5M19 9.5l-2-1.5" />
+                                </svg>
+                            </span>
+                            <span>Karang Taruna</span>
+                        </a>
+                    </li>
+
+                    <!-- Kader -->
+                    <li>
+                        <a href="<?= base_url('admin/kader') ?>"
+                            class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition
+                           <?= $activeMenu === 'kader'
+                                ? 'bg-primary-700 text-white shadow-inner'
+                                : 'text-primary-100/90 hover:bg-primary-800 hover:text-white' ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                                <!-- Icon Badge / Volunteer -->
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="2.4" />
+                                    <path d="M8.5 14h7l1.5 5-5-2-5 2 1.5-5z" />
+                                </svg>
+                            </span>
+                            <span>Kader</span>
+                        </a>
+                    </li>
+
+                    <!-- BUMDes -->
+                    <li>
+                        <a href="<?= base_url('admin/bumdes') ?>"
+                            class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition
+                           <?= $activeMenu === 'bumdes'
+                                ? 'bg-primary-700 text-white shadow-inner'
+                                : 'text-primary-100/90 hover:bg-primary-800 hover:text-white' ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                                <!-- Icon Store / Building -->
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 10.5 6 5h12l2 5.5" />
+                                    <path d="M5 10.5h14V19H5z" />
+                                    <path d="M10 14h4v5h-4z" />
+                                </svg>
+                            </span>
+                            <span>BUMDes</span>
+                        </a>
+                    </li>
+
                     <li class="mt-4 mb-1 px-2 text-[11px] font-semibold uppercase tracking-wide text-primary-300/70">
                         Master Data
                     </li>
