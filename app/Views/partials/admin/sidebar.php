@@ -114,62 +114,19 @@ $active = function ($key) use ($activeMenu) {
                     <span>Daftar Perangkat Desa</span>
                 </a>
             </li>
-
-            <!-- BPD -->
+            <!-- RT (Identitas) -->
             <li>
-                <a href="<?= base_url('admin/bpd') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('bpd') ?>">
+                <a href="<?= base_url('admin/rt') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('rt') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <circle cx="8" cy="9" r="2.1" />
-                            <circle cx="16" cy="9" r="2.1" />
-                            <path d="M4.5 17.5c.7-2 2-3 3.5-3s2.8 1 3.5 3" />
-                            <path d="M12.5 17.5c.7-2 2-3 3.5-3s2.8 1 3.5 3" />
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 20V9.5L12 4l8 5.5V20" />
+                            <path d="M9.5 20v-6h5v6" />
                         </svg>
                     </span>
-                    <span>BPD</span>
+                    <span>RT</span>
                 </a>
             </li>
 
-            <!-- Karang Taruna -->
-            <li>
-                <a href="<?= base_url('admin/karang-taruna') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('karang_taruna') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <circle cx="12" cy="8" r="2.3" />
-                            <path d="M6 18.5c.8-2.5 2.9-4 6-4s5.2 1.5 6 4" />
-                            <path d="M5 9.5l2-1.5M19 9.5l-2-1.5" />
-                        </svg>
-                    </span>
-                    <span>Karang Taruna</span>
-                </a>
-            </li>
-
-            <!-- Kader -->
-            <li>
-                <a href="<?= base_url('admin/kader') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('kader') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <circle cx="12" cy="8" r="2.4" />
-                            <path d="M8.5 14h7l1.5 5-5-2-5 2 1.5-5z" />
-                        </svg>
-                    </span>
-                    <span>Kader</span>
-                </a>
-            </li>
-
-            <!-- BUMDes -->
-            <li>
-                <a href="<?= base_url('admin/bumdes') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('bumdes') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M4 10.5 6 5h12l2 5.5" />
-                            <path d="M5 10.5h14V19H5z" />
-                            <path d="M10 14h4v5h-4z" />
-                        </svg>
-                    </span>
-                    <span>BUMDes</span>
-                </a>
-            </li>
 
             <!-- MASTER DATA -->
             <li class="mt-4 mb-1 px-2 text-[11px] font-semibold uppercase tracking-wide text-primary-300/70">
@@ -204,18 +161,35 @@ $active = function ($key) use ($activeMenu) {
                 </a>
             </li>
 
+
             <!-- Master Agama -->
+
             <li>
                 <a href="<?= base_url('admin/master-agama') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_agama') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M12 3v18" />
-                            <path d="M6 9h12" />
-                            <path d="M9 9c0 4 3 7 3 12" />
-                            <path d="M15 9c0 4-3 7-3 12" />
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 4l9 5-9 5-9-5 9-5z" />
+                            <path d="M3 14l9 5 9-5" />
                         </svg>
+
+
                     </span>
                     <span>Master Agama</span>
+                </a>
+            </li>
+
+
+            <!-- Data RT (Master) -->
+            <li>
+                <a href="<?= base_url('admin/master-rt') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_rt') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+                            <path d="M7 9h10M7 12h10M7 15h6" />
+                        </svg>
+                    </span>
+                    <span>Data RT</span>
                 </a>
             </li>
 

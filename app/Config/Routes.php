@@ -177,4 +177,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('jabatan/save',   'PerangkatDesa::saveJabatanHistory');
         $routes->post('jabatan/delete', 'PerangkatDesa::deleteJabatanHistory');
     });
+
+
+    // Master RT
+    $routes->group('master-rt', static function ($routes) {
+        $routes->get('/',           'MasterRt::index');
+        $routes->post('datatable',  'MasterRt::datatable');
+        $routes->post('save',       'MasterRt::save');
+        $routes->post('delete',     'MasterRt::delete');
+        $routes->post('dusun-options', 'MasterRt::dusunOptions');
+    });
 });
