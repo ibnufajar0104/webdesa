@@ -3,56 +3,30 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Models\MasterRtModel;
 use App\Models\DusunModel;
+use App\Models\MasterJabatanModel;
 
-class MasterRt extends BaseController
+class MasterDusun extends BaseController
 {
     protected $model;
     protected $validation;
-    protected $dusunModel;
 
     public function __construct()
     {
-        $this->model      = new MasterRtModel();
-        $this->dusunModel = new DusunModel();
+        $this->model      = new DusunModel();
         $this->validation = \Config\Services::validation();
-        $this->db = \Config\Database::connect();
     }
 
     public function index()
     {
-        return view('admin/master_rt/index', [
-            'pageTitle'  => 'Master RT',
-            'activeMenu' => 'master_rt',
+        return view('admin/master_dusun/index', [
+            'pageTitle'  => 'Master Dusun',
+            'activeMenu' => 'master_dusun',
         ]);
     }
 
     /**
-     * Options dusun untuk select (AJAX)
-     */
-    public function dusunOptions()
-    {
-        if (! $this->request->isAJAX()) {
-            return $this->response->setStatusCode(405);
-        }
-
-        $rows = $this->dusunModel
-            ->select('id, nama_dusun, kode_dusun')
-            ->where('deleted_at', null)
-            ->where('is_active', 1)
-            ->orderBy('nama_dusun', 'asc')
-            ->findAll();
-
-        return $this->response->setJSON([
-            'status'   => true,
-            'data'     => $rows,
-            'newToken' => csrf_hash(),
-        ]);
-    }
-
-    /**
-     * DataTables server-side (JOIN dusun)
+     * DataTables server-side
      */
     public function datatable()
     {
@@ -68,50 +42,46 @@ class MasterRt extends BaseController
         $search = $request->getPost('search')['value'] ?? '';
 
         $order = $request->getPost('order') ?? [];
-        if (isset($order[0]['column'])) {
+        if (! empty($order[0]['column'])) {
             $orderColumnIdx = (int) $order[0]['column'];
-            $orderDir       = (($order[0]['dir'] ?? 'asc') === 'desc') ? 'desc' : 'asc';
+            $orderDir       = ($order[0]['dir'] === 'desc') ? 'desc' : 'asc';
         } else {
-            $orderColumnIdx = 2;
+            $orderColumnIdx = 3; // default urut
             $orderDir       = 'asc';
         }
 
-        // mapping kolom datatable (sesuai urutan kolom yang tampil)
         $columns = [
-            0 => 'rt.id',
-            1 => 'd.nama_dusun',
-            2 => 'rt.no_rt',
-            3 => 'rt.is_active',
+            0 => 'id',
+            1 => 'nama_dusun',
+            2 => 'kode_dusun',
+            3 => 'is_active',
         ];
-        $orderColumn = $columns[$orderColumnIdx] ?? 'rt.no_rt';
+        $orderColumn = $columns[$orderColumnIdx] ?? 'urut';
 
-        // total tanpa filter/search (soft delete)
+        // total tanpa filter/search
         $recordsTotal = $this->model
             ->where('deleted_at', null)
             ->countAllResults();
 
-        // builder dengan join (alias rt hanya sekali!)
-        $builder = $this->db->table('rt rt');
-        $builder->select('rt.id, rt.id_dusun, rt.no_rt, rt.is_active, d.nama_dusun, d.kode_dusun');
-        $builder->join('dusun d', 'd.id = rt.id_dusun', 'left');
-        $builder->where('rt.deleted_at', null);
+        // base builder
+        $builder = $this->model->builder();
+        $builder->where('deleted_at', null);
 
-        // filter status RT
+        // filter status (opsional)
         $filterStatus = $request->getPost('filter_status');
         if ($filterStatus !== null && $filterStatus !== '') {
-            $builder->where('rt.is_active', (int) $filterStatus);
+            $builder->where('is_active', (int) $filterStatus);
         }
 
         // search global
         if ($search !== '') {
             $builder->groupStart()
-                ->like('rt.no_rt', $search)
-                ->orLike('d.nama_dusun', $search)
-                ->orLike('d.kode_dusun', $search)
+                ->like('nama_jabatan', $search)
+                ->orLike('kode_jabatan', $search)
                 ->groupEnd();
         }
 
-        // hitung filtered (pakai false supaya builder tidak di-reset)
+        // hitung filtered
         $recordsFiltered = $builder->countAllResults(false);
 
         // order & limit
@@ -128,22 +98,21 @@ class MasterRt extends BaseController
         ]);
     }
 
-
     /**
-     * Insert / Update
+     * Insert / Update dari modal (MASTER DUSUN)
      */
     public function save()
     {
         $id = $this->request->getPost('id');
 
         $rules = [
-            'id_dusun' => [
-                'label' => 'Dusun',
-                'rules' => 'required|integer',
+            'nama_dusun' => [
+                'label' => 'Nama dusun',
+                'rules' => 'required|min_length[2]|max_length[150]',
             ],
-            'no_rt' => [
-                'label' => 'Nomor RT',
-                'rules' => 'required|integer',
+            'kode_dusun' => [
+                'label' => 'Kode dusun',
+                'rules' => 'permit_empty|max_length[30]',
             ],
             'is_active' => [
                 'label' => 'Status aktif',
@@ -159,25 +128,25 @@ class MasterRt extends BaseController
         }
 
         $data = [
-            'id_dusun' => (int) $this->request->getPost('id_dusun'),
-            'no_rt'    => $this->request->getPost('no_rt'),
-            'is_active' => (int) $this->request->getPost('is_active'),
+            'nama_dusun' => $this->request->getPost('nama_dusun'),
+            'kode_dusun' => $this->request->getPost('kode_dusun') ?: null,
+            'is_active'  => (int) $this->request->getPost('is_active'),
         ];
 
         if ($id) {
             $this->model->update($id, $data);
-            $msg = 'Data RT berhasil diperbarui.';
+            $msg = 'Data dusun berhasil diperbarui.';
         } else {
             $this->model->insert($data);
-            $msg = 'Data RT berhasil ditambahkan.';
+            $msg = 'Data dusun berhasil ditambahkan.';
         }
 
-        return redirect()->to('admin/master-rt')
+        return redirect()->to('admin/master-dusun')
             ->with('success', $msg);
     }
 
     /**
-     * Delete (AJAX)
+     * Hapus (AJAX + JSON) untuk SweetAlert (MASTER DUSUN)
      */
     public function delete()
     {
@@ -208,7 +177,7 @@ class MasterRt extends BaseController
 
         return $this->response->setJSON([
             'status'   => true,
-            'message'  => 'Data RT berhasil dihapus',
+            'message'  => 'Data dusun berhasil dihapus',
             'newToken' => csrf_hash(),
         ]);
     }

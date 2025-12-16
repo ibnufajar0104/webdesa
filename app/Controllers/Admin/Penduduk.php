@@ -85,113 +85,103 @@ class Penduduk extends BaseController
      */
     public function datatable()
     {
-        if (!$this->request->isAJAX()) {
+        if (! $this->request->isAJAX()) {
             return $this->response->setStatusCode(405);
         }
 
-        $request = $this->request;
+        $req = $this->request;
 
         // ====== PARAM DATATABLE ======
-        $draw   = (int) $request->getPost('draw');
-        $start  = (int) $request->getPost('start');
-        $length = (int) $request->getPost('length');
-        $search = $request->getPost('search')['value'] ?? '';
+        $draw   = (int) $req->getPost('draw');
+        $start  = (int) $req->getPost('start');
+        $length = (int) $req->getPost('length');
+        $search = trim((string) ($req->getPost('search')['value'] ?? ''));
 
         // Order
-        $order = $request->getPost('order') ?? [];
-        if (!empty($order[0]['column'])) {
-            $orderColumnIdx = (int) $order[0]['column'];
-            $orderDir       = ($order[0]['dir'] === 'desc') ? 'desc' : 'asc';
-        } else {
-            $orderColumnIdx = 1; // default NIK
-            $orderDir       = 'asc';
-        }
+        $order = $req->getPost('order') ?? [];
+        $orderColumnIdx = isset($order[0]['column']) ? (int) $order[0]['column'] : 1;
+        $orderDir = (isset($order[0]['dir']) && $order[0]['dir'] === 'desc') ? 'DESC' : 'ASC';
 
-        // mapping index kolom DataTables -> field database
+        // Mapping index kolom DataTables -> field DB (harus sesuai kolom tabel)
         $columns = [
-            0 => 'id',             // index #
-            1 => 'nik',            // NIK
-            2 => 'no_kk',          // No KK
-            3 => 'nama_lengkap',   // Nama
-            4 => 'jenis_kelamin',  // JK
-            5 => 'tanggal_lahir',  // Usia (dari tgl lahir)
-            6 => 'status_penduduk',
-            7 => 'status_dasar',
-            8 => 'updated_at',
+            0 => 'id',
+            1 => 'nik',
+            2 => 'no_kk',
+            3 => 'nama_lengkap',
+            4 => 'jenis_kelamin',
+            5 => 'tanggal_lahir',
+            6 => 'pekerjaan_id',      // (di tabel kamu kolom pekerjaan tampil dari join)
+            7 => 'status_penduduk',   // chips (penduduk/status_dasar)
+            8 => 'status_dasar',
+            9 => 'updated_at',
         ];
+
         $orderColumn = $columns[$orderColumnIdx] ?? 'nik';
 
         // ====== CUSTOM FILTERS ======
-        $filterDusun          = $request->getPost('filter_dusun');
-        $filterJk             = $request->getPost('filter_jk');
-        $filterPendidikan     = $request->getPost('filter_pendidikan');
-        $filterPekerjaan      = $request->getPost('filter_pekerjaan');
-        $filterStatusPenduduk = $request->getPost('filter_status_penduduk');
-        $filterUsiaMin        = $request->getPost('filter_usia_min');
-        $filterUsiaMax        = $request->getPost('filter_usia_max');
-        $filterAgama          = $request->getPost('filter_agama');
+        $filterDusun          = $req->getPost('filter_dusun');
+        $filterJk             = $req->getPost('filter_jk');
+        $filterPendidikan     = $req->getPost('filter_pendidikan');
+        $filterPekerjaan      = $req->getPost('filter_pekerjaan');
+        $filterStatusPenduduk = $req->getPost('filter_status_penduduk');
+        $filterUsiaMin        = $req->getPost('filter_usia_min');
+        $filterUsiaMax        = $req->getPost('filter_usia_max');
+        $filterAgama          = $req->getPost('filter_agama');
 
         // ====== BASE BUILDER ======
         $builder = $this->db->table('penduduk');
         $builder->select(
             'penduduk.*, ' .
-                'rt.no_rt, rw.no_rw, dusun.nama_dusun, ' .
+                'rt.no_rt, dusun.nama_dusun, ' .
                 'master_pekerjaan.nama_pekerjaan, ' .
                 'master_agama.nama_agama'
         );
+
+        // join (gunakan LEFT JOIN biar data tetap tampil meski referensi null)
         $builder->join('rt', 'rt.id = penduduk.rt_id', 'left');
-        $builder->join('rw', 'rw.id = rt.rw_id', 'left');
-        $builder->join('dusun', 'dusun.id = rw.dusun_id', 'left');
+        $builder->join('dusun', 'dusun.id = rt.id_dusun', 'left');
         $builder->join('master_pekerjaan', 'master_pekerjaan.id = penduduk.pekerjaan_id', 'left');
         $builder->join('master_agama', 'master_agama.id = penduduk.agama_id', 'left');
 
-        // TOTAL TANPA FILTER & SEARCH (hanya yang belum di-soft-delete)
-        $recordsTotal = $this->pendudukModel
+        // ====== RECORDS TOTAL (tanpa filter/search) ======
+        $recordsTotal = $this->db->table('penduduk')
             ->where('deleted_at', null)
             ->countAllResults();
 
-        // ====== FILTER DASAR (WAJIB) ======
+        // ====== WAJIB: soft delete ======
         $builder->where('penduduk.deleted_at', null);
 
         // ====== FILTER TAMBAHAN ======
-        if (!empty($filterDusun)) {
-            $builder->where('dusun.id', $filterDusun);
+        if ($filterDusun !== null && $filterDusun !== '') {
+            $builder->where('dusun.id', (int) $filterDusun);
         }
 
-        if (!empty($filterJk)) {
+        if ($filterJk !== null && $filterJk !== '') {
             $builder->where('penduduk.jenis_kelamin', $filterJk);
         }
 
-        if (!empty($filterPendidikan)) {
-            $builder->where('penduduk.pendidikan_id', $filterPendidikan);
+        if ($filterPendidikan !== null && $filterPendidikan !== '') {
+            $builder->where('penduduk.pendidikan_id', (int) $filterPendidikan);
         }
 
-        if (!empty($filterPekerjaan)) {
-            $builder->where('penduduk.pekerjaan_id', $filterPekerjaan);
+        if ($filterPekerjaan !== null && $filterPekerjaan !== '') {
+            $builder->where('penduduk.pekerjaan_id', (int) $filterPekerjaan);
         }
 
-        if (!empty($filterStatusPenduduk)) {
+        if ($filterStatusPenduduk !== null && $filterStatusPenduduk !== '') {
             $builder->where('penduduk.status_penduduk', $filterStatusPenduduk);
         }
 
-        // Filter Agama (pakai FK agama_id)
-        if (!empty($filterAgama)) {
-            $builder->where('penduduk.agama_id', $filterAgama);
+        if ($filterAgama !== null && $filterAgama !== '') {
+            $builder->where('penduduk.agama_id', (int) $filterAgama);
         }
 
-        // FILTER USIA (pakai TIMESTAMPDIFF YEAR)
+        // usia (MYSQL)
         if ($filterUsiaMin !== null && $filterUsiaMin !== '') {
-            $builder->where(
-                'TIMESTAMPDIFF(YEAR, penduduk.tanggal_lahir, CURDATE()) >=',
-                (int) $filterUsiaMin
-            );
+            $builder->where('TIMESTAMPDIFF(YEAR, penduduk.tanggal_lahir, CURDATE()) >=', (int) $filterUsiaMin);
         }
-
         if ($filterUsiaMax !== null && $filterUsiaMax !== '') {
-            $builder->where(
-                'TIMESTAMPDIFF(YEAR, penduduk.tanggal_lahir, CURDATE()) <=',
-                (int) $filterUsiaMax
-            );
+            $builder->where('TIMESTAMPDIFF(YEAR, penduduk.tanggal_lahir, CURDATE()) <=', (int) $filterUsiaMax);
         }
 
         // ====== SEARCH GLOBAL ======
@@ -205,11 +195,35 @@ class Penduduk extends BaseController
                 ->groupEnd();
         }
 
-        // HITUNG SETELAH FILTER
+        // ====== RECORDS FILTERED ======
         $recordsFiltered = $builder->countAllResults(false);
 
-        // ORDER + LIMIT
-        $builder->orderBy('penduduk.' . $orderColumn, $orderDir)
+        // ====== FIX START KEBABLASAN (ini biang 11–10 dari 10) ======
+        if ($start >= $recordsFiltered) {
+            $start = 0;
+        }
+
+        // ====== ORDER BY (tentukan alias yang benar) ======
+        $orderMap = [
+            'nik'            => 'penduduk.nik',
+            'no_kk'          => 'penduduk.no_kk',
+            'nama_lengkap'   => 'penduduk.nama_lengkap',
+            'jenis_kelamin'  => 'penduduk.jenis_kelamin',
+            'tanggal_lahir'  => 'penduduk.tanggal_lahir',
+            'pekerjaan_id'   => 'penduduk.pekerjaan_id',
+            'status_penduduk' => 'penduduk.status_penduduk',
+            'status_dasar'   => 'penduduk.status_dasar',
+            'updated_at'     => 'penduduk.updated_at',
+            'id'             => 'penduduk.id',
+        ];
+        $orderByField = $orderMap[$orderColumn] ?? 'penduduk.nik';
+
+        // ====== LIMIT ======
+        if ($length <= 0) { // -1 (show all) / 0
+            $length = 10;
+        }
+
+        $builder->orderBy($orderByField, $orderDir)
             ->limit($length, $start);
 
         $data = $builder->get()->getResultArray();
@@ -219,8 +233,13 @@ class Penduduk extends BaseController
             'recordsTotal'    => $recordsTotal,
             'recordsFiltered' => $recordsFiltered,
             'data'            => $data,
+
+            // opsional: kalau kamu mau update token per response
+            // 'newToken' => csrf_hash(),
         ]);
     }
+
+
 
     /**
      * Ambil master pendidikan (belum di-soft-delete + aktif)
@@ -268,19 +287,17 @@ class Penduduk extends BaseController
     private function getRtOptions(): array
     {
         return $this->db->table('rt')
-            ->select('rt.id, rt.no_rt, rw.no_rw, dusun.nama_dusun')
-            ->join('rw', 'rw.id = rt.rw_id')
-            ->join('dusun', 'dusun.id = rw.dusun_id')
+            ->select('rt.id, rt.no_rt, dusun.nama_dusun')
+            ->join('dusun', 'dusun.id = rt.id_dusun', 'left')
             ->where('rt.deleted_at', null)
-            ->where('rw.deleted_at', null)
             ->where('dusun.deleted_at', null)
             ->where('rt.is_active', 1)
             ->orderBy('dusun.nama_dusun', 'ASC')
-            ->orderBy('rw.no_rw', 'ASC')
             ->orderBy('rt.no_rt', 'ASC')
             ->get()
             ->getResultArray();
     }
+
 
     /**
      * Ambil master Dusun (belum di-soft-delete + aktif)
@@ -316,7 +333,7 @@ class Penduduk extends BaseController
             'rt_id'             => old('rt_id'),
             'alamat'            => old('alamat'),
             'desa'              => old('desa') ?? 'Batilai',
-            'kecamatan'         => old('kecamatan') ?? 'Pelaihari',
+            'kecamatan'         => old('kecamatan') ?? 'Takisung',
             'no_hp'             => old('no_hp'),
             'email'             => old('email'),
             'ktp_file'          => null,

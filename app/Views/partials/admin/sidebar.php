@@ -179,6 +179,21 @@ $active = function ($key) use ($activeMenu) {
                 </a>
             </li>
 
+            <!-- Master Dusun -->
+            <li>
+                <a href="<?= base_url('admin/master-dusun') ?>"
+                    class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_dusun') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 20V10l8-5 8 5v10" />
+                            <path d="M9 20v-6h6v6" />
+                            <path d="M7.5 12.5h.01M10.5 12.5h.01M13.5 12.5h.01M16.5 12.5h.01" />
+                        </svg>
+                    </span>
+                    <span>Master Dusun</span>
+                </a>
+            </li>
 
             <!-- Data RT (Master) -->
             <li>
@@ -189,7 +204,7 @@ $active = function ($key) use ($activeMenu) {
                             <path d="M7 9h10M7 12h10M7 15h6" />
                         </svg>
                     </span>
-                    <span>Data RT</span>
+                    <span>Master RT</span>
                 </a>
             </li>
 

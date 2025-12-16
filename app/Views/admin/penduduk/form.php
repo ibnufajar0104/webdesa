@@ -108,7 +108,7 @@
                         <input type="text" name="tempat_lahir" id="tempat_lahir"
                             value="<?= esc($penduduk['tempat_lahir'] ?? '') ?>"
                             class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs md:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                            placeholder="Contoh: Pelaihari">
+                            placeholder="Contoh: Takisung">
                     </div>
 
                     <!-- Tanggal Lahir -->
@@ -272,20 +272,20 @@
                     <!-- RT (master) -->
                     <div>
                         <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1" for="rt_id">
-                            Dusun / RW / RT
+                            Dusun / RT
                         </label>
                         <select name="rt_id" id="rt_id"
                             class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs md:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-                            <option value="">- Pilih Dusun / RW / RT -</option>
+                            <option value="">- Pilih Dusun / RT -</option>
                             <?php foreach (($rtOptions ?? []) as $rt): ?>
                                 <?php
                                 $labelDusun = $rt['nama_dusun'] ?? '-';
-                                $rw = str_pad((string)($rt['no_rw'] ?? 0), 3, '0', STR_PAD_LEFT);
+
                                 $rtn = str_pad((string)($rt['no_rt'] ?? 0), 3, '0', STR_PAD_LEFT);
                                 $selected = ($penduduk['rt_id'] ?? '') == $rt['id'] ? 'selected' : '';
                                 ?>
                                 <option value="<?= $rt['id'] ?>" <?= $selected ?>>
-                                    <?= esc($labelDusun) ?> - RW <?= $rw ?> / RT <?= $rtn ?>
+                                    <?= esc($labelDusun) ?> - RT <?= $rtn ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

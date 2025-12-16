@@ -123,6 +123,15 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
     });
 
 
+    // Master Jabatan
+    $routes->group('master-dusun', static function ($routes) {
+        $routes->get('/',           'MasterDusun::index');
+        $routes->post('datatable',  'MasterDusun::datatable');
+        $routes->post('save',       'MasterDusun::save');
+        $routes->post('delete',     'MasterDusun::delete');
+    });
+
+
     // Sambutan Kepala Desa
     $routes->group('sambutan-kades', static function ($routes) {
         $routes->get('/',      'SambutanKades::index');

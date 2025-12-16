@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 14, 2025 at 08:22 AM
+-- Generation Time: Dec 16, 2025 at 04:02 PM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.29
 
@@ -72,7 +72,8 @@ CREATE TABLE `dusun` (
 INSERT INTO `dusun` (`id`, `nama_dusun`, `kode_dusun`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Dusun I', 'D001', 1, NULL, NULL, NULL),
 (2, 'Dusun II', 'D002', 1, NULL, NULL, NULL),
-(3, 'Dusun III', 'D003', 1, NULL, NULL, NULL);
+(3, 'Dusun III', 'D003', 1, NULL, NULL, NULL),
+(4, '123', '123', 1, '2025-12-16 15:03:17', '2025-12-16 15:09:02', '2025-12-16 15:09:02');
 
 -- --------------------------------------------------------
 
@@ -395,23 +396,14 @@ INSERT INTO `penduduk` (`id`, `nik`, `no_kk`, `nama_lengkap`, `jenis_kelamin`, `
 (34, '6372021001000034', '6372025001000034', 'Ahmad Rifandi', 'L', '', '1992-04-11', NULL, 1, 'Belum Kawin', 6, 6, 'WNI', 'Tetap', 'Hidup', 1, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (35, '6372021002000035', '6372025002000035', 'Siti Rohani', 'P', '', '1989-08-01', NULL, 1, 'Belum Kawin', 4, 4, 'WNI', 'Tetap', 'Hidup', 2, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (36, '6372021003000036', '6372025003000036', 'Budi Hartono', 'L', '', '2000-10-22', NULL, 1, 'Belum Kawin', 3, 1, 'WNI', 'Pendatang', 'Hidup', 3, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(37, '6372021004000037', '6372025004000037', 'Maria Elisabeth', 'P', '', '1996-02-14', NULL, 2, 'Belum Kawin', 7, 5, 'WNI', 'Tetap', 'Hidup', 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(38, '6372021005000038', '6372025005000038', 'Ketut Aryana', 'L', '', '1978-06-07', NULL, 4, 'Belum Kawin', 2, 3, 'WNI', 'Tetap', 'Hidup', 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(39, '6372021006000039', '6372025006000039', 'Yohanes Gamaliel', 'L', '', '1983-09-19', NULL, 3, 'Belum Kawin', 6, 5, 'WNI', 'Tetap', 'Hidup', 5, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(40, '6372021007000040', '6372025007000040', 'Dewi Lestari', 'P', '', '1994-11-03', NULL, 1, 'Belum Kawin', 5, 2, 'WNI', 'Pendatang', 'Hidup', 6, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (41, '6372021008000041', '6372025008000041', 'Gusti Ayu Pratiwi', 'P', '', '1999-01-28', NULL, 4, 'Belum Kawin', 4, 6, 'WNI', 'Pendatang', 'Hidup', 2, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (42, '6372021009000042', '6372025009000042', 'Slamet Riyadi', 'L', '', '1985-12-12', NULL, 1, 'Belum Kawin', 6, 6, 'WNI', 'Tetap', 'Hidup', 3, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(43, '6372021010000043', '6372025010000043', 'Paulus Andika', 'L', '', '1974-07-30', NULL, 3, 'Belum Kawin', 4, 4, 'WNI', 'Tetap', 'Hidup', 6, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(44, '6372021011000044', '6372025011000044', 'Nur Aisyah', 'P', '', '2002-03-21', NULL, 1, 'Belum Kawin', 4, 2, 'WNI', 'Pendatang', 'Hidup', 5, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(45, '6372021012000045', '6372025012000045', 'Adi Prasetyo', 'L', '', '1981-10-02', NULL, 1, 'Belum Kawin', 2, 3, 'WNI', 'Tetap', 'Hidup', 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(46, '6372021013000046', '6372025013000046', 'Kartini Sari', 'P', '', '1997-09-14', NULL, 1, 'Belum Kawin', 6, 5, 'WNI', 'Tetap', 'Hidup', 5, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (47, '6372021014000047', '6372025014000047', 'Luh Putu Ayuni', 'P', '', '1993-01-16', NULL, 4, 'Belum Kawin', 4, 6, 'WNI', 'Pendatang', 'Hidup', 2, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (48, '6372021015000048', '6372025015000048', 'Novita Anggreani', 'P', '', '2001-12-09', NULL, 1, 'Belum Kawin', 3, 2, 'WNI', 'Tetap', 'Hidup', 3, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:56:52', '2025-11-16 15:56:52'),
 (49, '6372021016000049', '6372025016000049', 'Herman Gunawan', 'L', '', '1980-05-05', NULL, 2, 'Belum Kawin', 4, 6, 'WNI', 'Tetap', 'Hidup', 1, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(50, '6372021017000050', '6372025017000050', 'Nanda Oktaviani', 'P', '', '1998-04-27', NULL, 1, 'Belum Kawin', 7, 6, 'WNI', 'Pendatang', 'Hidup', 6, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
-(51, '6372021018000051', '6372025018000051', 'Rama Wijaya', 'L', '', '1979-02-10', NULL, 1, 'Belum Kawin', 5, 3, 'WNI', 'Tetap', 'Hidup', 4, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (52, '6372021019000052', '6372025019000052', 'Agus Maulana', 'L', '', '1991-09-17', NULL, 1, 'Belum Kawin', 6, 6, 'WNI', 'Pendatang', 'Hidup', 1, '', 'Batilai', 'Takisung', '', '', NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:39:26', NULL),
-(53, '6372021020000053', '6372025020000053', 'Mega Aprilia', 'P', '', '2003-07-18', NULL, 1, 'Belum Kawin', 4, 2, 'WNI', 'Tetap', 'Hidup', 2, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL);
+(53, '6372021020000053', '6372025020000053', 'Mega Aprilia', 'P', '', '2003-07-18', NULL, 1, 'Belum Kawin', 4, 2, 'WNI', 'Tetap', 'Hidup', 2, '', 'Batilai', 'Takisung', '', '', NULL, 1, '2025-11-16 15:38:50', '2025-12-16 15:44:36', NULL),
+(54, '2423454745745745', '2342423454745745', 'sfd', 'L', '4234', '2025-12-16', 'A', NULL, 'Belum Kawin', NULL, NULL, 'WNI', 'Tetap', 'Hidup', NULL, '', 'Batilai', 'Pelaihari', '', '', NULL, 1, '2025-12-16 15:44:26', '2025-12-16 15:48:32', '2025-12-16 15:48:32');
 
 -- --------------------------------------------------------
 
@@ -608,8 +600,9 @@ INSERT INTO `perangkat_pendidikan_history` (`id`, `perangkat_id`, `pendidikan_id
 
 CREATE TABLE `rt` (
   `id` int UNSIGNED NOT NULL,
+  `id_dusun` int DEFAULT NULL,
   `rw_id` int UNSIGNED NOT NULL,
-  `no_rt` tinyint UNSIGNED NOT NULL,
+  `no_rt` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -620,17 +613,36 @@ CREATE TABLE `rt` (
 -- Dumping data for table `rt`
 --
 
-INSERT INTO `rt` (`id`, `rw_id`, `no_rt`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 1, 1, NULL, NULL, NULL),
-(2, 1, 2, 1, NULL, NULL, NULL),
-(3, 1, 3, 1, NULL, NULL, NULL),
-(4, 2, 1, 1, NULL, NULL, NULL),
-(5, 2, 2, 1, NULL, NULL, NULL),
-(6, 3, 1, 1, NULL, NULL, NULL),
-(7, 3, 2, 1, NULL, NULL, NULL),
-(8, 4, 1, 1, NULL, NULL, NULL),
-(9, 5, 1, 1, NULL, NULL, NULL),
-(10, 5, 2, 1, NULL, NULL, NULL);
+INSERT INTO `rt` (`id`, `id_dusun`, `rw_id`, `no_rt`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 1, '9', 1, NULL, '2025-12-16 14:51:50', NULL),
+(2, 1, 1, '17', 1, NULL, '2025-12-16 14:52:09', NULL),
+(3, 1, 1, '3', 1, NULL, NULL, NULL),
+(7, 2, 3, '02', 1, NULL, '2025-12-16 14:53:14', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rt_identitas`
+--
+
+CREATE TABLE `rt_identitas` (
+  `id` bigint UNSIGNED NOT NULL,
+  `rt_id` bigint UNSIGNED NOT NULL,
+  `nama_ketua` varchar(150) DEFAULT NULL,
+  `nik_ketua` varchar(30) DEFAULT NULL,
+  `no_hp_ketua` varchar(30) DEFAULT NULL,
+  `email_ketua` varchar(150) DEFAULT NULL,
+  `alamat_sekretariat` text,
+  `sk_nomor` varchar(100) DEFAULT NULL,
+  `sk_tanggal` date DEFAULT NULL,
+  `tmt_mulai` date DEFAULT NULL,
+  `tmt_selesai` date DEFAULT NULL,
+  `keterangan` text,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -800,6 +812,12 @@ ALTER TABLE `rt`
   ADD KEY `rt_rw_id_foreign` (`rw_id`);
 
 --
+-- Indexes for table `rt_identitas`
+--
+ALTER TABLE `rt_identitas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `rw`
 --
 ALTER TABLE `rw`
@@ -826,7 +844,7 @@ ALTER TABLE `banners`
 -- AUTO_INCREMENT for table `dusun`
 --
 ALTER TABLE `dusun`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `jam_pelayanan`
@@ -886,7 +904,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `penduduk`
 --
 ALTER TABLE `penduduk`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `perangkat_desa`
@@ -911,6 +929,12 @@ ALTER TABLE `perangkat_pendidikan_history`
 --
 ALTER TABLE `rt`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `rt_identitas`
+--
+ALTER TABLE `rt_identitas`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `rw`

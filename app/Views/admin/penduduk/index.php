@@ -171,7 +171,7 @@ Data Penduduk
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">No. KK</th>
                     <th class="px-3 py-2 text-left font-medium">Nama</th>
                     <th class="px-3 py-2 text-left font-medium">JK</th>
-                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Dusun / RW / RT</th>
+                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Dusun / RT</th>
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Usia</th>
                     <th class="px-3 py-2 text-left font-medium">Pekerjaan</th>
                     <th class="px-3 py-2 text-left font-medium">Status</th>
@@ -197,28 +197,44 @@ Data Penduduk
 
         const storageKey = 'penduduk_page';
 
+        const $filterDusun = $('#filterDusun');
+        const $filterJk = $('#filterJk');
+        const $filterPendidikan = $('#filterPendidikan');
+        const $filterPekerjaan = $('#filterPekerjaan');
+        const $filterStatusPenduduk = $('#filterStatusPenduduk');
+        const $filterAgama = $('#filterAgama');
+        const $filterUsiaMin = $('#filterUsiaMin');
+        const $filterUsiaMax = $('#filterUsiaMax');
+
         const table = $('#tablePenduduk').DataTable({
             processing: true,
             serverSide: true,
+            order: [
+                [1, 'asc']
+            ],
             ajax: {
                 url: baseUrl + 'admin/data-penduduk/datatable',
                 type: 'POST',
                 data: function(d) {
                     d[csrfName] = csrfHash;
 
-                    d.filter_dusun = $('#filterDusun').val();
-                    d.filter_jk = $('#filterJk').val();
-                    d.filter_pendidikan = $('#filterPendidikan').val();
-                    d.filter_pekerjaan = $('#filterPekerjaan').val();
-                    d.filter_status_penduduk = $('#filterStatusPenduduk').val();
-                    d.filter_agama = $('#filterAgama').val();
-                    d.filter_usia_min = $('#filterUsiaMin').val();
-                    d.filter_usia_max = $('#filterUsiaMax').val();
-                }
+                    d.filter_dusun = $filterDusun.val();
+                    d.filter_jk = $filterJk.val();
+                    d.filter_pendidikan = $filterPendidikan.val();
+                    d.filter_pekerjaan = $filterPekerjaan.val();
+                    d.filter_status_penduduk = $filterStatusPenduduk.val();
+                    d.filter_agama = $filterAgama.val();
+                    d.filter_usia_min = $filterUsiaMin.val();
+                    d.filter_usia_max = $filterUsiaMax.val();
+                },
+
+                // aktifkan kalau controller mengembalikan newToken
+                // dataSrc: function (json) {
+                //   if (json.newToken) csrfHash = json.newToken;
+                //   return json.data;
+                // }
             },
-            order: [
-                [1, 'asc']
-            ],
+
             language: {
                 processing: "Memproses...",
                 search: "Cari:",
@@ -236,6 +252,7 @@ Data Penduduk
                     next: "&gt;"
                 }
             },
+
             columns: [{
                     data: null,
                     orderable: false,
@@ -251,9 +268,7 @@ Data Penduduk
                 },
                 {
                     data: 'no_kk',
-                    render: function(data) {
-                        return data || '-';
-                    },
+                    render: (d) => d || '-',
                     className: 'px-3 py-2 text-slate-800 dark:text-slate-100 whitespace-nowrap'
                 },
                 {
@@ -262,13 +277,9 @@ Data Penduduk
                 },
                 {
                     data: 'jenis_kelamin',
-                    render: function(data) {
-                        if (data === 'L') {
-                            return '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:border-blue-700">Laki-laki</span>';
-                        }
-                        if (data === 'P') {
-                            return '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-pink-50 text-pink-700 border border-pink-200 dark:bg-pink-900/40 dark:text-pink-200 dark:border-pink-700">Perempuan</span>';
-                        }
+                    render: function(d) {
+                        if (d === 'L') return '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:border-blue-700">Laki-laki</span>';
+                        if (d === 'P') return '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-pink-50 text-pink-700 border border-pink-200 dark:bg-pink-900/40 dark:text-pink-200 dark:border-pink-700">Perempuan</span>';
                         return '-';
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
@@ -277,44 +288,43 @@ Data Penduduk
                     data: null,
                     render: function(row) {
                         const dusun = row.nama_dusun || '-';
-                        const rw = row.no_rw ? String(row.no_rw).padStart(3, '0') : '---';
                         const rt = row.no_rt ? String(row.no_rt).padStart(3, '0') : '---';
                         return `
-                            <div class="flex flex-col">
-                                <span class="text-xs text-slate-800 dark:text-slate-100">${dusun}</span>
-                                <span class="text-[11px] text-slate-500 dark:text-slate-400">RW ${rw} / RT ${rt}</span>
-                            </div>
-                        `;
+              <div class="flex flex-col">
+                <span class="text-xs text-slate-800 dark:text-slate-100">${dusun}</span>
+                <span class="text-[11px] text-slate-500 dark:text-slate-400">RT ${rt}</span>
+              </div>
+            `;
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
                 },
                 {
                     data: 'tanggal_lahir',
-                    render: function(data) {
-                        if (!data) return '-';
-                        const birth = new Date(data);
+                    render: function(d) {
+                        if (!d) return '-';
+
+                        // aman untuk "YYYY-MM-DD"
+                        const birth = new Date(d);
                         if (isNaN(birth)) return '-';
+
                         const today = new Date();
                         let age = today.getFullYear() - birth.getFullYear();
                         const m = today.getMonth() - birth.getMonth();
-                        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-                            age--;
-                        }
+                        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+
                         return age + ' th';
                     },
                     className: 'px-3 py-2 whitespace-nowrap text-xs text-slate-700 dark:text-slate-200'
                 },
                 {
                     data: 'nama_pekerjaan',
-                    render: function(data) {
-                        return data || '-';
-                    },
+                    render: (d) => d || '-',
                     className: 'px-3 py-2 text-xs text-slate-700 dark:text-slate-200'
                 },
                 {
                     data: null,
                     render: function(row) {
-                        let chips = [];
+                        const chips = [];
 
                         if (row.status_penduduk === 'Tetap') {
                             chips.push('<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700">Tetap</span>');
@@ -346,52 +356,53 @@ Data Penduduk
                         const editUrl = baseUrl + 'admin/data-penduduk/edit/' + row.id;
 
                         return `
-            <div class="flex items-center gap-1.5">
-                <a href="${detailUrl}"
-                   class="js-keep-page inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-white text-[11px] font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-1 focus:ring-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-                   title="Detail">
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 20 20" fill="currentColor"
-                         class="w-3.5 h-3.5">
-                        <path d="M8 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
-                        <path fill-rule="evenodd"
-                              d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5Zm5 5a3 3 0 1 0 1.524 5.585l1.196 1.195a.75.75 0 1 0 1.06-1.06l-1.195-1.196A3 3 0 0 0 9.5 7Z"
-                              clip-rule="evenodd" />
-                    </svg>
-                    <span>Detail</span>
+              <div class="flex items-center gap-1.5">
+                <a href="${detailUrl}" class="js-keep-page inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-white text-[11px] font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-1 focus:ring-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" title="Detail">
+                  <!-- icon detail tetap -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                    <path d="M8 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
+                    <path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5Zm5 5a3 3 0 1 0 1.524 5.585l1.196 1.195a.75.75 0 1 0 1.06-1.06l-1.195-1.196A3 3 0 0 0 9.5 7Z" clip-rule="evenodd" />
+                  </svg>
+                  <span>Detail</span>
                 </a>
 
-                <a href="${editUrl}"
-                   class="js-keep-page inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 focus:outline-none focus:ring-1 focus:ring-sky-400/70 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20"
-                   title="Edit">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                         class="w-3.5 h-3.5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="m16.862 4.487 1.687 1.688a1.875 1.875 0 0 1 0 2.652L8.21 19.167A4.5 4.5 0 0 1 6.678 20l-2.135.534A.75.75 0 0 1 4 19.808l.534-2.135a4.5 4.5 0 0 1 1.334-2.531l10.338-10.338a1.875 1.875 0 0 1 2.652 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M16.5 4.5 19.5 7.5" />
-                    </svg>
-                    <span>Edit</span>
+                <a href="${editUrl}" class="js-keep-page inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 focus:outline-none focus:ring-1 focus:ring-sky-400/70 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20" title="Edit">
+                  <!-- icon edit tetap -->
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687 1.688a1.875 1.875 0 0 1 0 2.652L8.21 19.167A4.5 4.5 0 0 1 6.678 20l-2.135.534A.75.75 0 0 1 4 19.808l.534-2.135a4.5 4.5 0 0 1 1.334-2.531l10.338-10.338a1.875 1.875 0 0 1 2.652 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 4.5 19.5 7.5" />
+                  </svg>
+                  <span>Edit</span>
                 </a>
 
-                <button type="button"
+               <button type="button"
                         class="btnDelete inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] font-medium text-rose-700 hover:bg-rose-100 focus:outline-none focus:ring-1 focus:ring-rose-400/70 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
                         data-id="${row.id}" title="Hapus">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                         fill="currentColor" class="size-4">
-                        <path fill-rule="evenodd"
-                              d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z"
-                              clip-rule="evenodd" />
-                    </svg>
+                 <svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="w-3.5 h-3.5">
+                    <path d="M6 7h12" />
+                    <path d="M9 7V5h6v2" />
+                    <rect x="7" y="7" width="10" height="12" rx="1.5" />
+                    <path d="M10 11v5" />
+                    <path d="M14 11v5" />
+                </svg>
+
+
                     <span>Hapus</span>
                 </button>
-            </div>
-        `;
+              </div>
+            `;
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
                 }
             ],
+
             initComplete: function() {
                 const api = this.api();
                 const savedPage = localStorage.getItem(storageKey);
@@ -405,38 +416,43 @@ Data Penduduk
             }
         });
 
-        // simpan nomor halaman sebelum ke Detail/Edit
+        // simpan page sebelum ke Detail/Edit
         $('#tablePenduduk').on('click', '.js-keep-page', function() {
-            const currentPage = table.page(); // index mulai 0
-            localStorage.setItem(storageKey, currentPage);
+            localStorage.setItem(storageKey, table.page()); // index 0-based
         });
 
-        // trigger draw ketika filter berubah
-        $('#filterDusun, #filterJk, #filterPendidikan, #filterPekerjaan, #filterStatusPenduduk, #filterAgama')
-            .on('change', function() {
-                table.draw();
-            });
+        // helper: setiap filter berubah, balik ke page 0 + hapus page tersimpan
+        function redrawFromFirstPage() {
+            localStorage.removeItem(storageKey);
+            table.page(0).draw(false);
+        }
 
-        $('#filterUsiaMin, #filterUsiaMax').on('keyup change', function() {
-            table.draw();
-        });
+        // filter change
+        $($filterDusun.add($filterJk).add($filterPendidikan).add($filterPekerjaan).add($filterStatusPenduduk).add($filterAgama))
+            .on('change', redrawFromFirstPage);
+
+        // filter usia (ketik)
+        $filterUsiaMin.add($filterUsiaMax).on('keyup change', redrawFromFirstPage);
 
         // reset filter
         $('#btnResetFilter').on('click', function() {
-            $('#filterDusun').val('');
-            $('#filterJk').val('');
-            $('#filterPendidikan').val('');
-            $('#filterPekerjaan').val('');
-            $('#filterStatusPenduduk').val('');
-            $('#filterAgama').val('');
-            $('#filterUsiaMin').val('');
-            $('#filterUsiaMax').val('');
-            table.draw();
+            // kalau pakai select2, ini penting
+            $filterDusun.val('').trigger('change');
+            $filterJk.val('').trigger('change');
+            $filterPendidikan.val('').trigger('change');
+            $filterPekerjaan.val('').trigger('change');
+            $filterStatusPenduduk.val('').trigger('change');
+            $filterAgama.val('').trigger('change');
+
+            $filterUsiaMin.val('');
+            $filterUsiaMax.val('');
+
+            redrawFromFirstPage();
         });
 
-        // Hapus dengan jQuery + AJAX + SweetAlert2
+        // delete (punyamu sudah oke)
         $('#tablePenduduk').on('click', '.btnDelete', function() {
-            let id = $(this).data('id');
+            const id = $(this).data('id');
 
             Swal.fire({
                 title: 'Hapus data penduduk?',
@@ -454,13 +470,11 @@ Data Penduduk
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        id: id,
+                        id,
                         [csrfName]: csrfHash
                     },
                     success: function(res) {
-                        if (res.newToken) {
-                            csrfHash = res.newToken;
-                        }
+                        if (res.newToken) csrfHash = res.newToken;
 
                         if (res.status) {
                             Swal.fire({
@@ -470,7 +484,7 @@ Data Penduduk
                                 timer: 2000,
                                 showConfirmButton: false
                             });
-                            table.draw(false); // tetap di halaman yang sama
+                            table.draw(false);
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -489,8 +503,8 @@ Data Penduduk
                 });
             });
         });
-
     });
 </script>
+
 
 <?= $this->endSection() ?>

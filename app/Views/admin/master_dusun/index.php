@@ -1,7 +1,7 @@
 <?= $this->extend('layout/admin') ?>
 
 <?= $this->section('title') ?>
-Master RT
+Master Dusun
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -9,10 +9,10 @@ Master RT
 <div class="flex items-center justify-between mb-4">
     <div>
         <h2 class="text-sm md:text-base font-semibold text-slate-800 dark:text-slate-100">
-            Master RT
+            Master Dusun
         </h2>
         <p class="text-xs text-slate-500 dark:text-slate-400">
-            Kelola daftar RT berdasarkan dusun.
+            Kelola daftar dusun yang digunakan pada data wilayah/desa.
         </p>
     </div>
 
@@ -25,14 +25,14 @@ Master RT
             <path stroke-linecap="round" stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
-        <span>Tambah RT</span>
+        <span>Tambah Dusun</span>
     </button>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden dark:bg-slate-900 dark:border-slate-800">
     <div class="p-3 border-b border-slate-100 dark:border-slate-800">
         <p class="text-xs text-slate-500 dark:text-slate-400">
-            Atur dusun, nomor RT, dan status aktif.
+            Sesuaikan nama, kode, dan status dusun sesuai wilayah desa.
         </p>
     </div>
 
@@ -67,14 +67,13 @@ Master RT
 
     <!-- TABLE -->
     <div class="p-3 overflow-x-auto">
-        <table id="tableRt" class="min-w-full text-xs md:text-sm">
+        <table id="tableDusun" class="min-w-full text-xs md:text-sm">
             <thead>
                 <tr
                     class="bg-slate-50 text-slate-600 border-b border-slate-100 dark:bg-slate-900/60 dark:text-slate-200 dark:border-slate-800">
                     <th class="px-3 py-2 text-left font-medium">#</th>
-                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Dusun</th>
-
-                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">No RT</th>
+                    <th class="px-3 py-2 text-left font-medium">Nama Dusun</th>
+                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Kode</th>
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Status</th>
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Aksi</th>
                 </tr>
@@ -85,7 +84,7 @@ Master RT
 </div>
 
 <!-- MODAL Tambah/Edit -->
-<div id="modalRt"
+<div id="modalDusun"
     class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-900/40 backdrop-blur-sm">
     <div
         class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md border border-slate-200 dark:border-slate-800">
@@ -93,7 +92,7 @@ Master RT
             class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <h3 id="modalTitle"
                 class="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                Tambah RT
+                Tambah Dusun
             </h3>
             <button type="button"
                 onclick="closeModal()"
@@ -106,43 +105,34 @@ Master RT
             </button>
         </div>
 
-        <form id="formRt" method="post"
-            action="<?= base_url('admin/master-rt/save') ?>"
+        <form id="formDusun" method="post"
+            action="<?= base_url('admin/master-dusun/save') ?>"
             class="px-4 py-3 space-y-3">
             <?= csrf_field() ?>
-            <input type="hidden" name="id" id="rtId">
+            <input type="hidden" name="id" id="dusunId">
 
             <div class="space-y-1.5">
-                <!-- <label for="id_dusun"
+                <label for="nama_dusun"
                     class="text-xs font-medium text-slate-700 dark:text-slate-200">
-                    ID Dusun <span class="text-rose-500">*</span>
-                </label> -->
-                <div class="space-y-1.5">
-                    <label for="id_dusun"
-                        class="text-xs font-medium text-slate-700 dark:text-slate-200">
-                        Dusun <span class="text-rose-500">*</span>
-                    </label>
-                    <select name="id_dusun" id="id_dusun"
-                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
-               focus:outline-none focus:ring-2 focus:ring-primary-500/60 focus:border-primary-500
-               dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-                        required>
-                        <option value="">-- Pilih Dusun --</option>
-                    </select>
-                </div>
-
-            </div>
-
-            <div class="space-y-1.5">
-                <label for="no_rt"
-                    class="text-xs font-medium text-slate-700 dark:text-slate-200">
-                    Nomor RT <span class="text-rose-500">*</span>
+                    Nama Dusun <span class="text-rose-500">*</span>
                 </label>
-                <input type="number" name="no_rt" id="no_rt"
+                <input type="text" name="nama_dusun" id="nama_dusun"
                     class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
                            focus:outline-none focus:ring-2 focus:ring-primary-500/60 focus:border-primary-500
                            dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
-                    placeholder="Contoh: 1, 2, 3 ..." required>
+                    placeholder="Contoh: Dusun Suka Maju" required>
+            </div>
+
+            <div class="space-y-1.5">
+                <label for="kode_dusun"
+                    class="text-xs font-medium text-slate-700 dark:text-slate-200">
+                    Kode Dusun
+                </label>
+                <input type="text" name="kode_dusun" id="kode_dusun"
+                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-primary-500/60 focus:border-primary-500
+                           dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
+                    placeholder="Misal: DS01, DS02">
             </div>
 
             <div class="space-y-1.5">
@@ -188,25 +178,24 @@ Master RT
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
 <script>
-    const baseUrl = "<?= rtrim(base_url(), '/') ?>/";
-    const csrfName = "<?= csrf_token() ?>";
-    let csrfHash = "<?= csrf_hash() ?>";
     $(function() {
+        const baseUrl = "<?= rtrim(base_url(), '/') ?>/";
+        const csrfName = "<?= csrf_token() ?>";
+        let csrfHash = "<?= csrf_hash() ?>";
 
-
-        const modal = document.getElementById('modalRt');
+        const modal = document.getElementById('modalDusun');
         const modalTitle = document.getElementById('modalTitle');
-        const idField = document.getElementById('rtId');
-        const dusunField = document.getElementById('id_dusun');
-        const noRtField = document.getElementById('no_rt');
+        const idField = document.getElementById('dusunId');
+        const namaField = document.getElementById('nama_dusun');
+        const kodeField = document.getElementById('kode_dusun');
         const aktifField = document.getElementById('is_active');
 
         // DataTables
-        let table = $('#tableRt').DataTable({
+        let table = $('#tableDusun').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: baseUrl + 'admin/master-rt/datatable',
+                url: baseUrl + 'admin/master-dusun/datatable',
                 type: 'POST',
                 data: function(d) {
                     d[csrfName] = csrfHash;
@@ -214,7 +203,7 @@ Master RT
                 }
             },
             order: [
-                [2, 'asc']
+                [1, 'asc']
             ],
             language: {
                 processing: "Memproses...",
@@ -244,20 +233,14 @@ Master RT
                 },
                 {
                     data: 'nama_dusun',
-                    render: function(v, type, row) {
-                        if (!v) return '-';
-                        const kode = row.kode_dusun ? ` <span class="text-[11px] text-slate-400">(${row.kode_dusun})</span>` : '';
-                        return `<span class="text-slate-800 dark:text-slate-100">${v}</span>${kode}`;
-                    },
-                    className: 'px-3 py-2 whitespace-nowrap'
+                    className: 'px-3 py-2 text-slate-800 dark:text-slate-100'
                 },
-
                 {
-                    data: 'no_rt',
+                    data: 'kode_dusun',
                     render: function(data) {
-                        return data ?? '-';
+                        return data || '-';
                     },
-                    className: 'px-3 py-2 whitespace-nowrap text-slate-800 dark:text-slate-100'
+                    className: 'px-3 py-2 whitespace-nowrap text-slate-700 dark:text-slate-100'
                 },
                 {
                     data: 'is_active',
@@ -279,8 +262,8 @@ Master RT
                                 <button type="button"
                                     class="btnEdit inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 focus:outline-none focus:ring-1 focus:ring-sky-400/70 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20"
                                     data-id="${row.id}"
-                                    data-id_dusun="${row.id_dusun ?? ''}"
-                                    data-no_rt="${row.no_rt ?? ''}"
+                                    data-nama="${row.nama_dusun ?? ''}"
+                                    data-kode="${row.kode_dusun ?? ''}"
                                     data-active="${row.is_active}">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -323,34 +306,31 @@ Master RT
         });
 
         // Modal helpers
-        window.openAddModal = async function() {
-            modalTitle.textContent = 'Tambah RT';
+        window.openAddModal = function() {
+            modalTitle.textContent = 'Tambah Dusun';
             idField.value = '';
-            noRtField.value = '';
+            namaField.value = '';
+            kodeField.value = '';
             aktifField.value = '1';
-
-            await loadDusunOptions('');
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            $('#id_dusun').focus();
+            namaField.focus();
         };
 
         function openEditModalFromRow(rowBtn) {
             const btn = rowBtn;
-            modalTitle.textContent = 'Edit RT';
+            modalTitle.textContent = 'Edit Dusun';
 
             idField.value = btn.dataset.id || '';
-            noRtField.value = btn.dataset.no_rt || '';
+            namaField.value = btn.dataset.nama || '';
+            kodeField.value = btn.dataset.kode || '';
             aktifField.value = btn.dataset.active || '1';
-
-            loadDusunOptions(btn.dataset.id_dusun || '');
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            noRtField.focus();
+            namaField.focus();
         }
-
 
         window.closeModal = function() {
             modal.classList.add('hidden');
@@ -370,16 +350,16 @@ Master RT
         });
 
         // Bind edit button
-        $('#tableRt').on('click', '.btnEdit', function() {
+        $('#tableDusun').on('click', '.btnEdit', function() {
             openEditModalFromRow(this);
         });
 
-        // Hapus dengan AJAX + Swal (butuh SweetAlert2 sudah ada di layout)
-        $('#tableRt').on('click', '.btnDelete', function() {
+        // Hapus dengan AJAX + Swal
+        $('#tableDusun').on('click', '.btnDelete', function() {
             let id = $(this).data('id');
 
             Swal.fire({
-                title: 'Hapus data RT?',
+                title: 'Hapus data dusun?',
                 text: 'Data yang dihapus tidak dapat dikembalikan.',
                 icon: 'warning',
                 showCancelButton: true,
@@ -390,7 +370,7 @@ Master RT
                 if (!result.isConfirmed) return;
 
                 $.ajax({
-                    url: baseUrl + 'admin/master-rt/delete',
+                    url: baseUrl + 'admin/master-dusun/delete',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -406,7 +386,7 @@ Master RT
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
-                                text: res.message || 'Data RT berhasil dihapus',
+                                text: res.message || 'Data dusun berhasil dihapus',
                                 timer: 2000,
                                 showConfirmButton: false
                             });
@@ -430,35 +410,6 @@ Master RT
             });
         });
     });
-
-
-    async function loadDusunOptions(selectedId = '') {
-        try {
-            const res = await $.ajax({
-                url: baseUrl + 'admin/master-rt/dusun-options',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    [csrfName]: csrfHash
-                }
-            });
-
-            if (res.newToken) csrfHash = res.newToken;
-
-            const $sel = $('#id_dusun');
-            $sel.empty().append(`<option value="">-- Pilih Dusun --</option>`);
-
-            (res.data || []).forEach(d => {
-                const label = d.kode_dusun ? `${d.nama_dusun} (${d.kode_dusun})` : d.nama_dusun;
-                $sel.append(`<option value="${d.id}">${label}</option>`);
-            });
-
-            if (selectedId) $sel.val(String(selectedId));
-        } catch (e) {
-            // kalau gagal, biarkan select kosong
-            console.error(e);
-        }
-    }
 </script>
 
 <?= $this->endSection() ?>
