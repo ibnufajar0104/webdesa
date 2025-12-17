@@ -85,7 +85,18 @@ $active = function ($key) use ($activeMenu) {
                     <span>Berita</span>
                 </a>
             </li>
-
+            <li>
+                <a href="<?= base_url('admin/galery') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('galery') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <rect x="4" y="6" width="16" height="12" rx="1.5" />
+                            <path d="M8 14l2.2-2.2L13.2 15l2.3-2.3L20 18" />
+                            <circle cx="9" cy="10" r="1.1" />
+                        </svg>
+                    </span>
+                    <span>Galery</span>
+                </a>
+            </li>
             <!-- Data Penduduk -->
             <li>
                 <a href="<?= base_url('admin/data-penduduk') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('penduduk') ?>">
@@ -116,7 +127,7 @@ $active = function ($key) use ($activeMenu) {
             </li>
             <!-- RT (Identitas) -->
             <li>
-                <a href="<?= base_url('admin/rt') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('rt') ?>">
+                <a href="<?= base_url('admin/rt-identitas') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('rt-identitas') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 20V9.5L12 4l8 5.5V20" />

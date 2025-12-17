@@ -168,4 +168,57 @@ class FileHandler extends BaseController
 
         return $this->response->setBody(file_get_contents($filePath));
     }
+
+
+    public function galery($filename = null)
+    {
+        if (!$filename) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Sanitasi nama file (anti path traversal)
+        $safeName = basename($filename);
+
+        // Hanya karakter aman
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $safeName)) {
+            return $this->response->setStatusCode(400, 'Invalid file name');
+        }
+
+        // Batasi ekstensi hanya gambar
+        $ext = strtolower(pathinfo($safeName, PATHINFO_EXTENSION));
+        $allowedExt = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+        if (!in_array($ext, $allowedExt, true)) {
+            return $this->response->setStatusCode(403, 'File type forbidden');
+        }
+
+        $filePath = WRITEPATH . 'uploads/galery/' . $safeName;
+
+        if (!is_file($filePath)) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Deteksi mime type
+        $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+
+        // Izinkan MIME gambar saja
+        $allowedMime = [
+            'image/png',
+            'image/jpeg',
+            'image/gif',
+            'image/webp',
+        ];
+
+        if (!in_array($mimeType, $allowedMime, true)) {
+            return $this->response->setStatusCode(403, 'File type forbidden');
+        }
+
+        // Header untuk image (inline)
+        $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Content-Disposition', 'inline; filename="' . $safeName . '"')
+            ->setHeader('X-Content-Type-Options', 'nosniff')
+            ->setHeader('Cache-Control', 'public, max-age=604800'); // 7 hari
+
+        return $this->response->setBody(file_get_contents($filePath));
+    }
 }

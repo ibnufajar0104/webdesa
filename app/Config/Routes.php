@@ -23,6 +23,7 @@ $routes->group('file', static function ($routes) {
     $routes->get('perangkat/(:any)', 'FileHandler::perangkat/$1');
     $routes->get('ijazah/(:any)',   'FileHandler::ijazah/$1');
     $routes->get('sk/(:any)',       'FileHandler::sk/$1');
+    $routes->get('galery/(:any)',       'FileHandler::galery/$1');
 });
 
 
@@ -195,5 +196,28 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('save',       'MasterRt::save');
         $routes->post('delete',     'MasterRt::delete');
         $routes->post('dusun-options', 'MasterRt::dusunOptions');
+    });
+
+
+    $routes->group('rt-identitas', static function ($routes) {
+        $routes->get('/', 'RtIdentitas::index');
+        $routes->post('datatable', 'RtIdentitas::datatable');
+
+        $routes->get('create', 'RtIdentitas::create');
+        $routes->get('edit/(:num)', 'RtIdentitas::edit/$1');
+        $routes->post('save', 'RtIdentitas::save');
+        $routes->post('delete', 'RtIdentitas::delete');
+    });
+
+    // Galery
+    $routes->group('galery', static function ($routes) {
+        $routes->get('/',           'Galery::index');
+        $routes->post('datatable',  'Galery::datatable');
+
+        $routes->get('create',      'Galery::create');
+        $routes->get('edit/(:num)', 'Galery::edit/$1');
+        $routes->post('save',       'Galery::save');
+
+        $routes->post('delete',     'Galery::delete');
     });
 });

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 16, 2025 at 04:02 PM
+-- Generation Time: Dec 17, 2025 at 09:17 AM
 -- Server version: 8.0.30
--- PHP Version: 7.4.29
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,14 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `banners` (
   `id` int UNSIGNED NOT NULL,
-  `title` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `subtitle` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `button_text` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `button_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'file gambar utama banner',
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `subtitle` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `button_text` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `button_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'file gambar utama banner',
   `position` int NOT NULL DEFAULT '1' COMMENT 'urutan tampil',
-  `status` enum('active','inactive') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active',
+  `status` enum('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
@@ -57,8 +57,8 @@ INSERT INTO `banners` (`id`, `title`, `subtitle`, `description`, `button_text`, 
 
 CREATE TABLE `dusun` (
   `id` int UNSIGNED NOT NULL,
-  `nama_dusun` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_dusun` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_dusun` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `kode_dusun` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -78,15 +78,42 @@ INSERT INTO `dusun` (`id`, `nama_dusun`, `kode_dusun`, `is_active`, `created_at`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `galery`
+--
+
+CREATE TABLE `galery` (
+  `id` bigint UNSIGNED NOT NULL,
+  `judul` varchar(200) DEFAULT NULL,
+  `caption` text,
+  `file_path` varchar(255) NOT NULL,
+  `mime` varchar(80) DEFAULT NULL,
+  `ukuran` bigint UNSIGNED DEFAULT NULL,
+  `urut` int NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `galery`
+--
+
+INSERT INTO `galery` (`id`, `judul`, `caption`, `file_path`, `mime`, `ukuran`, `urut`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '4234', '2432', 'galery/1765962700_6477ba0f2f10806449fb.jpeg', 'image/jpeg', 445195, 1, 1, '2025-12-17 09:11:40', '2025-12-17 09:17:13', '2025-12-17 09:17:13');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jam_pelayanan`
 --
 
 CREATE TABLE `jam_pelayanan` (
   `id` int UNSIGNED NOT NULL,
-  `hari` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `jam_mulai` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `jam_selesai` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `keterangan` text COLLATE utf8mb4_general_ci,
+  `hari` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `jam_mulai` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jam_selesai` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
@@ -107,12 +134,12 @@ INSERT INTO `jam_pelayanan` (`id`, `hari`, `jam_mulai`, `jam_selesai`, `keterang
 
 CREATE TABLE `kontak_desa` (
   `id` int UNSIGNED NOT NULL,
-  `alamat` text COLLATE utf8mb4_general_ci,
-  `telepon` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `whatsapp` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Nomor WA format internasional, contoh: 628xxxxxxxxxx',
-  `email` varchar(120) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `website` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `link_maps` text COLLATE utf8mb4_general_ci COMMENT 'URL Google Maps / embed link',
+  `alamat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `telepon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `whatsapp` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Nomor WA format internasional, contoh: 628xxxxxxxxxx',
+  `email` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `website` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `link_maps` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT 'URL Google Maps / embed link',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
@@ -133,8 +160,8 @@ INSERT INTO `kontak_desa` (`id`, `alamat`, `telepon`, `whatsapp`, `email`, `webs
 
 CREATE TABLE `master_agama` (
   `id` int UNSIGNED NOT NULL,
-  `nama_agama` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_agama` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_agama` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `kode_agama` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `urut` int NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1=aktif,0=nonaktif',
   `created_at` datetime DEFAULT NULL,
@@ -162,8 +189,8 @@ INSERT INTO `master_agama` (`id`, `nama_agama`, `kode_agama`, `urut`, `is_active
 
 CREATE TABLE `master_jabatan` (
   `id` int UNSIGNED NOT NULL,
-  `nama_jabatan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_jabatan` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_jabatan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `kode_jabatan` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `urut` int NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
@@ -195,8 +222,8 @@ INSERT INTO `master_jabatan` (`id`, `nama_jabatan`, `kode_jabatan`, `urut`, `is_
 
 CREATE TABLE `master_pekerjaan` (
   `id` int UNSIGNED NOT NULL,
-  `nama_pekerjaan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_pekerjaan` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_pekerjaan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `kode_pekerjaan` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `urut` tinyint UNSIGNED NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
@@ -229,8 +256,8 @@ INSERT INTO `master_pekerjaan` (`id`, `nama_pekerjaan`, `kode_pekerjaan`, `urut`
 
 CREATE TABLE `master_pendidikan` (
   `id` int UNSIGNED NOT NULL,
-  `nama_pendidikan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_pendidikan` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_pendidikan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `kode_pendidikan` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `urut` tinyint UNSIGNED NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
@@ -262,10 +289,10 @@ INSERT INTO `master_pendidikan` (`id`, `nama_pendidikan`, `kode_pendidikan`, `ur
 
 CREATE TABLE `migrations` (
   `id` bigint UNSIGNED NOT NULL,
-  `version` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `class` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `group` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `namespace` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `class` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `group` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `namespace` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `time` int NOT NULL,
   `batch` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -301,11 +328,11 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 
 CREATE TABLE `news` (
   `id` int UNSIGNED NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_general_ci NOT NULL,
-  `content` longtext COLLATE utf8mb4_general_ci,
-  `status` enum('published','draft') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'published',
-  `cover_image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `slug` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `status` enum('published','draft') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'published',
+  `cover_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
@@ -330,10 +357,10 @@ INSERT INTO `news` (`id`, `slug`, `title`, `content`, `status`, `cover_image`, `
 
 CREATE TABLE `pages` (
   `id` int UNSIGNED NOT NULL,
-  `slug` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `content` text COLLATE utf8mb4_general_ci,
-  `status` varchar(20) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'published',
+  `slug` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'published',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
@@ -360,27 +387,27 @@ INSERT INTO `pages` (`id`, `slug`, `title`, `content`, `status`, `created_at`, `
 
 CREATE TABLE `penduduk` (
   `id` int UNSIGNED NOT NULL,
-  `nik` char(16) COLLATE utf8mb4_general_ci NOT NULL,
-  `no_kk` char(16) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nama_lengkap` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `jenis_kelamin` enum('L','P') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'L',
-  `tempat_lahir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nik` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `no_kk` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_lengkap` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `jenis_kelamin` enum('L','P') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'L',
+  `tempat_lahir` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `golongan_darah` enum('A','B','AB','O','-') COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `golongan_darah` enum('A','B','AB','O','-') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `agama_id` int DEFAULT NULL,
-  `status_perkawinan` enum('Belum Kawin','Kawin','Cerai Hidup','Cerai Mati') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Belum Kawin',
+  `status_perkawinan` enum('Belum Kawin','Kawin','Cerai Hidup','Cerai Mati') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Belum Kawin',
   `pendidikan_id` int UNSIGNED DEFAULT NULL,
   `pekerjaan_id` int UNSIGNED DEFAULT NULL,
-  `kewarganegaraan` varchar(50) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'WNI',
-  `status_penduduk` enum('Tetap','Pendatang') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Tetap',
-  `status_dasar` enum('Hidup','Meninggal','Pindah','Hilang') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Hidup',
+  `kewarganegaraan` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'WNI',
+  `status_penduduk` enum('Tetap','Pendatang') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Tetap',
+  `status_dasar` enum('Hidup','Meninggal','Pindah','Hilang') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Hidup',
   `rt_id` int UNSIGNED DEFAULT NULL,
-  `alamat` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `desa` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `kecamatan` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `no_hp` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ktp_file` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `alamat` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `desa` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `kecamatan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `no_hp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ktp_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -413,18 +440,18 @@ INSERT INTO `penduduk` (`id`, `nik`, `no_kk`, `nama_lengkap`, `jenis_kelamin`, `
 
 CREATE TABLE `perangkat_desa` (
   `id` int UNSIGNED NOT NULL,
-  `nama` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `nip` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nik` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `jenis_kelamin` char(1) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nik` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jenis_kelamin` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `jabatan_id` int UNSIGNED DEFAULT NULL,
   `pendidikan_id` int UNSIGNED DEFAULT NULL,
   `tmt_jabatan` date DEFAULT NULL,
   `status_aktif` tinyint(1) NOT NULL DEFAULT '1',
-  `no_hp` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `alamat` text COLLATE utf8mb4_general_ci,
-  `foto_file` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `no_hp` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `alamat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `foto_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
@@ -466,13 +493,13 @@ CREATE TABLE `perangkat_jabatan_history` (
   `id` int UNSIGNED NOT NULL,
   `perangkat_id` int UNSIGNED NOT NULL,
   `jabatan_id` int UNSIGNED DEFAULT NULL,
-  `nama_unit` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sk_nomor` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_unit` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sk_nomor` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `sk_tanggal` date DEFAULT NULL,
   `tmt_mulai` date DEFAULT NULL,
   `tmt_selesai` date DEFAULT NULL,
-  `sk_file` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `keterangan` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sk_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `keterangan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
@@ -535,11 +562,11 @@ CREATE TABLE `perangkat_pendidikan_history` (
   `id` int UNSIGNED NOT NULL,
   `perangkat_id` int UNSIGNED NOT NULL,
   `pendidikan_id` int UNSIGNED DEFAULT NULL,
-  `nama_lembaga` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `jurusan` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_lembaga` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jurusan` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `tahun_masuk` smallint DEFAULT NULL,
   `tahun_lulus` smallint DEFAULT NULL,
-  `ijazah_file` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ijazah_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
@@ -602,7 +629,7 @@ CREATE TABLE `rt` (
   `id` int UNSIGNED NOT NULL,
   `id_dusun` int DEFAULT NULL,
   `rw_id` int UNSIGNED NOT NULL,
-  `no_rt` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
+  `no_rt` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -644,6 +671,13 @@ CREATE TABLE `rt_identitas` (
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `rt_identitas`
+--
+
+INSERT INTO `rt_identitas` (`id`, `rt_id`, `nama_ketua`, `nik_ketua`, `no_hp_ketua`, `email_ketua`, `alamat_sekretariat`, `sk_nomor`, `sk_tanggal`, `tmt_mulai`, `tmt_selesai`, `keterangan`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 7, 'ssdf', '123123123123123123', '123123123', '123123@gmail.com', '12sdfsd', 'f213', '2025-12-17', '2025-12-17', '2025-12-17', 'sdf', 1, '2025-12-17 09:00:56', '2025-12-17 09:01:36', '2025-12-17 09:01:36');
+
 -- --------------------------------------------------------
 
 --
@@ -679,9 +713,9 @@ INSERT INTO `rw` (`id`, `dusun_id`, `no_rw`, `is_active`, `created_at`, `updated
 
 CREATE TABLE `sambutan_kades` (
   `id` int UNSIGNED NOT NULL,
-  `judul` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `isi` text COLLATE utf8mb4_general_ci,
-  `foto_kades` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `judul` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `isi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `foto_kades` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
@@ -709,6 +743,15 @@ ALTER TABLE `banners`
 --
 ALTER TABLE `dusun`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `galery`
+--
+ALTER TABLE `galery`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_galery_active` (`is_active`),
+  ADD KEY `idx_galery_urut` (`urut`),
+  ADD KEY `idx_galery_created` (`created_at`);
 
 --
 -- Indexes for table `jam_pelayanan`
@@ -847,6 +890,12 @@ ALTER TABLE `dusun`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `galery`
+--
+ALTER TABLE `galery`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `jam_pelayanan`
 --
 ALTER TABLE `jam_pelayanan`
@@ -934,7 +983,7 @@ ALTER TABLE `rt`
 -- AUTO_INCREMENT for table `rt_identitas`
 --
 ALTER TABLE `rt_identitas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `rw`
