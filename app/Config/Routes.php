@@ -211,4 +211,14 @@ $routes->group('admin', [
         $routes->post('save',       'Pengguna::save');
         $routes->post('delete',     'Pengguna::delete');
     });
+
+
+    // Manajemen Menu
+    $routes->group('menu', static function ($routes) {
+        $routes->get('/',                'Menu::index');
+        $routes->post('save',            'Menu::save');
+        $routes->post('reorder',         'Menu::reorder');
+        $routes->post('toggle/(:num)',   'Menu::toggle/$1');
+        $routes->post('delete/(:num)',   'Menu::delete/$1');
+    });
 });

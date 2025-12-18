@@ -52,4 +52,44 @@
         background: rgba(148, 163, 184, .75);
         border-radius: 999px;
     }
+
+    /* Sidebar standby (nempel) + hanya menu yang scroll */
+    #sidebar {
+        position: sticky;
+        /* nempel saat konten discroll */
+        top: 0;
+        height: 100vh;
+        /* setinggi layar */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Menu yang boleh scroll */
+    #sidebar nav {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        /* scroll tidak “narik” body */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Biar brand & footer tetap terlihat */
+    #sidebar>.h-16,
+    #sidebar>.h-14 {
+        flex: 0 0 auto;
+    }
+
+    /* Scrollbar tipis (opsional) */
+    #sidebar nav::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #sidebar nav::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, .35);
+        border-radius: 999px;
+    }
+
+    .dark #sidebar nav::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, .25);
+    }
 </style>

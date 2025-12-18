@@ -8,7 +8,10 @@ $active = function ($key) use ($activeMenu) {
 };
 ?>
 
-<aside id="sidebar" class="hidden md:flex md:flex-col w-64 bg-primary-900 text-slate-100 shadow-xl dark:bg-primary-950">
+<!-- <aside id="sidebar" class="hidden md:flex md:flex-col w-64 bg-primary-900 text-slate-100 shadow-xl dark:bg-primary-950"> -->
+<aside id="sidebar"
+    class="hidden md:flex md:flex-col w-64 bg-primary-900 text-slate-100 shadow-xl
+         dark:bg-primary-950 md:sticky md:top-0 md:h-screen">
 
     <!-- Brand -->
     <div class="h-16 flex items-center px-6 border-b border-primary-700/60">
@@ -24,7 +27,9 @@ $active = function ($key) use ($activeMenu) {
     </div>
 
     <!-- MENU -->
+    <!-- <nav class="flex-1 overflow-y-auto scroll-thin py-4"> -->
     <nav class="flex-1 overflow-y-auto scroll-thin py-4">
+
         <ul class="px-3 space-y-1 text-sm">
 
             <!-- Dashboard -->

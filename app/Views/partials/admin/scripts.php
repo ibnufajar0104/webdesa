@@ -29,10 +29,10 @@
         function applyTheme(theme) {
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
-                if (themeLabel) themeLabel.textContent = 'Light';
+                if (themeLabel) themeLabel.textContent = 'Gelap';
             } else {
                 document.documentElement.classList.remove('dark');
-                if (themeLabel) themeLabel.textContent = 'Dark';
+                if (themeLabel) themeLabel.textContent = 'Terang';
             }
         }
         applyTheme(initialTheme);
