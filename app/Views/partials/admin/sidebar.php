@@ -125,9 +125,21 @@ $active = function ($key) use ($activeMenu) {
                     <span>Daftar Perangkat Desa</span>
                 </a>
             </li>
+
+            <li>
+                <a href="<?= base_url('admin/penerima-bantuan') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('penerima_bantuan') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.5 20 6v6c0 5-3.5 9-8 9s-8-4-8-9V6l8-3.5Z" />
+                            <path d="M8.5 12.5 11 15l4.5-5" />
+                        </svg>
+                    </span>
+                    <span>Penerima Bantuan</span>
+                </a>
+            </li>
             <!-- RT (Identitas) -->
             <li>
-                <a href="<?= base_url('admin/rt-identitas') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('rt-identitas') ?>">
+                <a href="<?= base_url('admin/rt-identitas') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('rt_identitas') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 20V9.5L12 4l8 5.5V20" />
@@ -231,6 +243,19 @@ $active = function ($key) use ($activeMenu) {
                         </svg>
                     </span>
                     <span>Master Jabatan</span>
+                </a>
+            </li>
+            <!-- Pengguna -->
+            <li>
+                <a href="<?= base_url('admin/pengguna') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('pengguna') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="3" />
+                            <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+                        </svg>
+                    </span>
+                    <span>Pengguna</span>
                 </a>
             </li>
 

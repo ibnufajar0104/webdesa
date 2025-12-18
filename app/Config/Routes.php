@@ -9,46 +9,51 @@ use CodeIgniter\Router\RouteCollection;
 // =======================
 // FRONT
 // =======================
-$routes->get('/', 'Home::index');
+
+// AUTH (PUBLIC)
+$routes->get('login', 'Auth::login');
+$routes->post('login', 'Auth::attempt');
+$routes->get('logout', 'Auth::logout');
+
+// (Opsional) Biar / langsung ke login atau home publik
+// $routes->get('/', 'Home::index');
+// atau:
+$routes->get('/', static fn() => redirect()->to(site_url('login')));
+
 
 // =======================
 // FILE HANDLER
 // =======================
-// routes file handler
 $routes->group('file', static function ($routes) {
-    $routes->get('pages/(:any)',    'FileHandler::pages/$1');
-    $routes->get('news/(:any)',     'FileHandler::news/$1');
-    $routes->get('banner/(:any)',   'FileHandler::banner/$1');
-    $routes->get('ktp/(:any)',      'FileHandler::ktp/$1');
+    $routes->get('pages/(:any)',     'FileHandler::pages/$1');
+    $routes->get('news/(:any)',      'FileHandler::news/$1');
+    $routes->get('banner/(:any)',    'FileHandler::banner/$1');
+    $routes->get('ktp/(:any)',       'FileHandler::ktp/$1');
     $routes->get('perangkat/(:any)', 'FileHandler::perangkat/$1');
-    $routes->get('ijazah/(:any)',   'FileHandler::ijazah/$1');
-    $routes->get('sk/(:any)',       'FileHandler::sk/$1');
-    $routes->get('galery/(:any)',       'FileHandler::galery/$1');
+    $routes->get('ijazah/(:any)',    'FileHandler::ijazah/$1');
+    $routes->get('sk/(:any)',        'FileHandler::sk/$1');
+    $routes->get('galery/(:any)',    'FileHandler::galery/$1');
 });
 
 
-
 // =======================
-// ADMIN
+// ADMIN (PROTECTED)
 // =======================
-$routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static function ($routes) {
+$routes->group('admin', [
+    'namespace' => 'App\Controllers\Admin',
+    'filter'    => 'auth',  // <-- WAJIB LOGIN
+], static function ($routes) {
 
     // DASHBOARD
     $routes->get('dashboard', 'Dashboard::index');
-
-    // =======================
-    // KONTEN SITUS
-    // =======================
 
     // Halaman Statis
     $routes->group('halaman-statis', static function ($routes) {
         $routes->get('/',             'HalamanStatis::index');
         $routes->post('datatable',    'HalamanStatis::datatable');
-
         $routes->get('create',        'HalamanStatis::create');
         $routes->get('edit/(:num)',   'HalamanStatis::edit/$1');
         $routes->post('save',         'HalamanStatis::save');
-
         $routes->post('delete',       'HalamanStatis::delete');
         $routes->post('upload-image', 'HalamanStatis::uploadImage');
     });
@@ -57,45 +62,30 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
     $routes->group('berita', static function ($routes) {
         $routes->get('/',           'Berita::index');
         $routes->post('datatable',  'Berita::datatable');
-
         $routes->get('create',      'Berita::create');
         $routes->get('edit/(:num)', 'Berita::edit/$1');
         $routes->post('save',       'Berita::save');
-
         $routes->post('delete',     'Berita::delete');
     });
 
-    // =======================
-    // DATA PENDUDUK
-    // =======================
+    // Data Penduduk
     $routes->group('data-penduduk', static function ($routes) {
         $routes->get('/',             'Penduduk::index');
         $routes->post('datatable',    'Penduduk::datatable');
-
         $routes->get('create',        'Penduduk::create');
         $routes->get('edit/(:num)',   'Penduduk::edit/$1');
         $routes->get('detail/(:num)', 'Penduduk::detail/$1');
-
         $routes->post('save',         'Penduduk::save');
         $routes->post('delete',       'Penduduk::delete');
     });
 
-    // =======================
-    // MASTER DATA
-    // =======================
-
     // Master Pendidikan
-    // =======================
-    // MASTER DATA
-    // =======================
     $routes->group('master-pendidikan', static function ($routes) {
         $routes->get('/',           'MasterPendidikan::index');
         $routes->post('datatable',  'MasterPendidikan::datatable');
         $routes->post('save',       'MasterPendidikan::save');
         $routes->post('delete',     'MasterPendidikan::delete');
     });
-
-
 
     // Master Pekerjaan
     $routes->group('master-pekerjaan', static function ($routes) {
@@ -105,7 +95,6 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('delete',     'MasterPekerjaan::delete');
     });
 
-
     // Master Agama
     $routes->group('master-agama', static function ($routes) {
         $routes->get('/',           'MasterAgama::index');
@@ -113,7 +102,6 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('save',       'MasterAgama::save');
         $routes->post('delete',     'MasterAgama::delete');
     });
-
 
     // Master Jabatan
     $routes->group('master-jabatan', static function ($routes) {
@@ -123,8 +111,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('delete',     'MasterJabatan::delete');
     });
 
-
-    // Master Jabatan
+    // Master Dusun
     $routes->group('master-dusun', static function ($routes) {
         $routes->get('/',           'MasterDusun::index');
         $routes->post('datatable',  'MasterDusun::datatable');
@@ -132,8 +119,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('delete',     'MasterDusun::delete');
     });
 
-
-    // Sambutan Kepala Desa
+    // Sambutan Kades
     $routes->group('sambutan-kades', static function ($routes) {
         $routes->get('/',      'SambutanKades::index');
         $routes->post('save',  'SambutanKades::save');
@@ -145,79 +131,84 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->post('save',  'JamPelayanan::save');
     });
 
-
+    // Kontak
     $routes->group('kontak', static function ($routes) {
         $routes->get('/',     'Kontak::index');
         $routes->post('save', 'Kontak::save');
     });
 
-
     // Banner
     $routes->group('banner', static function ($routes) {
         $routes->get('/',           'Banner::index');
         $routes->post('datatable',  'Banner::datatable');
-
         $routes->get('create',      'Banner::create');
         $routes->get('edit/(:num)', 'Banner::edit/$1');
         $routes->post('save',       'Banner::save');
-
         $routes->post('delete',     'Banner::delete');
     });
 
-
-    // =======================
-    // PERANGKAT DESA
-    // =======================
+    // Perangkat Desa
     $routes->group('perangkat-desa', static function ($routes) {
         $routes->get('/',             'PerangkatDesa::index');
         $routes->post('datatable',    'PerangkatDesa::datatable');
-
         $routes->get('create',        'PerangkatDesa::create');
         $routes->get('edit/(:num)',   'PerangkatDesa::edit/$1');
         $routes->get('detail/(:num)', 'PerangkatDesa::detail/$1');
-
         $routes->post('save',         'PerangkatDesa::save');
         $routes->post('delete',       'PerangkatDesa::delete');
-
-        // CRUD Riwayat Pendidikan
         $routes->post('pendidikan/save',   'PerangkatDesa::savePendidikanHistory');
         $routes->post('pendidikan/delete', 'PerangkatDesa::deletePendidikanHistory');
-
-        // CRUD Riwayat Jabatan
         $routes->post('jabatan/save',   'PerangkatDesa::saveJabatanHistory');
         $routes->post('jabatan/delete', 'PerangkatDesa::deleteJabatanHistory');
     });
 
-
     // Master RT
     $routes->group('master-rt', static function ($routes) {
-        $routes->get('/',           'MasterRt::index');
-        $routes->post('datatable',  'MasterRt::datatable');
-        $routes->post('save',       'MasterRt::save');
-        $routes->post('delete',     'MasterRt::delete');
+        $routes->get('/',             'MasterRt::index');
+        $routes->post('datatable',    'MasterRt::datatable');
+        $routes->post('save',         'MasterRt::save');
+        $routes->post('delete',       'MasterRt::delete');
         $routes->post('dusun-options', 'MasterRt::dusunOptions');
     });
 
-
+    // RT Identitas
     $routes->group('rt-identitas', static function ($routes) {
-        $routes->get('/', 'RtIdentitas::index');
-        $routes->post('datatable', 'RtIdentitas::datatable');
-
-        $routes->get('create', 'RtIdentitas::create');
+        $routes->get('/',           'RtIdentitas::index');
+        $routes->post('datatable',  'RtIdentitas::datatable');
+        $routes->get('create',      'RtIdentitas::create');
         $routes->get('edit/(:num)', 'RtIdentitas::edit/$1');
-        $routes->post('save', 'RtIdentitas::save');
-        $routes->post('delete', 'RtIdentitas::delete');
+        $routes->post('save',       'RtIdentitas::save');
+        $routes->post('delete',     'RtIdentitas::delete');
     });
 
     // Galery
     $routes->group('galery', static function ($routes) {
         $routes->get('/',           'Galery::index');
         $routes->post('datatable',  'Galery::datatable');
-
         $routes->get('create',      'Galery::create');
         $routes->get('edit/(:num)', 'Galery::edit/$1');
         $routes->post('save',       'Galery::save');
-
         $routes->post('delete',     'Galery::delete');
+    });
+
+    // Penerima Bantuan
+    $routes->group('penerima-bantuan', static function ($routes) {
+        $routes->get('/',              'PenerimaBantuan::index');
+        $routes->post('datatable',     'PenerimaBantuan::datatable');
+        $routes->get('create',         'PenerimaBantuan::create');
+        $routes->get('edit/(:num)',    'PenerimaBantuan::edit/$1');
+        $routes->post('save',          'PenerimaBantuan::save');
+        $routes->post('delete',        'PenerimaBantuan::delete');
+        $routes->get('penduduk-options', 'PenerimaBantuan::pendudukOptions');
+    });
+
+    // Pengguna
+    $routes->group('pengguna', static function ($routes) {
+        $routes->get('/',           'Pengguna::index');
+        $routes->post('datatable',  'Pengguna::datatable');
+        $routes->get('create',      'Pengguna::create');
+        $routes->get('edit/(:num)', 'Pengguna::edit/$1');
+        $routes->post('save',       'Pengguna::save');
+        $routes->post('delete',     'Pengguna::delete');
     });
 });

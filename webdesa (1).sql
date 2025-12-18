@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 17, 2025 at 09:17 AM
+-- Generation Time: Dec 18, 2025 at 03:43 AM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.33
 
@@ -180,6 +180,32 @@ INSERT INTO `master_agama` (`id`, `nama_agama`, `kode_agama`, `urut`, `is_active
 (4, 'Hindu', '04', 4, 1, NULL, NULL, NULL),
 (5, 'Buddha', '05', 5, 1, NULL, NULL, NULL),
 (6, 'Konghucu', '06', 6, 1, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `master_bantuan`
+--
+
+CREATE TABLE `master_bantuan` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nama_bantuan` varchar(150) NOT NULL,
+  `kode_bantuan` varchar(50) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `urut` int NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `master_bantuan`
+--
+
+INSERT INTO `master_bantuan` (`id`, `nama_bantuan`, `kode_bantuan`, `is_active`, `urut`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'BLT', '01', 1, 1, NULL, NULL, NULL),
+(2, 'BPNT', '02', 1, 2, NULL, NULL, NULL),
+(3, 'PKH', '03', 1, 3, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -435,6 +461,35 @@ INSERT INTO `penduduk` (`id`, `nik`, `no_kk`, `nama_lengkap`, `jenis_kelamin`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `penerima_bantuan`
+--
+
+CREATE TABLE `penerima_bantuan` (
+  `id` bigint UNSIGNED NOT NULL,
+  `penduduk_id` bigint UNSIGNED NOT NULL,
+  `bantuan_id` bigint UNSIGNED NOT NULL,
+  `tahun` smallint UNSIGNED NOT NULL,
+  `periode` varchar(30) DEFAULT NULL,
+  `tanggal_terima` date DEFAULT NULL,
+  `nominal` decimal(14,2) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `keterangan` text,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `penerima_bantuan`
+--
+
+INSERT INTO `penerima_bantuan` (`id`, `penduduk_id`, `bantuan_id`, `tahun`, `periode`, `tanggal_terima`, `nominal`, `status`, `keterangan`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 48, 1, 2025, NULL, NULL, NULL, 1, '', '2025-12-18 02:45:58', '2025-12-18 03:02:06', '2025-12-18 03:02:06'),
+(2, 52, 1, 2025, 'Tahap 1', '2025-12-18', NULL, 1, '', '2025-12-18 03:03:22', '2025-12-18 03:03:53', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `perangkat_desa`
 --
 
@@ -462,7 +517,7 @@ CREATE TABLE `perangkat_desa` (
 --
 
 INSERT INTO `perangkat_desa` (`id`, `nama`, `nip`, `nik`, `jenis_kelamin`, `jabatan_id`, `pendidikan_id`, `tmt_jabatan`, `status_aktif`, `no_hp`, `email`, `alamat`, `foto_file`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Perangkat Desa 1', '1980010100000001', '6371010000000001', 'L', 1, 1, '2019-01-01', 1, '08220000001', 'perangkat1@batilai.desa.id', 'Jl. Contoh No. 1, Batilai', NULL, '2025-11-20 15:42:29', '2025-11-20 15:42:29', NULL),
+(1, 'Perangkat Desa 1', '1980010100000001', '6371010000000001', 'L', 1, 1, '2019-01-01', 1, '08220000001', 'perangkat1@batilai.desa.id', 'Jl. Contoh No. 1, Batilai', 'perangkat/1766022255_3a43278d6ea3554b3e26.jpeg', '2025-11-20 15:42:29', '2025-12-18 01:44:15', NULL),
 (2, 'Perangkat Desa 2', '1980010100000002', '6371010000000002', 'P', 2, 2, '2020-01-01', 1, '08220000002', 'perangkat2@batilai.desa.id', 'Jl. Contoh No. 2, Batilai', NULL, '2025-11-20 15:42:29', '2025-11-20 15:42:29', NULL),
 (3, 'Perangkat Desa 3', '1980010100000003', '6371010000000003', 'L', 3, 3, '2021-01-01', 1, '08220000003', 'perangkat3@batilai.desa.id', 'Jl. Contoh No. 3, Batilai', NULL, '2025-11-20 15:42:29', '2025-11-20 15:42:29', NULL),
 (4, 'Perangkat Desa 4', '1980010100000004', '6371010000000004', 'P', 4, 4, '2022-01-01', 1, '08220000004', 'perangkat4@batilai.desa.id', 'Jl. Contoh No. 4, Batilai', NULL, '2025-11-20 15:42:29', '2025-11-20 15:42:29', NULL),
@@ -728,6 +783,34 @@ CREATE TABLE `sambutan_kades` (
 INSERT INTO `sambutan_kades` (`id`, `judul`, `isi`, `foto_kades`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 'Sambutan Kepala Desa Batilai', 'Assalamualaikum warahmatullahi wabarakatuh,\r\n\r\nSelamat datang di website resmi Desa Batilai. Melalui media ini kami berharap informasi terkait pemerintahan desa, pelayanan, dan kegiatan masyarakat dapat tersampaikan dengan baik kepada seluruh warga.\r\n\r\nMari bersama-sama kita bangun Desa Batilai menjadi desa yang maju, mandiri, dan sejahtera.\r\n\r\nWassalamualaikum warahmatullahi wabarakatuh.', 'kades_1763565523.png', 1, '2025-11-19 15:12:42', '2025-11-19 15:18:43');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nama` varchar(150) NOT NULL,
+  `username` varchar(60) NOT NULL,
+  `email` varchar(120) DEFAULT NULL,
+  `no_hp` varchar(30) DEFAULT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `role` varchar(30) NOT NULL DEFAULT 'admin',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `last_login_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `nama`, `username`, `email`, `no_hp`, `password_hash`, `role`, `is_active`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Administrator', 'admin@admin.com', 'admin@admin.com', '085245065929', '$2y$10$IB0FbQFRiyvlhW3oLXGCMejPSesHH3MHE9ItUYNTNX7dRWwr7jUum', 'superadmin', 1, '2025-12-18 03:39:07', '2025-12-18 03:18:20', '2025-12-18 03:39:07', NULL);
+
 --
 -- Indexes for dumped tables
 --
@@ -770,6 +853,15 @@ ALTER TABLE `kontak_desa`
 --
 ALTER TABLE `master_agama`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `master_bantuan`
+--
+ALTER TABLE `master_bantuan`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_master_bantuan_nama` (`nama_bantuan`),
+  ADD KEY `idx_master_bantuan_active` (`is_active`),
+  ADD KEY `idx_master_bantuan_urut` (`urut`);
 
 --
 -- Indexes for table `master_jabatan`
@@ -827,6 +919,17 @@ ALTER TABLE `penduduk`
   ADD KEY `status_dasar` (`status_dasar`);
 
 --
+-- Indexes for table `penerima_bantuan`
+--
+ALTER TABLE `penerima_bantuan`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_pb_unique` (`penduduk_id`,`bantuan_id`,`tahun`,`periode`),
+  ADD KEY `idx_pb_penduduk` (`penduduk_id`),
+  ADD KEY `idx_pb_bantuan` (`bantuan_id`),
+  ADD KEY `idx_pb_tahun` (`tahun`),
+  ADD KEY `idx_pb_status` (`status`);
+
+--
 -- Indexes for table `perangkat_desa`
 --
 ALTER TABLE `perangkat_desa`
@@ -874,6 +977,17 @@ ALTER TABLE `sambutan_kades`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_users_username` (`username`),
+  ADD UNIQUE KEY `uq_users_email` (`email`),
+  ADD KEY `idx_users_role` (`role`),
+  ADD KEY `idx_users_active` (`is_active`),
+  ADD KEY `idx_users_deleted` (`deleted_at`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -912,6 +1026,12 @@ ALTER TABLE `kontak_desa`
 --
 ALTER TABLE `master_agama`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `master_bantuan`
+--
+ALTER TABLE `master_bantuan`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `master_jabatan`
@@ -956,6 +1076,12 @@ ALTER TABLE `penduduk`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
+-- AUTO_INCREMENT for table `penerima_bantuan`
+--
+ALTER TABLE `penerima_bantuan`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `perangkat_desa`
 --
 ALTER TABLE `perangkat_desa`
@@ -998,6 +1124,12 @@ ALTER TABLE `sambutan_kades`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -1008,6 +1140,12 @@ ALTER TABLE `penduduk`
   ADD CONSTRAINT `penduduk_pekerjaan_id_foreign` FOREIGN KEY (`pekerjaan_id`) REFERENCES `master_pekerjaan` (`id`) ON DELETE CASCADE ON UPDATE SET NULL,
   ADD CONSTRAINT `penduduk_pendidikan_id_foreign` FOREIGN KEY (`pendidikan_id`) REFERENCES `master_pendidikan` (`id`) ON DELETE CASCADE ON UPDATE SET NULL,
   ADD CONSTRAINT `penduduk_rt_id_foreign` FOREIGN KEY (`rt_id`) REFERENCES `rt` (`id`) ON DELETE CASCADE ON UPDATE SET NULL;
+
+--
+-- Constraints for table `penerima_bantuan`
+--
+ALTER TABLE `penerima_bantuan`
+  ADD CONSTRAINT `fk_pb_bantuan` FOREIGN KEY (`bantuan_id`) REFERENCES `master_bantuan` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
 -- Constraints for table `rt`
