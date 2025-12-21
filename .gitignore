@@ -5,6 +5,8 @@
 # Environment file
 .env
 *.env
+*.zip
+*.rar
 
 # Composer vendor
 /vendor/
