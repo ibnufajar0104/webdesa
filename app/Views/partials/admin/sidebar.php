@@ -8,11 +8,16 @@ $active = function ($key) use ($activeMenu) {
 };
 ?>
 
-<!-- <aside id="sidebar" class="hidden md:flex md:flex-col w-64 bg-primary-900 text-slate-100 shadow-xl dark:bg-primary-950"> -->
-<aside id="sidebar"
-    class="hidden md:flex md:flex-col w-64 bg-primary-900 text-slate-100 shadow-xl
-         dark:bg-primary-950 md:sticky md:top-0 md:h-screen">
+<?php $sidebarId = $sidebarId ?? 'sidebar'; ?>
 
+<aside id="<?= esc($sidebarId) ?>"
+    class="fixed inset-y-0 left-0 z-50 w-72
+         bg-primary-900 text-slate-100 shadow-xl
+         transform -translate-x-full
+         transition-transform duration-200 ease-out
+         md:static md:translate-x-0 md:w-64 md:flex md:flex-col
+         md:sticky md:top-0 md:h-screen
+         dark:bg-primary-950">
     <!-- Brand -->
     <div class="h-16 flex items-center px-6 border-b border-primary-700/60">
         <div class="flex items-center gap-3">

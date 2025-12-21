@@ -16,9 +16,9 @@ $routes->post('login', 'Auth::attempt');
 $routes->get('logout', 'Auth::logout');
 
 // (Opsional) Biar / langsung ke login atau home publik
-$routes->get('/', 'Home::index');
+// $routes->get('/', 'Home::index');
 // atau:
-// $routes->get('/', static fn() => redirect()->to(site_url('login')));
+$routes->get('/', static fn() => redirect()->to(site_url('login')));
 
 
 // =======================

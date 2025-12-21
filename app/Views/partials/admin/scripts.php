@@ -1,26 +1,30 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // =========================
+        // USER DROPDOWN
+        // =========================
         const userBtn = document.getElementById('userMenuButton');
         const userMenu = document.getElementById('userMenuDropdown');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
-        const themeToggle = document.getElementById('themeToggle');
-        const themeLabel = document.getElementById('themeToggleLabel');
+
+        function closeUserMenu() {
+            if (userMenu) userMenu.classList.add('hidden');
+        }
 
         document.addEventListener('click', function(e) {
             if (!userBtn || !userMenu) return;
-            const clickInsideButton = userBtn.contains(e.target);
-            const clickInsideMenu = userMenu.contains(e.target);
 
-            if (clickInsideButton) userMenu.classList.toggle('hidden');
-            else if (!clickInsideMenu) userMenu.classList.add('hidden');
+            const insideBtn = userBtn.contains(e.target);
+            const insideMenu = userMenu.contains(e.target);
+
+            if (insideBtn) userMenu.classList.toggle('hidden');
+            else if (!insideMenu) userMenu.classList.add('hidden');
         });
 
-        if (sidebarToggle && sidebar) {
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('hidden');
-            });
-        }
+        // =========================
+        // THEME TOGGLE
+        // =========================
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLabel = document.getElementById('themeToggleLabel');
 
         const storedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -45,5 +49,72 @@
                 applyTheme(next);
             });
         }
+
+        // =========================
+        // SIDEBAR OFF-CANVAS (MOBILE) - PAKAI #sidebarMobile
+        // =========================
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarMobile = document.getElementById('sidebarMobile');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        // kalau tidak ada komponen sidebar mobile, stop tanpa bikin error
+        if (!sidebarToggle || !sidebarMobile || !overlay) return;
+
+        const mqMobile = window.matchMedia('(max-width: 767px)');
+        const mqDesktop = window.matchMedia('(min-width: 768px)');
+
+        const openSidebar = () => {
+            closeUserMenu();
+
+            sidebarMobile.classList.remove('-translate-x-full', 'opacity-0', 'pointer-events-none');
+            sidebarMobile.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
+
+            overlay.classList.remove('hidden');
+            document.documentElement.classList.add('overflow-hidden');
+        };
+
+        const closeSidebar = () => {
+            sidebarMobile.classList.add('-translate-x-full', 'opacity-0', 'pointer-events-none');
+            sidebarMobile.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
+
+            overlay.classList.add('hidden');
+            document.documentElement.classList.remove('overflow-hidden');
+        };
+
+        const isSidebarOpen = () => sidebarMobile.classList.contains('translate-x-0');
+
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (mqDesktop.matches) return; // jaga-jaga kalau tombol tampil
+            isSidebarOpen() ? closeSidebar() : openSidebar();
+        });
+
+        overlay.addEventListener('click', closeSidebar);
+
+        // klik link di menu -> tutup
+        sidebarMobile.addEventListener('click', function(e) {
+            const a = e.target.closest('a');
+            if (!a) return;
+            if (mqMobile.matches) closeSidebar();
+        });
+
+        // ESC -> tutup
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isSidebarOpen()) closeSidebar();
+        });
+
+        // sync state ketika resize / load
+        function syncSidebarState() {
+            if (mqDesktop.matches) {
+                overlay.classList.add('hidden');
+                document.documentElement.classList.remove('overflow-hidden');
+                closeSidebar(); // pastikan mobile sidebar tidak nyangkut state open
+            } else {
+                closeSidebar(); // default mobile tertutup saat load
+            }
+        }
+
+        window.addEventListener('resize', syncSidebarState);
+        syncSidebarState();
     });
 </script>

@@ -59,9 +59,9 @@
                     </span>
                     <span class="text-[10px] text-slate-400 leading-tight">Admin Web Desa</span>
                 </div>
-                <!-- <div class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-semibold shadow">
+                <div class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-semibold shadow">
                     <?= strtoupper(substr((string)(session('username') ?? 'A'), 0, 1)) ?>
-                </div> -->
+                </div>
                 <!-- Chevron -->
                 <svg class="w-3.5 h-3.5 text-slate-500 hidden sm:block" viewBox="0 0 20 20" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
