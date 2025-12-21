@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 18, 2025 at 03:43 AM
+-- Generation Time: Dec 21, 2025 at 03:40 AM
 -- Server version: 8.0.30
--- PHP Version: 7.4.33
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -310,6 +310,34 @@ INSERT INTO `master_pendidikan` (`id`, `nama_pendidikan`, `kode_pendidikan`, `ur
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `menus`
+--
+
+CREATE TABLE `menus` (
+  `id` int UNSIGNED NOT NULL,
+  `parent_id` int UNSIGNED DEFAULT NULL,
+  `label` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_header` tinyint(1) NOT NULL DEFAULT '0',
+  `sort_order` int NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `roles` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menus`
+--
+
+INSERT INTO `menus` (`id`, `parent_id`, `label`, `url`, `is_header`, `sort_order`, `is_active`, `roles`, `created_at`, `updated_at`) VALUES
+(3, NULL, 'Beranda', 'beranda', 0, 2, 1, NULL, '2025-12-21 03:09:03', '2025-12-21 03:13:55'),
+(4, NULL, 'Statistik', 'statistik', 0, 3, 1, NULL, '2025-12-21 03:09:37', '2025-12-21 03:14:24'),
+(5, NULL, 'Perangkat Desa', 'perangkatdesa', 0, 1, 1, NULL, '2025-12-21 03:13:48', '2025-12-21 03:13:55');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -344,7 +372,8 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 (14, '2025-11-20-000002', 'App\\Database\\Migrations\\CreatePerangkatPendidikanHistory', 'default', 'App', 1763650586, 13),
 (15, '2025-11-20-120000', 'App\\Database\\Migrations\\CreatePerangkatJabatanHistory', 'default', 'App', 1763652207, 14),
 (16, '2025-11-20-130000', 'App\\Database\\Migrations\\SeedDummyPerangkatDesa', 'default', 'App', 1763652848, 15),
-(17, '2025-11-20-150000', 'App\\Database\\Migrations\\ResetAndSeedPerangkatDesaDummy', 'default', 'App', 1763653349, 16);
+(17, '2025-11-20-150000', 'App\\Database\\Migrations\\ResetAndSeedPerangkatDesaDummy', 'default', 'App', 1763653349, 16),
+(18, '2025-12-18-153809', 'App\\Database\\Migrations\\CreateMenus', 'default', 'App', 1766072367, 17);
 
 -- --------------------------------------------------------
 
@@ -456,7 +485,7 @@ INSERT INTO `penduduk` (`id`, `nik`, `no_kk`, `nama_lengkap`, `jenis_kelamin`, `
 (49, '6372021016000049', '6372025016000049', 'Herman Gunawan', 'L', '', '1980-05-05', NULL, 2, 'Belum Kawin', 4, 6, 'WNI', 'Tetap', 'Hidup', 1, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:38:50', NULL),
 (52, '6372021019000052', '6372025019000052', 'Agus Maulana', 'L', '', '1991-09-17', NULL, 1, 'Belum Kawin', 6, 6, 'WNI', 'Pendatang', 'Hidup', 1, '', 'Batilai', 'Takisung', '', '', NULL, 1, '2025-11-16 15:38:50', '2025-11-16 15:39:26', NULL),
 (53, '6372021020000053', '6372025020000053', 'Mega Aprilia', 'P', '', '2003-07-18', NULL, 1, 'Belum Kawin', 4, 2, 'WNI', 'Tetap', 'Hidup', 2, '', 'Batilai', 'Takisung', '', '', NULL, 1, '2025-11-16 15:38:50', '2025-12-16 15:44:36', NULL),
-(54, '2423454745745745', '2342423454745745', 'sfd', 'L', '4234', '2025-12-16', 'A', NULL, 'Belum Kawin', NULL, NULL, 'WNI', 'Tetap', 'Hidup', NULL, '', 'Batilai', 'Pelaihari', '', '', NULL, 1, '2025-12-16 15:44:26', '2025-12-16 15:48:32', '2025-12-16 15:48:32');
+(54, '2423454745745745', '2342423454745745', 'sfd', 'L', '4234', '2025-12-16', 'A', 1, 'Belum Kawin', NULL, NULL, 'WNI', 'Tetap', 'Hidup', NULL, '', 'Batilai', 'Pelaihari', '', '', NULL, 1, '2025-12-16 15:44:26', '2025-12-16 15:48:32', '2025-12-16 15:48:32');
 
 -- --------------------------------------------------------
 
@@ -809,7 +838,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama`, `username`, `email`, `no_hp`, `password_hash`, `role`, `is_active`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Administrator', 'admin@admin.com', 'admin@admin.com', '085245065929', '$2y$10$IB0FbQFRiyvlhW3oLXGCMejPSesHH3MHE9ItUYNTNX7dRWwr7jUum', 'superadmin', 1, '2025-12-18 03:39:07', '2025-12-18 03:18:20', '2025-12-18 03:39:07', NULL);
+(1, 'Administrator', 'admin@admin.com', 'admin@admin.com', '085245065929', '$2y$10$IB0FbQFRiyvlhW3oLXGCMejPSesHH3MHE9ItUYNTNX7dRWwr7jUum', 'superadmin', 1, '2025-12-21 01:36:06', '2025-12-18 03:18:20', '2025-12-21 01:36:06', NULL),
+(2, 'Ibnu Fajar', 'ibnufajar', 'ibnufajar0104@gmail.com', '085245065929', '$2y$10$cTIB98bnxrxQAK5kosJfIeHaZxHUyFmuKPC.NtnDxDZXOrsz3NPu2', 'admin', 1, '2025-12-21 02:42:46', '2025-12-21 01:37:24', '2025-12-21 02:42:46', NULL);
 
 --
 -- Indexes for dumped tables
@@ -880,6 +910,13 @@ ALTER TABLE `master_pekerjaan`
 --
 ALTER TABLE `master_pendidikan`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menus`
+--
+ALTER TABLE `menus`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parent_id` (`parent_id`);
 
 --
 -- Indexes for table `migrations`
@@ -1052,10 +1089,16 @@ ALTER TABLE `master_pendidikan`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `menus`
+--
+ALTER TABLE `menus`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `news`
@@ -1127,7 +1170,7 @@ ALTER TABLE `sambutan_kades`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

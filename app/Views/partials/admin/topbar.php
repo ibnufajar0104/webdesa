@@ -16,7 +16,7 @@
 
         <div>
             <h1 class="text-sm md:text-base font-semibold text-slate-800 dark:text-slate-100">
-                CMS DESA BATILAI
+                CMS WEB DESA BATILAI
             </h1>
             <p class="text-xs text-slate-500 hidden sm:block dark:text-slate-400">
                 Panel manajemen konten Web Desa
@@ -55,13 +55,13 @@
                 class="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs md:text-sm shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500/60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800">
                 <div class="hidden sm:flex flex-col items-end">
                     <span class="font-medium leading-tight">
-                        <?= esc(session('user_name') ?? 'Administrator') ?>
+                        <?= esc(session('nama') ?? 'Administrator') ?>
                     </span>
                     <span class="text-[10px] text-slate-400 leading-tight">Admin Web Desa</span>
                 </div>
-                <div class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-semibold shadow">
-                    <?= strtoupper(substr((string)(session('user_name') ?? 'A'), 0, 1)) ?>
-                </div>
+                <!-- <div class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-semibold shadow">
+                    <?= strtoupper(substr((string)(session('username') ?? 'A'), 0, 1)) ?>
+                </div> -->
                 <!-- Chevron -->
                 <svg class="w-3.5 h-3.5 text-slate-500 hidden sm:block" viewBox="0 0 20 20" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -74,9 +74,9 @@
                 class="hidden absolute right-0 mt-2 w-44 origin-top-right bg-white border border-slate-200 rounded-xl shadow-lg py-1 text-xs md:text-sm z-30 dark:bg-slate-900 dark:border-slate-700">
                 <div class="px-3 py-2 border-b border-slate-100 dark:border-slate-700">
                     <p class="font-medium text-slate-800 dark:text-slate-100 truncate">
-                        <?= esc(session('user_name') ?? 'Administrator') ?>
+                        <?= esc(session('nama') ?? 'Administrator') ?>
                     </p>
-                    <p class="text-[11px] text-slate-400 dark:text-slate-500">Admin Web Desa</p>
+                    <p class="text-[11px] text-slate-400 dark:text-slate-500">Desa Batilai</p>
                 </div>
 
                 <a href="<?= base_url('admin/profile') ?>"

@@ -16,11 +16,11 @@ $active = function ($key) use ($activeMenu) {
     <!-- Brand -->
     <div class="h-16 flex items-center px-6 border-b border-primary-700/60">
         <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-md">
+            <!-- <div class="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-md">
                 <span class="text-sm font-bold tracking-tight">WD</span>
-            </div>
+            </div> -->
             <div>
-                <p class="text-sm font-semibold leading-tight">Web Desa CMS</p>
+                <p class="text-sm font-semibold leading-tight">CMS Web Desa</p>
                 <p class="text-xs text-primary-200/80">Panel Admin</p>
             </div>
         </div>
@@ -60,6 +60,21 @@ $active = function ($key) use ($activeMenu) {
                         </svg>
                     </span>
                     <span>Halaman Statis</span>
+                </a>
+            </li>
+            <!-- Manajemen Menu -->
+            <li>
+                <a href="<?= base_url('admin/menu') ?>"
+                    class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('menu') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="4" rx="1" />
+                            <rect x="3" y="10" width="18" height="4" rx="1" />
+                            <rect x="3" y="16" width="18" height="4" rx="1" />
+                        </svg>
+                    </span>
+                    <span>Manajemen Menu</span>
                 </a>
             </li>
 

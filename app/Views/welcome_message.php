@@ -1,331 +1,809 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Welcome to CodeIgniter 4!</title>
-    <meta name="description" content="The small framework with powerful features">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Desa - Portal Informasi Digital</title>
 
-    <!-- STYLES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style {csp-style-nonce}>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         * {
-            transition: background-color 300ms ease, color 300ms ease;
+            font-family: 'Poppins', sans-serif;
         }
-        *:focus {
-            background-color: rgba(221, 72, 20, .2);
-            outline: none;
+
+        /* ====== Theme: calm / minimal ====== */
+        :root {
+            --accent: #1f2937;
+            /* slate-800 */
+            --accent-2: #334155;
+            /* slate-700 */
+            --ring: rgba(15, 23, 42, .08);
+            --border: rgba(15, 23, 42, .10);
+            --shadow: 0 10px 30px rgba(2, 6, 23, .06);
         }
-        html, body {
-            color: rgba(33, 37, 41, 1);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            font-size: 16px;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 20px rgba(2, 6, 23, .04);
+            transition: transform .2s ease, box-shadow .2s ease;
         }
-        header {
-            background-color: rgba(247, 248, 249, 1);
-            padding: .4rem 0 0;
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
         }
-        .menu {
-            padding: .4rem 2rem;
+
+        .pill {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .75);
+            backdrop-filter: blur(8px);
         }
-        header ul {
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            list-style-type: none;
-            margin: 0;
+
+        /* Slider: simple fade */
+        .slider-container {
+            position: relative;
             overflow: hidden;
-            padding: 0;
-            text-align: right;
         }
-        header li {
-            display: inline-block;
-        }
-        header li a {
-            border-radius: 5px;
-            color: rgba(0, 0, 0, .5);
-            display: block;
-            height: 44px;
-            text-decoration: none;
-        }
-        header li.menu-item a {
-            border-radius: 5px;
-            margin: 5px 0;
-            height: 38px;
-            line-height: 36px;
-            padding: .4rem .65rem;
-            text-align: center;
-        }
-        header li.menu-item a:hover,
-        header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .2);
-            color: rgba(221, 72, 20, 1);
-        }
-        header .logo {
-            float: left;
-            height: 44px;
-            padding: .4rem .5rem;
-        }
-        header .menu-toggle {
+
+        .slide {
             display: none;
-            float: right;
-            font-size: 2rem;
-            font-weight: bold;
         }
-        header .menu-toggle button {
-            background-color: rgba(221, 72, 20, .6);
-            border: none;
-            border-radius: 3px;
-            color: rgba(255, 255, 255, 1);
-            cursor: pointer;
-            font: inherit;
-            font-size: 1.3rem;
-            height: 36px;
-            padding: 0;
-            margin: 11px 0;
-            overflow: visible;
-            width: 40px;
-        }
-        header .menu-toggle button:hover,
-        header .menu-toggle button:focus {
-            background-color: rgba(221, 72, 20, .8);
-            color: rgba(255, 255, 255, .8);
-        }
-        header .heroe {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 1rem 1.75rem 1.75rem 1.75rem;
-        }
-        header .heroe h1 {
-            font-size: 2.5rem;
-            font-weight: 500;
-        }
-        header .heroe h2 {
-            font-size: 1.5rem;
-            font-weight: 300;
-        }
-        section {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 2.5rem 1.75rem 3.5rem 1.75rem;
-        }
-        section h1 {
-            margin-bottom: 2.5rem;
-        }
-        section h2 {
-            font-size: 120%;
-            line-height: 2.5rem;
-            padding-top: 1.5rem;
-        }
-        section pre {
-            background-color: rgba(247, 248, 249, 1);
-            border: 1px solid rgba(242, 242, 242, 1);
+
+        .slide.active {
             display: block;
-            font-size: .9rem;
-            margin: 2rem 0;
-            padding: 1rem 1.5rem;
-            white-space: pre-wrap;
-            word-break: break-all;
+            animation: fade .6s ease;
         }
-        section code {
-            display: block;
-        }
-        section a {
-            color: rgba(221, 72, 20, 1);
-        }
-        section svg {
-            margin-bottom: -5px;
-            margin-right: 5px;
-            width: 25px;
-        }
-        .further {
-            background-color: rgba(247, 248, 249, 1);
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            border-top: 1px solid rgba(242, 242, 242, 1);
-        }
-        .further h2:first-of-type {
-            padding-top: 0;
-        }
-        .svg-stroke {
-            fill: none;
-            stroke: #000;
-            stroke-width: 32px;
-        }
-        footer {
-            background-color: rgba(221, 72, 20, .8);
-            text-align: center;
-        }
-        footer .environment {
-            color: rgba(255, 255, 255, 1);
-            padding: 2rem 1.75rem;
-        }
-        footer .copyrights {
-            background-color: rgba(62, 62, 62, 1);
-            color: rgba(200, 200, 200, 1);
-            padding: .25rem 1.75rem;
-        }
-        @media (max-width: 629px) {
-            header ul {
-                padding: 0;
+
+        @keyframes fade {
+            from {
+                opacity: 0
             }
-            header .menu-toggle {
-                padding: 0 1rem;
+
+            to {
+                opacity: 1
             }
-            header .menu-item {
-                background-color: rgba(244, 245, 246, 1);
-                border-top: 1px solid rgba(242, 242, 242, 1);
-                margin: 0 15px;
-                width: calc(100% - 30px);
-            }
-            header .menu-toggle {
-                display: block;
-            }
-            header .hidden {
-                display: none;
-            }
-            header li.menu-item a {
-                background-color: rgba(221, 72, 20, .1);
-            }
-            header li.menu-item a:hover,
-            header li.menu-item a:focus {
-                background-color: rgba(221, 72, 20, .7);
-                color: rgba(255, 255, 255, .8);
-            }
+        }
+
+        /* Button: minimal */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            padding: .9rem 1.25rem;
+            font-weight: 600;
+            transition: all .2s ease;
+            gap: .6rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(2, 6, 23, .12);
+        }
+
+        .btn-primary:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            background: #fff;
+            border: 1px solid var(--border);
+            color: #0f172a;
+        }
+
+        .btn-ghost:hover {
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        /* Dot */
+        .dot {
+            width: .6rem;
+            height: .6rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, .45);
+        }
+
+        .dot.active {
+            background: rgba(255, 255, 255, .95);
+        }
+
+        /* Navbar shadow on scroll */
+        .nav-shadow {
+            box-shadow: 0 10px 30px rgba(2, 6, 23, .08);
+        }
+
+        /* Small banner (calm) */
+        .banner-dev {
+            background: #0f172a;
+            /* slate-900 */
+            color: rgba(255, 255, 255, .92);
         }
     </style>
 </head>
-<body>
 
-<!-- HEADER: MENU + HEROE SECTION -->
-<header>
+<body class="bg-slate-50 text-slate-900">
 
-    <div class="menu">
-        <ul>
-            <li class="logo">
-                <a href="https://codeigniter.com" target="_blank">
-                    <svg role="img" aria-label="Visit CodeIgniter.com official website!" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2100 500" height="44"><path fill="#dd4814" d="M148.2 411c-20.53-9.07-34.48-28.61-36.31-50.99 1.2-23.02 13.36-44.06 32.67-56.61-3.17 7.73-2.4 16.53 2 23.6 5.01 7 13.63 10.36 22.07 8.61 12.02-3.38 19.06-15.86 15.68-27.89-1.2-4.21-3.6-8.03-6.88-10.91-13.6-11.06-20.43-28.44-18-45.81 2.33-9.2 7.42-17.52 14.61-23.8-5.4 14.4 9.83 28.61 20.05 35.6 18.14 10.88 35.6 22.84 52.32 35.81 18.27 14.4 28.23 36.94 26.67 60-4.11 24.54-21.47 44.8-45.13 52.4 47.33-10.53 96.13-48.13 97.06-101.46-.93-42.67-26.4-80.96-65.33-98.4h-1.73c.86 2.09 1.28 4.34 1.2 6.61.13-1.47.13-2.93 0-4.4.21 1.73.21 3.47 0 5.2-2.96 12.13-15.2 19.6-27.36 16.64-4.86-1.2-9.2-3.93-12.32-7.87-15.6-20 0-42.76 2.61-64.76 1.6-28.13-11.25-55.02-34.05-71.46 11.41 19.02-3.79 44-14.84 58.21-11.07 14.21-27.07 24.8-40.11 37.2-14.05 13.07-26.93 27.44-38.49 42.8-24.99 30.53-34.8 70.8-26.67 109.4 11.15 37.2 42.07 65.15 80.2 72.4h.21l-.13-.12Zm324.56-159.8q0-17.92 6.16-35.56 6.44-17.92 18.48-31.92t29.68-22.68q17.64-8.96 40.04-8.96 26.6 0 45.36 12.04 19.04 12.04 28 31.36l-15.4 9.52q-4.76-9.8-11.76-16.52-6.72-6.72-14.56-10.92-7.84-4.2-16.24-5.88-8.4-1.96-16.52-1.96-17.92 0-31.64 7.28-13.72 7.28-23.24 19.04-9.24 11.76-14 26.6-4.76 14.56-4.76 29.68 0 16.52 5.6 31.64 5.88 15.12 15.68 26.88 10.08 11.48 23.52 18.48 13.72 6.72 29.68 6.72 8.4 0 17.08-1.96 8.96-2.24 17.08-6.72 8.4-4.76 15.4-11.48 7-7 11.76-16.8l16.24 8.4q-4.76 11.2-13.44 19.88-8.68 8.4-19.32 14.28-10.64 5.88-22.68 8.96-11.76 3.08-23.24 3.08-20.44 0-37.52-8.96-17.08-8.96-29.4-23.24-12.32-14.56-19.32-32.76-6.72-18.48-6.72-37.52Zm263.48 103.6q-15.96 0-29.12-5.88-13.16-6.16-22.96-16.52-9.52-10.36-14.84-24.08Q664 294.6 664 279.48q0-15.4 5.32-29.12 5.6-13.72 15.12-24.08 9.8-10.36 22.96-16.52t28.84-6.16q15.68 0 28.84 6.16 13.44 6.16 22.96 16.52 9.8 10.36 15.12 24.08 5.6 13.72 5.6 29.12 0 15.12-5.32 28.84t-15.12 24.08q-9.52 10.36-22.96 16.52-13.16 5.88-29.12 5.88Zm-52.92-75.04q0 12.32 4.2 22.96 4.2 10.36 11.2 18.48 7.28 7.84 16.8 12.32 9.8 4.48 20.72 4.48 10.92 0 20.44-4.48 9.8-4.76 17.08-12.6 7.28-8.12 11.48-18.76 4.2-10.64 4.2-22.96 0-12.04-4.2-22.68-4.2-10.92-11.48-18.76-7.28-8.12-17.08-12.6-9.52-4.76-20.44-4.76-10.92 0-20.44 4.76-9.52 4.48-16.8 12.6-7.28 8.12-11.48 19.04-4.2 10.64-4.2 22.96ZM900.6 354.8q-15.12 0-28-6.16-12.88-6.44-22.12-16.8t-14.56-23.8q-5.04-13.72-5.04-28.56 0-15.4 5.04-29.12 5.04-14 13.72-24.36 8.96-10.36 21-16.24 12.32-6.16 26.88-6.16 18.48 0 32.76 9.8 14.28 9.52 22.4 23.24V147.6h19.04v179.76q0 7.84 6.72 7.84V352q-4.2.84-6.72.84-6.72 0-11.76-4.2-5.04-4.48-5.04-10.64v-14.28Q946.24 338 931.4 346.4t-30.8 8.4Zm4.2-16.8q7 0 14.84-2.8 8.12-2.8 15.12-7.56 7-5.04 11.76-11.48 5.04-6.72 6.16-14.28V256.8q-2.8-7.56-8.12-14-5.32-6.72-12.32-11.76-6.72-5.04-14.56-7.84-7.84-2.8-15.4-2.8-11.76 0-21.28 5.04-9.52 5.04-16.52 13.44-6.72 8.12-10.36 18.76-3.64 10.64-3.64 21.84 0 11.76 4.2 22.4 4.2 10.64 11.48 18.76 7.28 7.84 17.08 12.6Q893.32 338 904.8 338Zm173.04 16.8q-15.96 0-29.4-5.88-13.16-6.16-22.96-16.52-9.8-10.64-15.4-24.36-5.32-13.72-5.32-29.4 0-15.4 5.32-28.84 5.6-13.72 15.12-23.8 9.8-10.36 23.24-16.24 13.44-6.16 29.12-6.16 15.96 0 29.12 6.16 13.44 5.88 22.96 16.24 9.52 10.36 14.84 23.8 5.32 13.44 5.32 28.56v4.48q0 2.24-.28 3.08h-124.88q.84 11.76 5.32 21.84 4.76 9.8 12.04 17.08 7.28 7.28 16.52 11.48 9.52 3.92 20.16 3.92 7 0 14-1.96t12.88-5.32q5.88-3.36 10.64-8.12 4.76-5.04 7.28-10.92l16.52 4.48q-3.36 8.12-9.52 14.84-6.16 6.44-14.28 11.48-8.12 4.76-17.92 7.56-9.8 2.52-20.44 2.52Zm-53.48-83.44h107.24q-.84-11.76-5.6-21.28-4.48-9.8-11.76-16.8-7-7-16.52-10.92-9.24-3.92-19.88-3.92-10.64 0-20.16 3.92t-16.8 10.92q-7 7-11.48 16.8-4.2 9.8-5.04 21.28Zm193.2 80.64h-38.64V153.2h38.64V352Zm93.52.84q-14.84 0-26.88-5.88t-21-15.96q-8.68-10.36-13.44-23.8-4.76-13.44-4.76-28.56 0-15.96 5.04-29.68 5.04-13.72 14-24.08 8.96-10.36 21.56-16.24 12.6-5.88 27.72-5.88 17.08 0 29.96 7.84 12.88 7.56 21.28 20.44v-25.76h32.76V345q0 16.24-6.16 29.12-6.16 12.88-17.08 21.84-10.64 8.96-25.76 13.72-14.84 4.76-32.48 4.76-24.08 0-40.6-7.84-16.24-8.12-28-22.68l20.44-19.88q8.4 10.36 21 16.24 12.88 5.88 27.16 5.88 8.68 0 16.52-2.24 8.12-2.52 14.28-7.56 6.16-5.04 9.52-12.88 3.64-7.84 3.64-18.48v-18.48q-7.28 12.6-20.44 19.6-13.16 6.72-28.28 6.72Zm12.6-29.96q6.16 0 11.76-1.96t10.36-5.32q4.76-3.36 8.4-7.84 3.64-4.48 5.6-9.52v-35q-5.04-12.88-15.96-20.72-10.64-7.84-22.4-7.84-8.68 0-15.68 3.92-7 3.64-12.04 10.08-5.04 6.16-7.84 14.28-2.52 8.12-2.52 16.8 0 8.96 3.08 16.8t8.4 13.72q5.6 5.88 12.88 9.24 7.28 3.36 15.96 3.36Zm243.88-62.44V352h-37.52v-82.32q0-17.64-6.16-25.76-6.16-8.12-17.08-8.12-5.6 0-11.48 2.24-5.88 2.24-11.2 6.44-5.04 3.92-9.24 9.52t-6.16 12.32V352h-37.52V205.28h33.88v27.16q8.12-14 23.52-21.84t34.72-7.84q13.72 0 22.4 5.04 8.68 5.04 13.44 13.16 4.76 8.12 6.44 18.48 1.96 10.36 1.96 21Zm70.28 91.56h-37.52V205.28h37.52V352Zm0-167.16h-37.52V147.6h37.52v37.24Zm114.24 129.92 7.56 29.68q-7.56 3.36-18.48 6.72-10.92 3.36-22.96 3.36-7.84 0-14.84-1.96-6.72-1.96-12.04-6.16-5.04-4.48-8.12-11.2-3.08-7-3.08-16.8v-84.28h-19.32v-28.84h19.32v-47.6h37.52v47.6h30.8v28.84h-30.8v71.68q0 7.84 3.92 11.2 4.2 3.08 10.08 3.08t11.48-1.96q5.6-1.96 8.96-3.36Zm91.56 40.04q-17.64 0-31.92-5.88-14.28-6.16-24.36-16.52t-15.68-24.08q-5.32-13.72-5.32-28.84 0-15.68 5.32-29.4 5.32-14 15.4-24.36 10.08-10.64 24.36-16.8 14.56-6.16 32.48-6.16 17.92 0 31.92 6.16 14.28 6.16 24.08 16.52 10.08 10.36 15.12 24.08 5.32 13.72 5.32 28.56 0 3.64-.28 7 0 3.36-.56 5.6h-113.4q.84 8.68 4.2 15.4 3.36 6.72 8.68 11.48 5.32 4.76 12.04 7.28 6.72 2.52 14 2.52 11.2 0 21-5.32 10.08-5.6 13.72-14.56l32.2 8.96q-8.12 16.8-26.04 27.72-17.64 10.64-42.28 10.64Zm-38.08-88.48h76.16q-1.4-16.52-12.32-26.32-10.64-10.08-26.04-10.08-7.56 0-14.28 2.8-6.44 2.52-11.48 7.28t-8.4 11.48q-3.08 6.72-3.64 14.84Zm225.12-62.72v34.16q-17.08.28-30.52 6.72-13.44 6.16-19.32 18.76V352h-37.52V205.28h34.44v31.36q3.92-7.56 9.24-13.44 5.32-6.16 11.48-10.64t12.32-6.72q6.44-2.52 12.32-2.52h4.48q1.68 0 3.08.28Z"/></svg>
-                </a>
-            </li>
-            <li class="menu-toggle">
-                <button id="menuToggle">&#9776;</button>
-            </li>
-            <li class="menu-item hidden"><a href="#">Home</a></li>
-            <li class="menu-item hidden"><a href="https://codeigniter.com/user_guide/" target="_blank">Docs</a>
-            </li>
-            <li class="menu-item hidden"><a href="https://forum.codeigniter.com/" target="_blank">Community</a></li>
-            <li class="menu-item hidden"><a
-                    href="https://codeigniter.com/contribute" target="_blank">Contribute</a>
-            </li>
-        </ul>
+    <!-- Calm Dev Banner -->
+    <div class="banner-dev py-2 text-center text-xs md:text-sm fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4">
+            <i class="fas fa-circle-info mr-2"></i>
+            Website masih tahap pengembangan — data bersifat contoh/percobaan.
+        </div>
     </div>
 
-    <div class="heroe">
+    <!-- Navbar (minimal) -->
+    <nav class="bg-white/90 backdrop-blur border-b border-slate-200 fixed w-full top-9 z-40 transition-all" id="navbar">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
+                        DS
+                    </div>
+                    <div class="leading-tight">
+                        <h1 class="text-lg md:text-xl font-bold text-slate-900">Desa Sejahtera</h1>
+                        <p class="text-xs text-slate-500">Portal Informasi Digital</p>
+                    </div>
+                </div>
 
-        <h1>Welcome to CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?></h1>
+                <div class="hidden lg:flex items-center gap-7 text-sm">
+                    <a class="text-slate-600 hover:text-slate-900 transition" href="#beranda">Beranda</a>
+                    <a class="text-slate-600 hover:text-slate-900 transition" href="#statistik">Statistik</a>
+                    <a class="text-slate-600 hover:text-slate-900 transition" href="#perangkat">Perangkat</a>
+                    <a class="text-slate-600 hover:text-slate-900 transition" href="#berita">Berita</a>
+                    <a class="text-slate-600 hover:text-slate-900 transition" href="#galeri">Galeri</a>
+                    <a class="btn btn-primary" href="#kontak">
+                        Kontak
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
 
-        <h2>The small framework with powerful features</h2>
+                <button class="lg:hidden text-slate-800">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-    </div>
+    <!-- Hero Slider (neutral overlay) -->
+    <section id="beranda" class="mt-24 slider-container">
+        <!-- Slide 1 -->
+        <div class="slide active relative h-[86vh] md:h-screen">
+            <img src="https://images.unsplash.com/photo-1500076656116-558758c991c1?w=1920" class="w-full h-full object-cover" alt="Slide 1">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/20"></div>
 
-</header>
+            <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-6">
+                    <div class="max-w-3xl">
+                        <div class="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full pill text-white/90 bg-white/10 border border-white/20">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="text-sm">Kecamatan Makmur, Kabupaten Jaya</span>
+                        </div>
 
-<!-- CONTENT -->
+                        <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight">
+                            Selamat Datang di<br>
+                            <span class="text-white/90">Desa Sejahtera</span>
+                        </h1>
+                        <p class="mt-5 text-base md:text-lg text-white/80 leading-relaxed max-w-2xl">
+                            Portal informasi dan layanan desa yang rapi, mudah diakses, dan transparan untuk warga.
+                        </p>
 
-<section>
+                        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                            <a href="#statistik" class="btn btn-primary">
+                                Jelajahi
+                                <i class="fas fa-arrow-down text-xs"></i>
+                            </a>
+                            <a href="#kontak" class="btn btn-ghost">
+                                <i class="fas fa-phone text-xs"></i>
+                                Hubungi
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <h1>About this page</h1>
+        <!-- Slide 2 -->
+        <div class="slide relative h-[86vh] md:h-screen">
+            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920" class="w-full h-full object-cover" alt="Slide 2">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/20"></div>
 
-    <p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
+            <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-6">
+                    <div class="max-w-3xl">
+                        <div class="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full pill text-white/90 bg-white/10 border border-white/20">
+                            <i class="fas fa-leaf"></i>
+                            <span class="text-sm">Lingkungan Hijau & Asri</span>
+                        </div>
+                        <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight">
+                            Desa Asri<br>
+                            <span class="text-white/90">Lingkungan Bersih</span>
+                        </h2>
+                        <p class="mt-5 text-base md:text-lg text-white/80 leading-relaxed max-w-2xl">
+                            Program kebersihan, penghijauan, dan gotong royong untuk kualitas hidup yang lebih baik.
+                        </p>
+                        <div class="mt-8">
+                            <a href="#galeri" class="btn btn-primary">
+                                Lihat Galeri
+                                <i class="fas fa-images text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <p>If you would like to edit this page you will find it located at:</p>
+        <!-- Slide 3 -->
+        <div class="slide relative h-[86vh] md:h-screen">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920" class="w-full h-full object-cover" alt="Slide 3">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/20"></div>
 
-    <pre><code>app/Views/welcome_message.php</code></pre>
+            <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-6">
+                    <div class="max-w-3xl">
+                        <div class="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full pill text-white/90 bg-white/10 border border-white/20">
+                            <i class="fas fa-hands-helping"></i>
+                            <span class="text-sm">Pelayanan & Administrasi</span>
+                        </div>
+                        <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight">
+                            Pelayanan Prima<br>
+                            <span class="text-white/90">Untuk Warga</span>
+                        </h2>
+                        <p class="mt-5 text-base md:text-lg text-white/80 leading-relaxed max-w-2xl">
+                            Informasi layanan desa, jam operasional, dan kontak yang jelas dan mudah ditemukan.
+                        </p>
+                        <div class="mt-8">
+                            <a href="#kontak" class="btn btn-primary">
+                                Layanan & Kontak
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <p>The corresponding controller for this page can be found at:</p>
+        <!-- Controls -->
+        <button onclick="changeSlide(-1)" class="absolute left-6 top-1/2 -translate-y-1/2 bg-white/15 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur border border-white/20">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button onclick="changeSlide(1)" class="absolute right-6 top-1/2 -translate-y-1/2 bg-white/15 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur border border-white/20">
+            <i class="fas fa-chevron-right"></i>
+        </button>
 
-    <pre><code>app/Controllers/Home.php</code></pre>
-
-</section>
-
-<div class="further">
-
-    <section>
-
-        <h1>Go further</h1>
-
-        <h2>
-            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect x='32' y='96' width='64' height='368' rx='16' ry='16' class="svg-stroke" /><line x1='112' y1='224' x2='240' y2='224' class="svg-stroke" /><line x1='112' y1='400' x2='240' y2='400' class="svg-stroke" /><rect x='112' y='160' width='128' height='304' rx='16' ry='16' class="svg-stroke" /><rect x='256' y='48' width='96' height='416' rx='16' ry='16' class="svg-stroke" /><path d='M422.46,96.11l-40.4,4.25c-11.12,1.17-19.18,11.57-17.93,23.1l34.92,321.59c1.26,11.53,11.37,20,22.49,18.84l40.4-4.25c11.12-1.17,19.18-11.57,17.93-23.1L445,115C443.69,103.42,433.58,94.94,422.46,96.11Z' class="svg-stroke"/></svg>
-            Learn
-        </h2>
-
-        <p>The User Guide contains an introduction, tutorial, a number of "how to"
-            guides, and then reference documentation for the components that make up
-            the framework. Check the <a href="https://codeigniter.com/user_guide/"
-            target="_blank">User Guide</a> !</p>
-
-        <h2>
-            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M431,320.6c-1-3.6,1.2-8.6,3.3-12.2a33.68,33.68,0,0,1,2.1-3.1A162,162,0,0,0,464,215c.3-92.2-77.5-167-173.7-167C206.4,48,136.4,105.1,120,180.9a160.7,160.7,0,0,0-3.7,34.2c0,92.3,74.8,169.1,171,169.1,15.3,0,35.9-4.6,47.2-7.7s22.5-7.2,25.4-8.3a26.44,26.44,0,0,1,9.3-1.7,26,26,0,0,1,10.1,2L436,388.6a13.52,13.52,0,0,0,3.9,1,8,8,0,0,0,8-8,12.85,12.85,0,0,0-.5-2.7Z' class="svg-stroke" /><path d='M66.46,232a146.23,146.23,0,0,0,6.39,152.67c2.31,3.49,3.61,6.19,3.21,8s-11.93,61.87-11.93,61.87a8,8,0,0,0,2.71,7.68A8.17,8.17,0,0,0,72,464a7.26,7.26,0,0,0,2.91-.6l56.21-22a15.7,15.7,0,0,1,12,.2c18.94,7.38,39.88,12,60.83,12A159.21,159.21,0,0,0,284,432.11' class="svg-stroke" /></svg>
-            Discuss
-        </h2>
-
-        <p>CodeIgniter is a community-developed open source project, with several
-             venues for the community members to gather and exchange ideas. View all
-             the threads on <a href="https://forum.codeigniter.com/"
-             target="_blank">CodeIgniter's forum</a>, or <a href="https://join.slack.com/t/codeigniterchat/shared_invite/zt-rl30zw00-obL1Hr1q1ATvkzVkFp8S0Q"
-             target="_blank">chat on Slack</a> !</p>
-
-        <h2>
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><line x1='176' y1='48' x2='336' y2='48' class="svg-stroke" /><line x1='118' y1='304' x2='394' y2='304' class="svg-stroke" /><path d='M208,48v93.48a64.09,64.09,0,0,1-9.88,34.18L73.21,373.49C48.4,412.78,76.63,464,123.08,464H388.92c46.45,0,74.68-51.22,49.87-90.51L313.87,175.66A64.09,64.09,0,0,1,304,141.48V48' class="svg-stroke" /></svg>
-             Contribute
-        </h2>
-
-        <p>CodeIgniter is a community driven project and accepts contributions
-             of code and documentation from the community. Why not
-             <a href="https://codeigniter.com/contribute" target="_blank">
-             join us</a> ?</p>
-
+        <div class="absolute bottom-7 left-1/2 -translate-x-1/2 flex gap-2">
+            <button onclick="goToSlide(0)" class="dot slide-dot"></button>
+            <button onclick="goToSlide(1)" class="dot slide-dot"></button>
+            <button onclick="goToSlide(2)" class="dot slide-dot"></button>
+        </div>
     </section>
 
-</div>
+    <!-- Statistik (minimal cards) -->
+    <section id="statistik" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-700 text-sm font-semibold">
+                    Data Terkini
+                </span>
+                <h2 class="mt-4 text-3xl md:text-5xl font-bold text-slate-900">Statistik Penduduk</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
+                    Ringkasan demografi untuk mendukung perencanaan pembangunan.
+                </p>
+            </div>
 
-<!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="text-xs text-slate-500">Update: hari ini</span>
+                    </div>
+                    <div class="mt-5 text-3xl font-bold text-slate-900">5,432</div>
+                    <div class="text-slate-600 mt-1">Total Penduduk</div>
+                    <div class="mt-4 text-xs text-slate-500">+2.5% dari tahun lalu</div>
+                </div>
 
-<footer>
-    <div class="environment">
+                <div class="card p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center border border-slate-200">
+                            <i class="fas fa-male"></i>
+                        </div>
+                        <span class="text-xs text-slate-500">Proporsi</span>
+                    </div>
+                    <div class="mt-5 text-3xl font-bold text-slate-900">2,718</div>
+                    <div class="text-slate-600 mt-1">Laki-laki</div>
+                    <div class="mt-4 text-xs text-slate-500">50.04%</div>
+                </div>
 
-        <p>Page rendered in {elapsed_time} seconds using {memory_usage} MB of memory.</p>
+                <div class="card p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center border border-slate-200">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <span class="text-xs text-slate-500">Proporsi</span>
+                    </div>
+                    <div class="mt-5 text-3xl font-bold text-slate-900">2,714</div>
+                    <div class="text-slate-600 mt-1">Perempuan</div>
+                    <div class="mt-4 text-xs text-slate-500">49.96%</div>
+                </div>
 
-        <p>Environment: <?= ENVIRONMENT ?></p>
+                <div class="card p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center border border-slate-200">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <span class="text-xs text-slate-500">Status</span>
+                    </div>
+                    <div class="mt-5 text-3xl font-bold text-slate-900">1,452</div>
+                    <div class="text-slate-600 mt-1">Kepala Keluarga</div>
+                    <div class="mt-4 text-xs text-slate-500">Data terverifikasi</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    </div>
+    <!-- Perangkat Desa (tone down badges) -->
+    <section id="perangkat" class="py-20 bg-white border-y border-slate-200">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">
+                    Tim Kami
+                </span>
+                <h2 class="mt-4 text-3xl md:text-5xl font-bold">Perangkat Desa</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Struktur organisasi pemerintahan desa.</p>
+            </div>
 
-    <div class="copyrights">
+            <div class="relative">
+                <div id="perangkatSlider" class="flex transition-transform duration-700 ease-in-out">
+                    <!-- Slide 1 -->
+                    <div class="min-w-full px-2">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="card p-6 text-center">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" class="w-28 h-28 rounded-full mx-auto object-cover border border-slate-200" alt="Kepala Desa">
+                                <h3 class="mt-4 font-bold text-lg">Budi Santoso, S.Sos</h3>
+                                <p class="text-slate-600 text-sm">Kepala Desa</p>
+                                <div class="mt-4 inline-flex items-center gap-2 text-xs text-slate-600 px-3 py-2 rounded-full border border-slate-200 bg-slate-50">
+                                    <i class="fas fa-calendar-alt"></i><span>Periode 2019–2025</span>
+                                </div>
+                            </div>
 
-        <p>&copy; <?= date('Y') ?> CodeIgniter Foundation. CodeIgniter is open source project released under the MIT
-            open source licence.</p>
+                            <div class="card p-6 text-center">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400" class="w-28 h-28 rounded-full mx-auto object-cover border border-slate-200" alt="Sekretaris">
+                                <h3 class="mt-4 font-bold text-lg">Siti Aminah, S.AP</h3>
+                                <p class="text-slate-600 text-sm">Sekretaris Desa</p>
+                                <div class="mt-4 flex justify-center gap-2">
+                                    <span class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Administrasi</span>
+                                    <span class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Keuangan</span>
+                                </div>
+                            </div>
 
-    </div>
+                            <div class="card p-6 text-center">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400" class="w-28 h-28 rounded-full mx-auto object-cover border border-slate-200" alt="Bendahara">
+                                <h3 class="mt-4 font-bold text-lg">Ahmad Wijaya, SE</h3>
+                                <p class="text-slate-600 text-sm">Bendahara Desa</p>
+                                <div class="mt-4 flex justify-center gap-2">
+                                    <span class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Keuangan</span>
+                                    <span class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Pelaporan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-</footer>
+                    <!-- Slide 2 -->
+                    <div class="min-w-full px-2">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="card p-6 text-center">
+                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400" class="w-28 h-28 rounded-full mx-auto object-cover border border-slate-200" alt="Kaur">
+                                <h3 class="mt-4 font-bold text-lg">Dedi Kusuma, ST</h3>
+                                <p class="text-slate-600 text-sm">Kaur Pembangunan</p>
+                                <div class="mt-4">
+                                    <span class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Infrastruktur</span>
+                                </div>
+                            </div>
 
-<!-- SCRIPTS -->
+                            <div class="card p-6 text-center">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400" class="w-28 h-28 rounded-full mx-auto object-cover border border-slate-200" alt="Kaur">
+                                <h3 class="mt-4 font-bold text-lg">Rina Lestari, S.Sos</h3>
+                                <p class="text-slate-600 text-sm">Kaur Kesejahteraan</p>
+                                <div class="mt-4">
+                                    <span class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Sosial</span>
+                                </div>
+                            </div>
 
-<script {csp-script-nonce}>
-    document.getElementById("menuToggle").addEventListener('click', toggleMenu);
-    function toggleMenu() {
-        var menuItems = document.getElementsByClassName('menu-item');
-        for (var i = 0; i < menuItems.length; i++) {
-            var menuItem = menuItems[i];
-            menuItem.classList.toggle("hidden");
+                            <div class="card p-6 text-center">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400" class="w-28 h-28 rounded-full mx-auto object-cover border border-slate-200" alt="Kasi">
+                                <h3 class="mt-4 font-bold text-lg">Eko Prasetyo, S.IP</h3>
+                                <p class="text-slate-600 text-sm">Kasi Pemerintahan</p>
+                                <div class="mt-4">
+                                    <span class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700">Pemerintahan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="changePerangkatSlide(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white border border-slate-200 shadow-sm hover:shadow p-3 rounded-full">
+                    <i class="fas fa-chevron-left text-slate-700"></i>
+                </button>
+                <button onclick="changePerangkatSlide(1)" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-slate-200 shadow-sm hover:shadow p-3 rounded-full">
+                    <i class="fas fa-chevron-right text-slate-700"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Berita (no category colors) -->
+    <section id="berita" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-700 text-sm font-semibold">
+                    <i class="fas fa-newspaper"></i> Update Terbaru
+                </span>
+                <h2 class="mt-4 text-3xl md:text-5xl font-bold">Berita & Kegiatan</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Informasi terkini seputar kegiatan dan perkembangan desa.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card -->
+                <article class="card overflow-hidden">
+                    <div class="h-52 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="Berita">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-4 text-xs text-slate-500">
+                            <span><i class="fas fa-calendar mr-1"></i>15 Des 2024</span>
+                            <span><i class="fas fa-user mr-1"></i>Admin</span>
+                        </div>
+                        <h3 class="mt-3 font-bold text-lg text-slate-900">Musyawarah Pembangunan Desa 2025</h3>
+                        <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+                            Kegiatan musyawarah pembangunan desa melibatkan warga untuk menentukan program prioritas...
+                        </p>
+                        <a href="#" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-black">
+                            Baca selengkapnya <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="card overflow-hidden">
+                    <div class="h-52 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="Berita">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-4 text-xs text-slate-500">
+                            <span><i class="fas fa-calendar mr-1"></i>10 Des 2024</span>
+                            <span><i class="fas fa-user mr-1"></i>Admin</span>
+                        </div>
+                        <h3 class="mt-3 font-bold text-lg text-slate-900">Gotong Royong Membersihkan Lingkungan</h3>
+                        <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+                            Warga desa bergotong royong menjaga kebersihan lingkungan untuk hidup lebih sehat...
+                        </p>
+                        <a href="#" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-black">
+                            Baca selengkapnya <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="card overflow-hidden">
+                    <div class="h-52 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="Berita">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-4 text-xs text-slate-500">
+                            <span><i class="fas fa-calendar mr-1"></i>5 Des 2024</span>
+                            <span><i class="fas fa-user mr-1"></i>Admin</span>
+                        </div>
+                        <h3 class="mt-3 font-bold text-lg text-slate-900">Pelatihan UMKM untuk Warga Desa</h3>
+                        <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+                            Pelatihan untuk meningkatkan keterampilan dan ekonomi warga melalui UMKM...
+                        </p>
+                        <a href="#" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-black">
+                            Baca selengkapnya <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="text-center mt-10">
+                <a href="#" class="btn btn-primary">
+                    Lihat Semua Berita
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri (keep simple) -->
+    <section id="galeri" class="py-20 bg-white border-y border-slate-200">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">
+                    <i class="fas fa-images"></i> Dokumentasi
+                </span>
+                <h2 class="mt-4 text-3xl md:text-5xl font-bold">Galeri Kegiatan</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Dokumentasi visual berbagai kegiatan dan momen penting.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Reuse your images; overlay minimal -->
+                <div class="card overflow-hidden h-56 md:h-72">
+                    <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="Galeri">
+                </div>
+                <div class="card overflow-hidden h-56 md:h-72">
+                    <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=500" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="Galeri">
+                </div>
+                <div class="card overflow-hidden h-56 md:h-72">
+                    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="Galeri">
+                </div>
+                <div class="card overflow-hidden h-56 md:h-72">
+                    <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=500" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="Galeri">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jam Pelayanan (white + border, no gradient) -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-700 text-sm font-semibold">
+                    <i class="fas fa-clock"></i> Waktu Layanan
+                </span>
+                <h2 class="mt-4 text-3xl md:text-5xl font-bold">Jam Pelayanan</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Kami siap melayani dengan profesional dan ramah.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Senin – Kamis</div>
+                            <div class="text-sm text-slate-500">Hari kerja</div>
+                        </div>
+                    </div>
+                    <div class="mt-5 text-2xl font-bold">08:00 – 15:00</div>
+                    <div class="text-sm text-slate-500">WIB</div>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Jumat</div>
+                            <div class="text-sm text-slate-500">Hari kerja pendek</div>
+                        </div>
+                    </div>
+                    <div class="mt-5 text-2xl font-bold">08:00 – 11:00</div>
+                    <div class="text-sm text-slate-500">WIB</div>
+                </div>
+
+                <div class="card p-6 md:col-span-2">
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center">
+                                <i class="fas fa-calendar-times"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold">Sabtu – Minggu</div>
+                                <div class="text-sm text-slate-500">Akhir pekan</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-slate-900">TUTUP</div>
+                            <div class="text-sm text-slate-500">Libur akhir pekan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 border border-slate-200 bg-white rounded-2xl p-6 text-sm text-slate-600">
+                    <div class="font-semibold text-slate-900 mb-2"><i class="fas fa-info-circle mr-2"></i>Informasi</div>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-xs"></i>Harap membawa persyaratan lengkap</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-xs"></i>Antrian dilayani sesuai urutan</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-xs"></i>Konfirmasi jika ada perubahan jadwal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak & Maps (minimal icons) -->
+    <section id="kontak" class="py-20 bg-white border-t border-slate-200">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">
+                    <i class="fas fa-phone-alt"></i> Hubungi Kami
+                </span>
+                <h2 class="mt-4 text-3xl md:text-5xl font-bold">Kontak & Lokasi</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Informasi kontak dan lokasi kantor desa.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="card p-6">
+                        <div class="flex gap-4">
+                            <div class="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold">Alamat Kantor</div>
+                                <p class="text-sm text-slate-600 mt-1">
+                                    Jl. Desa Sejahtera No. 123, Kecamatan Makmur, Kabupaten Jaya, Provinsi Bahagia, Indonesia
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <div class="flex gap-4">
+                            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold">Telepon</div>
+                                <p class="text-sm text-slate-600 mt-1">(021) 12345678 • +62 812-3456-7890</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <div class="flex gap-4">
+                            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold">Email</div>
+                                <p class="text-sm text-slate-600 mt-1">info@desasejahtera.id • admin@desasejahtera.id</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <div class="font-bold mb-3">Media Sosial</div>
+                        <div class="flex gap-2">
+                            <a href="#" class="btn btn-ghost px-4 py-2"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-ghost px-4 py-2"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="btn btn-ghost px-4 py-2"><i class="fab fa-youtube"></i></a>
+                            <a href="#" class="btn btn-ghost px-4 py-2"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-3 overflow-hidden min-h-[520px]">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127417.87169976443!2d114.5247295!3d-3.3186667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2de423b1c106b5a5%3A0x5c3b7d596e1e3d48!2sBanjarmasin%2C%20Kota%20Banjarmasin%2C%20Kalimantan%20Selatan!5e0!3m2!1sid!2sid!4v1234567890"
+                        width="100%" height="100%"
+                        style="border:0; min-height: 520px; border-radius: 16px;"
+                        allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (simple) -->
+    <footer class="bg-slate-950 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center font-bold">DS</div>
+                        <div>
+                            <div class="font-bold text-lg">Desa Sejahtera</div>
+                            <div class="text-xs text-white/60">Portal Informasi Digital</div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-white/65 max-w-xl">
+                        Membangun desa yang maju, mandiri, dan berdaya saing melalui inovasi digital dan pemberdayaan masyarakat.
+                    </p>
+                </div>
+
+                <div class="text-sm text-white/60">
+                    <div>&copy; 2024 Desa Sejahtera</div>
+                    <div class="mt-2 flex gap-4">
+                        <a href="#" class="hover:text-white transition">Privasi</a>
+                        <a href="#" class="hover:text-white transition">S&K</a>
+                        <a href="#" class="hover:text-white transition">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to top -->
+    <button id="scrollTop" class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-slate-900 text-white shadow-lg opacity-0 invisible transition-all hover:-translate-y-0.5 z-50">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // ===== Hero Slider =====
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slide-dot');
+
+        function setDotActive(idx) {
+            dots.forEach((d, i) => d.classList.toggle('active', i === idx));
         }
-    }
-</script>
 
-<!-- -->
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            setDotActive(currentSlide);
+        }
 
+        function changeSlide(n) {
+            showSlide(currentSlide + n);
+        }
+
+        function goToSlide(n) {
+            showSlide(n);
+        }
+
+        setInterval(() => changeSlide(1), 6500);
+        setDotActive(0);
+
+        // ===== Perangkat Slider =====
+        let currentPerangkatSlide = 0;
+        const perangkatSlider = document.getElementById('perangkatSlider');
+        const totalPerangkatSlides = 2;
+
+        function changePerangkatSlide(direction) {
+            currentPerangkatSlide += direction;
+            if (currentPerangkatSlide < 0) currentPerangkatSlide = totalPerangkatSlides - 1;
+            if (currentPerangkatSlide >= totalPerangkatSlides) currentPerangkatSlide = 0;
+            perangkatSlider.style.transform = `translateX(-${currentPerangkatSlide * 100}%)`;
+        }
+
+        // ===== Smooth scroll =====
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                const target = document.querySelector(a.getAttribute('href'));
+                if (!target) return;
+                e.preventDefault();
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // ===== Navbar scroll shadow =====
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('nav-shadow', window.pageYOffset > 80);
+        });
+
+        // ===== Scroll to top =====
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 400) {
+                scrollTopBtn.classList.remove('opacity-0', 'invisible');
+                scrollTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                scrollTopBtn.classList.add('opacity-0', 'invisible');
+                scrollTopBtn.classList.remove('opacity-100', 'visible');
+            }
+        });
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        }));
+    </script>
 </body>
+
 </html>

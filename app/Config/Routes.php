@@ -16,9 +16,9 @@ $routes->post('login', 'Auth::attempt');
 $routes->get('logout', 'Auth::logout');
 
 // (Opsional) Biar / langsung ke login atau home publik
-// $routes->get('/', 'Home::index');
+$routes->get('/', 'Home::index');
 // atau:
-$routes->get('/', static fn() => redirect()->to(site_url('login')));
+// $routes->get('/', static fn() => redirect()->to(site_url('login')));
 
 
 // =======================
@@ -205,12 +205,17 @@ $routes->group('admin', [
     // Pengguna
     $routes->group('pengguna', static function ($routes) {
         $routes->get('/',           'Pengguna::index');
+
         $routes->post('datatable',  'Pengguna::datatable');
         $routes->get('create',      'Pengguna::create');
         $routes->get('edit/(:num)', 'Pengguna::edit/$1');
         $routes->post('save',       'Pengguna::save');
+        $routes->post('save_profile',       'Pengguna::save_profile');
         $routes->post('delete',     'Pengguna::delete');
     });
+
+
+    $routes->get('profile',           'Pengguna::profile');
 
 
     // Manajemen Menu
@@ -220,5 +225,7 @@ $routes->group('admin', [
         $routes->post('reorder',         'Menu::reorder');
         $routes->post('toggle/(:num)',   'Menu::toggle/$1');
         $routes->post('delete/(:num)',   'Menu::delete/$1');
+        $routes->post('reorder', 'Menu::reorder');
+        $routes->post('set-active/(:num)', 'Menu::setActive/$1');
     });
 });

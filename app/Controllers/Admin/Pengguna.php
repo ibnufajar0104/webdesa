@@ -158,6 +158,38 @@ class Pengguna extends BaseController
         ]);
     }
 
+
+
+    public function profile()
+    {
+
+        $id = session()->user_id;
+        $row = $this->userModel->find($id);
+
+        if (!$row || !empty($row['deleted_at'])) {
+            return redirect()->to('admin/pengguna')->with('error', 'Data pengguna tidak ditemukan');
+        }
+
+        $user = [
+            'id'        => $row['id'],
+            'nama'      => old('nama', $row['nama']),
+            'username'  => old('username', $row['username']),
+            'email'     => old('email', $row['email']),
+            'no_hp'     => old('no_hp', $row['no_hp']),
+            'role'      => old('role', $row['role']),
+            'is_active' => old('is_active', $row['is_active']),
+        ];
+
+        return view('admin/pengguna/profile', [
+            'pageTitle'  => 'Edit Pengguna',
+            'activeMenu' => 'pengguna',
+            'mode'       => 'edit',
+            'user'       => $user,
+            'roleList'   => $this->roleList(),
+            'errors'     => session('errors') ?? [],
+        ]);
+    }
+
     public function save()
     {
         $id = $this->request->getPost('id');
@@ -252,6 +284,93 @@ class Pengguna extends BaseController
 
         $this->userModel->insert($data);
         return redirect()->to('admin/pengguna')->with('success', 'Pengguna berhasil ditambahkan');
+    }
+
+
+    public function save_profile()
+    {
+        $id = $this->request->getPost('id');
+
+        $role = (string) $this->request->getPost('role');
+        if (!array_key_exists($role, $this->roleList())) {
+            $role = 'admin';
+        }
+
+        $rules = [
+            'nama'     => 'required|min_length[3]|max_length[150]',
+            'username' => 'required|min_length[3]|max_length[60]',
+            'email'    => 'permit_empty|valid_email|max_length[120]',
+            'no_hp'    => 'permit_empty|max_length[30]'
+        ];
+
+        // password rules
+        $password = (string) $this->request->getPost('password');
+        $password2 = (string) $this->request->getPost('password_confirm');
+
+
+
+
+        if ($password !== '') {
+            $rules['password'] = 'min_length[6]';
+        }
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        }
+
+        // validasi confirm password kalau diisi
+        if (($password !== '') || (!$id)) {
+            if ($password !== $password2) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('errors', ['Konfirmasi password tidak sama.']);
+            }
+        }
+
+        $username = trim((string) $this->request->getPost('username'));
+        $email    = trim((string) $this->request->getPost('email'));
+
+        // cek unik username
+        $existsUsername = $this->userModel
+            ->where('username', $username)
+            ->where('deleted_at', null)
+            ->first();
+
+        if ($existsUsername && (string)$existsUsername['id'] !== (string)$id) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', ['Username sudah digunakan.']);
+        }
+
+        // cek unik email (kalau diisi)
+        if ($email !== '') {
+            $existsEmail = $this->userModel
+                ->where('email', $email)
+                ->where('deleted_at', null)
+                ->first();
+
+            if ($existsEmail && (string)$existsEmail['id'] !== (string)$id) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('errors', ['Email sudah digunakan.']);
+            }
+        }
+
+        $data = [
+            'nama'      => trim((string) $this->request->getPost('nama')),
+            'username'  => $username,
+            'email'     => ($email === '') ? null : $email,
+            'no_hp'     => trim((string) $this->request->getPost('no_hp')) ?: null
+        ];
+
+        if (($password !== '') || (!$id)) {
+            $data['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        if ($id) {
+            $this->userModel->update($id, $data);
+            return redirect()->to('admin/profile')->with('success', 'Pengguna berhasil diperbarui');
+        }
     }
 
     public function delete()

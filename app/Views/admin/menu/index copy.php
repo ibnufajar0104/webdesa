@@ -116,12 +116,12 @@
                 <?php endforeach; ?>
             </ul>
 
-            <!-- <div class="mt-3">
+            <div class="mt-3">
                 <button id="btnSaveOrder"
                     class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm hover:bg-slate-50 dark:hover:bg-slate-800">
                     Simpan Urutan
                 </button>
-            </div> -->
+            </div>
         </div>
     </div>
 
@@ -194,58 +194,29 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
     (() => {
         const baseUrl = "<?= rtrim(base_url(), '/') ?>/";
         const elRoot = document.getElementById('menuRoot');
+        const btnSave = document.getElementById('btnSaveOrder');
+        const msg = document.getElementById('msg');
 
-        /* =========================================================
-           SWEETALERT HELPERS (pengganti flash session)
-        ========================================================= */
-        const toastSuccess = (text = 'Berhasil') => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text,
-                timer: 1800,
-                showConfirmButton: false
+        // Sortable untuk menu utama
+        new Sortable(elRoot, {
+            animation: 150,
+            handle: '.cursor-move',
+            draggable: '.menu-item',
+        });
+
+        // Sortable untuk semua submenu (bisa pindah parent)
+        document.querySelectorAll('.submenu').forEach((ul) => {
+            new Sortable(ul, {
+                group: 'submenu',
+                animation: 150,
+                handle: '.cursor-move',
+                draggable: '.menu-item'
             });
-        };
-
-        const toastError = (text = 'Terjadi kesalahan') => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal',
-                text
-            });
-        };
-
-        // opsional: notif kecil saat proses (tanpa tombol)
-        const showLoading = (text = 'Memproses...') => {
-            Swal.fire({
-                title: text,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => Swal.showLoading()
-            });
-        };
-
-        const safeJson = async (res) => {
-            try {
-                return await res.json();
-            } catch {
-                return {};
-            }
-        };
-
-        /* =========================================================
-           REALTIME SAVE ORDER (debounce)
-        ========================================================= */
-        let saveTimer = null;
-        let saving = false;
-        let pending = false;
+        });
 
         const collectOrder = () => {
             const items = [];
@@ -258,7 +229,7 @@
                     sort_order: idx + 1
                 });
 
-                const sub = li.querySelector(':scope > .submenu');
+                const sub = li.querySelector('.submenu');
                 if (sub) {
                     [...sub.children].forEach((cli, cidx) => {
                         items.push({
@@ -273,16 +244,8 @@
             return items;
         };
 
-        const postReorder = async () => {
-            // mencegah request bertubi-tubi: kalau sedang save, tandai pending
-            if (saving) {
-                pending = true;
-                return;
-            }
-
-            saving = true;
-            pending = false;
-
+        btnSave?.addEventListener('click', async () => {
+            btnSave.disabled = true;
             try {
                 const res = await fetch(baseUrl + 'admin/menu/reorder', {
                     method: 'POST',
@@ -293,111 +256,24 @@
                         items: collectOrder()
                     })
                 });
-
-                const json = await safeJson(res);
-                if (!res.ok || json.status === false) {
-                    toastError(json.msg || 'Gagal menyimpan urutan.');
-                } else {
-                    // biar tidak ganggu: pakai toast kecil
-                    toastSuccess(json.msg || 'Urutan tersimpan.');
-                }
+                const json = await res.json();
+                msg.textContent = json.msg || 'OK';
             } catch (e) {
-                toastError('Gagal menyimpan urutan.');
+                msg.textContent = 'Gagal menyimpan urutan.';
             } finally {
-                saving = false;
-                // kalau ada perubahan lagi selama save, kirim sekali lagi
-                if (pending) postReorder();
+                btnSave.disabled = false;
             }
-        };
-
-        const saveOrderRealtime = (delay = 250) => {
-            clearTimeout(saveTimer);
-            saveTimer = setTimeout(postReorder, delay);
-        };
-
-        /* =========================================================
-           DROP KE SAMPING -> JADI SUBMENU
-        ========================================================= */
-        let hoverParentEl = null;
-
-        const ensureSubmenu = (parentLi) => {
-            let ul = parentLi.querySelector(':scope > .submenu');
-            if (!ul) {
-                ul = document.createElement('ul');
-                ul.className = 'submenu space-y-2 p-3 pt-0';
-                ul.dataset.parentId = parentLi.dataset.id;
-                parentLi.appendChild(ul);
-                makeSortable(ul);
-            }
-            return ul;
-        };
-
-        const computeHoverParent = (evt) => {
-            hoverParentEl = null;
-
-            const oe = evt.originalEvent;
-            if (!oe || typeof oe.clientX !== 'number') return;
-
-            const related = evt.related;
-            if (!related) return;
-
-            const li = related.classList?.contains('menu-item') ?
-                related :
-                related.closest?.('.menu-item');
-
-            if (!li) return;
-            if (evt.dragged && evt.dragged === li) return; // jangan parent diri sendiri
-
-            const rect = li.getBoundingClientRect();
-            const threshold = rect.left + 40; // geser kanan sedikit = niat jadi submenu
-            if (oe.clientX > threshold) hoverParentEl = li;
-        };
-
-        /* =========================================================
-           SORTABLE INIT
-        ========================================================= */
-        const makeSortable = (ul) => new Sortable(ul, {
-            group: 'menuTree',
-            animation: 150,
-            handle: '.cursor-move',
-            draggable: '.menu-item',
-
-            onMove: (evt) => {
-                computeHoverParent(evt);
-                return true;
-            },
-
-            onEnd: (evt) => {
-                if (hoverParentEl) {
-                    const draggedEl = evt.item;
-                    const sub = ensureSubmenu(hoverParentEl);
-                    sub.appendChild(draggedEl);
-                }
-                hoverParentEl = null;
-
-                // realtime save
-                saveOrderRealtime();
-            },
-
-            onAdd: () => saveOrderRealtime(),
-            onUpdate: () => saveOrderRealtime(),
         });
 
-        makeSortable(elRoot);
-        document.querySelectorAll('.submenu').forEach(makeSortable);
-
-        /* =========================================================
-           FORM ADD/EDIT + SAVE
-        ========================================================= */
+        // Form add/edit
         const frm = document.getElementById('frmMenu');
-
         const setForm = (data = {}) => {
             frm.id.value = data.id || '';
             frm.label.value = data.label || '';
             frm.parent_id.value = (data.parent_id ?? '') === null ? '' : (data.parent_id ?? '');
             frm.url.value = data.url || '';
             frm.is_active.value = String(data.is_active ?? 1);
-            frm.target.value = String(data.target ?? '_self');
+            frm.target.value = String(data.target ?? '_self'); // baru
         };
 
         document.getElementById('btnAdd')?.addEventListener('click', () => setForm({}));
@@ -414,46 +290,28 @@
             });
         });
 
-        frm?.addEventListener('submit', async (e) => {
+        frm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            msg.textContent = 'Menyimpan...';
 
-            showLoading('Menyimpan...');
-            try {
-                const formData = new FormData(frm);
-                const res = await fetch(baseUrl + 'admin/menu/save', {
-                    method: 'POST',
-                    body: formData
-                });
-                const json = await safeJson(res);
+            const formData = new FormData(frm);
+            const res = await fetch(baseUrl + 'admin/menu/save', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await res.json().catch(() => ({}));
 
-                Swal.close();
-
-                if (!res.ok || json.status === false) {
-                    const errText = json.msg || 'Gagal menyimpan menu.';
-                    toastError(errText);
-                    return;
-                }
-
-                toastSuccess(json.msg || 'Menu tersimpan.');
-                // biar gampang, reload untuk refresh tree + parents
-                location.reload();
-            } catch (e2) {
-                Swal.close();
-                toastError('Terjadi kesalahan saat menyimpan.');
-            }
+            msg.textContent = json.msg || 'OK';
+            if (json.status) location.reload();
         });
 
-        /* =========================================================
-           SET AKTIF/NONAKTIF (dropdown)
-        ========================================================= */
+        // SET AKTIF/NONAKTIF (dropdown) - menggantikan toggle
         document.querySelectorAll('.selActive').forEach((sel) => {
             sel.addEventListener('change', async () => {
                 const id = sel.dataset.id;
                 const val = sel.value;
 
-                // (opsional) loading kecil saja
-                // showLoading('Menyimpan status...');
-
+                msg.textContent = 'Menyimpan status...';
                 try {
                     const res = await fetch(baseUrl + 'admin/menu/set-active/' + id, {
                         method: 'POST',
@@ -464,80 +322,28 @@
                             is_active: Number(val)
                         })
                     });
-                    const json = await safeJson(res);
-
-                    // Swal.close();
-
-                    if (!res.ok || json.status === false) {
-                        toastError(json.msg || 'Gagal mengubah status.');
-                        return;
-                    }
-
-                    toastSuccess(json.msg || 'Status diperbarui.');
-                    // reload biar badge "nonaktif" update
-                    location.reload();
+                    const json = await res.json().catch(() => ({}));
+                    msg.textContent = json.msg || 'OK';
+                    if (json.status) location.reload();
                 } catch (e) {
-                    // Swal.close();
-                    toastError('Terjadi kesalahan saat mengubah status.');
+                    msg.textContent = 'Gagal mengubah status.';
                 }
             });
         });
 
-        /* =========================================================
-           DELETE (pakai contoh Swal konfirmasi kamu)
-        ========================================================= */
         document.querySelectorAll('.btnDel').forEach((b) => {
             b.addEventListener('click', async () => {
+                if (!confirm('Hapus menu ini? Submenu akan ikut terhapus.')) return;
                 const id = b.dataset.id;
-
-                Swal.fire({
-                    title: 'Hapus menu?',
-                    text: 'Data yang dihapus tidak dapat dikembalikan.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, hapus',
-                    cancelButtonText: 'Batal',
-                    confirmButtonColor: '#e11d48'
-                }).then(async (result) => {
-                    if (!result.isConfirmed) return;
-
-                    try {
-                        const res = await fetch(baseUrl + 'admin/menu/delete/' + id, {
-                            method: 'POST'
-                        });
-                        const json = await safeJson(res);
-
-                        if (!res.ok || json.status === false) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: json.msg || 'Gagal menghapus'
-                            });
-                            return;
-                        }
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: json.msg || 'Berhasil',
-                            timer: 1800,
-                            showConfirmButton: false
-                        });
-
-                        // paling aman: reload biar tree rapi
-                        setTimeout(() => location.reload(), 900);
-                    } catch (e) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: 'Terjadi kesalahan saat menghapus data'
-                        });
-                    }
+                const res = await fetch(baseUrl + 'admin/menu/delete/' + id, {
+                    method: 'POST'
                 });
+                const json = await res.json().catch(() => ({}));
+                msg.textContent = json.msg || 'OK';
+                if (json.status) location.reload();
             });
         });
     })();
 </script>
-
 
 <?= $this->endSection() ?>
