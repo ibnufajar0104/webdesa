@@ -15,8 +15,9 @@ $routes->get('login',  'Auth::login');
 $routes->post('login', 'Auth::attempt');
 $routes->get('logout', 'Auth::logout');
 
-// / langsung ke login
+// (Opsional) Biar / langsung ke login atau home publik
 $routes->get('/', static fn() => redirect()->to(site_url('login')));
+
 
 // =======================
 // FILE HANDLER
@@ -30,21 +31,21 @@ $routes->group('file', static function ($routes) {
     $routes->get('ijazah/(:any)',    'FileHandler::ijazah/$1');
     $routes->get('sk/(:any)',        'FileHandler::sk/$1');
     $routes->get('galery/(:any)',    'FileHandler::galery/$1');
-    $routes->get('dokumen/(:any)',   'FileHandler::dokumen/$1');
 });
+
 
 // =======================
 // ADMIN (PROTECTED)
 // =======================
 $routes->group('admin', [
     'namespace' => 'App\Controllers\Admin',
-    'filter'    => 'auth',
+    'filter'    => 'auth', // <-- WAJIB LOGIN
 ], static function ($routes) {
 
     // DASHBOARD
     $routes->get('dashboard', 'Dashboard::index');
 
-    // PROFILE (dedup: cukup satu)
+    // PROFILE
     $routes->get('profile', 'Pengguna::profile');
 
     // Halaman Statis
@@ -125,12 +126,10 @@ $routes->group('admin', [
         $routes->post('save', 'SambutanKades::save');
     });
 
-    // Jam Pelayanan (ambil versi lengkap: datatable + save + delete)
+    // Jam Pelayanan
     $routes->group('jam-pelayanan', static function ($routes) {
-        $routes->get('/',          'JamPelayanan::index');
-        $routes->post('datatable', 'JamPelayanan::datatable');
-        $routes->post('save',      'JamPelayanan::save');
-        $routes->post('delete',    'JamPelayanan::delete');
+        $routes->get('/',     'JamPelayanan::index');
+        $routes->post('save', 'JamPelayanan::save');
     });
 
     // Kontak
@@ -151,13 +150,13 @@ $routes->group('admin', [
 
     // Perangkat Desa
     $routes->group('perangkat-desa', static function ($routes) {
-        $routes->get('/',             'PerangkatDesa::index');
-        $routes->post('datatable',    'PerangkatDesa::datatable');
-        $routes->get('create',        'PerangkatDesa::create');
-        $routes->get('edit/(:num)',   'PerangkatDesa::edit/$1');
-        $routes->get('detail/(:num)', 'PerangkatDesa::detail/$1');
-        $routes->post('save',         'PerangkatDesa::save');
-        $routes->post('delete',       'PerangkatDesa::delete');
+        $routes->get('/',              'PerangkatDesa::index');
+        $routes->post('datatable',     'PerangkatDesa::datatable');
+        $routes->get('create',         'PerangkatDesa::create');
+        $routes->get('edit/(:num)',    'PerangkatDesa::edit/$1');
+        $routes->get('detail/(:num)',  'PerangkatDesa::detail/$1');
+        $routes->post('save',          'PerangkatDesa::save');
+        $routes->post('delete',        'PerangkatDesa::delete');
 
         $routes->post('pendidikan/save',   'PerangkatDesa::savePendidikanHistory');
         $routes->post('pendidikan/delete', 'PerangkatDesa::deletePendidikanHistory');
@@ -216,51 +215,34 @@ $routes->group('admin', [
         $routes->post('delete',       'Pengguna::delete');
     });
 
-    // Manajemen Menu (dedup: reorder dobel dihapus)
+    // Manajemen Menu
     $routes->group('menu', static function ($routes) {
-        $routes->get('/',                  'Menu::index');
-        $routes->post('save',              'Menu::save');
-        $routes->post('reorder',           'Menu::reorder');
-        $routes->post('toggle/(:num)',     'Menu::toggle/$1');
-        $routes->post('set-active/(:num)', 'Menu::setActive/$1');
-        $routes->post('delete/(:num)',     'Menu::delete/$1');
-    });
-
-    // Kategori Dokumen
-    $routes->group('kategori-dokumen', static function ($routes) {
-        $routes->get('/',           'KategoriDokumen::index');
-        $routes->post('datatable',  'KategoriDokumen::datatable');
-        $routes->get('create',      'KategoriDokumen::create');
-        $routes->get('edit/(:num)', 'KategoriDokumen::edit/$1');
-        $routes->post('save',       'KategoriDokumen::save');
-        $routes->post('delete',     'KategoriDokumen::delete');
-    });
-
-    // Dokumen
-    $routes->group('dokumen', static function ($routes) {
-        $routes->get('/',           'Dokumen::index');
-        $routes->post('datatable',  'Dokumen::datatable');
-        $routes->get('create',      'Dokumen::create');
-        $routes->get('edit/(:num)', 'Dokumen::edit/$1');
-        $routes->post('save',       'Dokumen::save');
-        $routes->post('delete',     'Dokumen::delete');
+        $routes->get('/',                   'Menu::index');
+        $routes->post('save',               'Menu::save');
+        $routes->post('reorder',            'Menu::reorder');
+        $routes->post('toggle/(:num)',      'Menu::toggle/$1');
+        $routes->post('delete/(:num)',      'Menu::delete/$1');
+        $routes->post('set-active/(:num)',  'Menu::setActive/$1');
     });
 });
 
+
 // =======================
 // API (FRONTEND WEBSITE) - BASIC AUTH
+// letakkan di bawah sesuai permintaan
 // =======================
 $routes->group('api', [
     'namespace' => 'App\Controllers\Api',
     'filter'    => 'basicAuth',
 ], static function ($routes) {
-    // NEWS API
-    $routes->get('news',            'News::index');       // ?page=&per_page=
-    $routes->get('news/latest',     'News::latest');      // ?limit=
-    $routes->get('news/search',     'News::search');      // ?q=&page=&per_page=
-    $routes->get('news/(:segment)', 'News::show/$1');     // slug
+    // News API
+    $routes->get('news',          'News::index');      // ?page=&per_page=
+    $routes->get('news/latest',   'News::latest');     // ?limit=
+    $routes->get('news/search',   'News::search');     // ?q=&page=&per_page=
+    $routes->get('news/(:segment)', 'News::show/$1');   // slug
 
-    // BANNER API
-    $routes->get('banner',        'Banner::index');       // ?limit=
-    $routes->get('banner/(:num)', 'Banner::show/$1');     // id
+
+    // BANNER
+    $routes->get('banner',          'Banner::index');      // ?limit=
+    $routes->get('banner/(:num)',   'Banner::show/$1');   // optional
 });
