@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 23, 2025 at 02:09 AM
+-- Generation Time: Dec 23, 2025 at 08:23 AM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.33
 
@@ -40,7 +40,7 @@ CREATE TABLE `banners` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `banners`
@@ -75,6 +75,13 @@ CREATE TABLE `dokumen` (
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `dokumen`
+--
+
+INSERT INTO `dokumen` (`id`, `kategori_id`, `judul`, `slug`, `nomor`, `tahun`, `tanggal`, `ringkasan`, `file_path`, `file_name`, `mime`, `size`, `views`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 'tes', 'tes', '100', 2025, '2025-12-23', 'asdasd', '1766476431_208da2e405b64b0fbccc.pdf', 'IMG-SKP M. SYAFRIANDI NOOR 2024_0001.pdf', 'application/pdf', 2564560, 0, 1, '2025-12-23 07:53:51', '2025-12-23 07:53:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -127,7 +134,7 @@ CREATE TABLE `dusun` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `dusun`
@@ -164,7 +171,11 @@ CREATE TABLE `galery` (
 --
 
 INSERT INTO `galery` (`id`, `judul`, `caption`, `file_path`, `mime`, `ukuran`, `urut`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '4234', '2432', 'galery/1765962700_6477ba0f2f10806449fb.jpeg', 'image/jpeg', 445195, 1, 1, '2025-12-17 09:11:40', '2025-12-17 09:17:13', '2025-12-17 09:17:13');
+(1, '4234', '2432', 'galery/1765962700_6477ba0f2f10806449fb.jpeg', 'image/jpeg', 445195, 1, 1, '2025-12-17 09:11:40', '2025-12-17 09:17:13', '2025-12-17 09:17:13'),
+(2, 'Gotong Royong Pembersihan Lingkungan', 'Kegiatan gotong royong bersama perangkat desa dan masyarakat dalam rangka menjaga kebersihan lingkungan serta mempererat kebersamaan warga. Dilaksanakan secara rutin sebagai bentuk kepedulian terhadap lingkungan desa.', 'galery/1766475725_2a8440e2ef091e376690.jpg', 'image/jpeg', 47761, 0, 1, '2025-12-23 07:42:05', '2025-12-23 07:42:05', NULL),
+(3, 'Pelayanan Administrasi Kependudukan', 'Pelayanan administrasi kependudukan kepada masyarakat berjalan dengan tertib dan lancar. Pemerintah desa berkomitmen memberikan pelayanan yang cepat, transparan, dan mudah diakses oleh seluruh warga.', 'galery/1766475747_bdbe78237c1702ff37c8.jpg', 'image/jpeg', 41389, 0, 1, '2025-12-23 07:42:27', '2025-12-23 07:42:27', NULL),
+(4, 'Rapat Koordinasi Lembaga Desa', 'Rapat koordinasi bersama lembaga desa membahas program kerja dan evaluasi kegiatan yang telah dilaksanakan. Diharapkan melalui koordinasi ini, seluruh program dapat berjalan lebih efektif dan tepat sasaran.', 'galery/1766475790_659e531e97c74ae96e9f.jpg', 'image/jpeg', 45908, 0, 1, '2025-12-23 07:43:10', '2025-12-23 07:43:10', NULL),
+(5, 'Kegiatan Posyandu Balita', 'Pelaksanaan kegiatan Posyandu balita sebagai upaya pemantauan tumbuh kembang anak dan peningkatan kesehatan ibu dan anak. Kegiatan ini didukung oleh kader posyandu dan tenaga kesehatan setempat.', 'galery/1766475811_edfd1a25c3258be55555.jpg', 'image/jpeg', 36795, 0, 1, '2025-12-23 07:43:31', '2025-12-23 07:43:31', NULL);
 
 -- --------------------------------------------------------
 
@@ -181,7 +192,7 @@ CREATE TABLE `jam_pelayanan` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `jam_pelayanan`
@@ -207,7 +218,7 @@ CREATE TABLE `kontak_desa` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `kontak_desa`
@@ -231,7 +242,7 @@ CREATE TABLE `master_agama` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `master_agama`
@@ -286,7 +297,7 @@ CREATE TABLE `master_jabatan` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `master_jabatan`
@@ -319,7 +330,7 @@ CREATE TABLE `master_pekerjaan` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `master_pekerjaan`
@@ -353,7 +364,7 @@ CREATE TABLE `master_pendidikan` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `master_pendidikan`
@@ -382,22 +393,21 @@ CREATE TABLE `menus` (
   `parent_id` int UNSIGNED DEFAULT NULL,
   `label` varchar(150) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
-  `is_header` tinyint(1) NOT NULL DEFAULT '0',
   `sort_order` int NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `roles` varchar(100) DEFAULT NULL,
+  `target` varchar(10) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `menus`
 --
 
-INSERT INTO `menus` (`id`, `parent_id`, `label`, `url`, `is_header`, `sort_order`, `is_active`, `roles`, `created_at`, `updated_at`) VALUES
-(3, NULL, 'Beranda', 'beranda', 0, 1, 1, NULL, '2025-12-21 03:09:03', '2025-12-21 09:22:05'),
-(4, NULL, 'Statistik', 'statistik', 0, 3, 1, NULL, '2025-12-21 03:09:37', '2025-12-21 09:22:05'),
-(5, NULL, 'Perangkat Desa', 'perangkatdesa', 0, 2, 1, NULL, '2025-12-21 03:13:48', '2025-12-21 09:22:05');
+INSERT INTO `menus` (`id`, `parent_id`, `label`, `url`, `sort_order`, `is_active`, `target`, `created_at`, `updated_at`) VALUES
+(3, NULL, 'Berandaa', 'beranda', 1, 1, '_self', '2025-12-21 03:09:03', '2025-12-23 07:38:25'),
+(4, NULL, 'Statistik', 'statistik', 3, 1, '_blank', '2025-12-21 03:09:37', '2025-12-23 07:38:25'),
+(5, NULL, 'Perangkat Desa', 'perangkatdesa', 2, 1, '_self', '2025-12-21 03:13:48', '2025-12-23 07:38:25');
 
 -- --------------------------------------------------------
 
@@ -413,7 +423,7 @@ CREATE TABLE `migrations` (
   `namespace` varchar(255) NOT NULL,
   `time` int NOT NULL,
   `batch` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `migrations`
@@ -457,7 +467,7 @@ CREATE TABLE `news` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `news`
@@ -485,7 +495,7 @@ CREATE TABLE `pages` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `pages`
@@ -498,7 +508,10 @@ INSERT INTO `pages` (`id`, `slug`, `title`, `content`, `status`, `created_at`, `
 (4, 'testing-again', 'testing again', '<p>testinggg<br><img src=\"http://localhost:8080/file/pages/1763260484_521e38813a2ebadc5400.png\" alt=\"\"></p>', 'published', '2025-11-16 02:31:47', '2025-11-16 03:03:05', '2025-11-16 03:03:05'),
 (5, 'hai', 'hai', '<p><img src=\"http://localhost:8080/file/pages/1763263318_1fdfec68e0bd3c9d0c68.png\" alt=\"\"></p>\r\n<p></p>', 'published', '2025-11-16 03:06:52', '2025-11-16 05:35:14', '2025-11-16 05:35:14'),
 (6, '23dasdasdasd', '23dasdasdasd', '<p>aaaa</p>\r\n<p><img src=\"http://localhost:8080/file/pages/img_69194765161645.37549608.jpg\" alt=\"\"></p>', 'draft', '2025-11-16 03:33:07', '2025-11-16 05:35:10', '2025-11-16 05:35:10'),
-(7, 'asdas', 'asdas', '<p>asdasdasdas</p>\r\n<p>&nbsp;<img src=\"http://localhost:8080/file/pages/img_69196609c67529.86719948.jpg\" alt=\"\"></p>', 'published', '2025-11-16 05:50:20', '2025-11-16 05:50:45', '2025-11-16 05:50:45');
+(7, 'asdas', 'asdas', '<p>asdasdasdas</p>\r\n<p>&nbsp;<img src=\"http://localhost:8080/file/pages/img_69196609c67529.86719948.jpg\" alt=\"\"></p>', 'published', '2025-11-16 05:50:20', '2025-11-16 05:50:45', '2025-11-16 05:50:45'),
+(8, 'tentang-desa', 'Tentang Desa', '<p data-start=\"180\" data-end=\"338\">Desa ini merupakan wilayah administratif yang berada dalam satuan pemerintahan desa dan menjadi pusat aktivitas sosial, ekonomi, serta pelayanan masyarakat.</p>\r\n<p data-start=\"345\" data-end=\"512\">Dengan potensi sumber daya alam dan sumber daya manusia yang dimiliki, desa terus berupaya melakukan pembangunan berkelanjutan demi meningkatkan kesejahteraan warga.</p>\r\n<p data-start=\"519\" data-end=\"698\">Pemerintah desa berkomitmen memberikan pelayanan yang transparan, akuntabel, dan berorientasi pada kebutuhan masyarakat, sejalan dengan prinsip tata kelola pemerintahan yang baik.</p>', 'published', '2025-12-23 06:58:55', '2025-12-23 06:58:55', NULL),
+(9, 'visi-dan-misi-desa', 'Visi dan Misi Desa', '<p><strong>Visi Desa</strong></p>\r\n<p>Terwujudnya Desa yang Maju, Mandiri, Sejahtera, dan Berdaya Saing.</p>\r\n<p data-start=\"832\" data-end=\"845\"><strong>Misi Desa</strong></p>\r\n<ol data-start=\"846\" data-end=\"1125\">\r\n<li data-start=\"846\" data-end=\"924\">\r\n<p data-start=\"849\" data-end=\"924\">Meningkatkan kualitas pelayanan publik yang cepat, tepat, dan transparan.</p>\r\n</li>\r\n<li data-start=\"925\" data-end=\"992\">\r\n<p data-start=\"928\" data-end=\"992\">Mendorong partisipasi aktif masyarakat dalam pembangunan desa.</p>\r\n</li>\r\n<li data-start=\"993\" data-end=\"1054\">\r\n<p data-start=\"996\" data-end=\"1054\">Mengelola potensi desa secara optimal dan berkelanjutan.</p>\r\n</li>\r\n<li data-start=\"1055\" data-end=\"1125\">\r\n<p data-start=\"1058\" data-end=\"1125\">Mewujudkan tata kelola pemerintahan desa yang bersih dan akuntabel</p>\r\n</li>\r\n</ol>', 'published', '2025-12-23 06:59:47', '2025-12-23 06:59:47', NULL),
+(10, 'sejarah-desa', 'Sejarah Desa', '<p data-start=\"189\" data-end=\"498\">Desa ini berdiri sebagai bagian dari proses perkembangan wilayah dan pemukiman masyarakat yang berlangsung secara turun-temurun. Pada awalnya, wilayah desa merupakan kawasan tempat bermukimnya beberapa keluarga yang menggantungkan hidup pada sektor pertanian, perkebunan, dan sumber daya alam di sekitarnya.</p>\r\n<p data-start=\"505\" data-end=\"850\">Seiring dengan bertambahnya jumlah penduduk, masyarakat mulai membentuk tata kehidupan bersama yang terorganisir, ditandai dengan adanya tokoh masyarakat, adat, serta kesepakatan bersama dalam mengelola wilayah dan kehidupan sosial. Dari proses inilah kemudian terbentuk pemerintahan desa sebagai satuan administratif yang diakui secara resmi.</p>\r\n<p data-start=\"857\" data-end=\"1244\">Dalam perkembangannya, desa terus mengalami perubahan dan kemajuan, baik dari sisi pemerintahan, pembangunan, maupun pelayanan kepada masyarakat. Dengan tetap menjunjung nilai-nilai kebersamaan, gotong royong, dan kearifan lokal, desa berkomitmen untuk terus berkembang menuju masa depan yang lebih baik tanpa meninggalkan sejarah dan jati diri yang telah diwariskan oleh para pendahulu.</p>', 'published', '2025-12-23 07:01:35', '2025-12-23 07:01:35', NULL);
 
 -- --------------------------------------------------------
 
@@ -533,7 +546,7 @@ CREATE TABLE `penduduk` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `penduduk`
@@ -605,7 +618,7 @@ CREATE TABLE `perangkat_desa` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `perangkat_desa`
@@ -653,7 +666,7 @@ CREATE TABLE `perangkat_jabatan_history` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `perangkat_jabatan_history`
@@ -720,7 +733,7 @@ CREATE TABLE `perangkat_pendidikan_history` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `perangkat_pendidikan_history`
@@ -784,7 +797,7 @@ CREATE TABLE `rt` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `rt`
@@ -842,7 +855,7 @@ CREATE TABLE `rw` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `rw`
@@ -869,7 +882,7 @@ CREATE TABLE `sambutan_kades` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Dumping data for table `sambutan_kades`
@@ -904,7 +917,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama`, `username`, `email`, `no_hp`, `password_hash`, `role`, `is_active`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Administrator', 'admin@admin.com', 'admin@admin.com', '085245065929', '$2y$10$IB0FbQFRiyvlhW3oLXGCMejPSesHH3MHE9ItUYNTNX7dRWwr7jUum', 'superadmin', 1, '2025-12-23 01:04:13', '2025-12-18 03:18:20', '2025-12-23 01:04:13', NULL),
+(1, 'Administrator', 'admin@admin.com', 'admin@admin.com', '085245065929', '$2y$10$IB0FbQFRiyvlhW3oLXGCMejPSesHH3MHE9ItUYNTNX7dRWwr7jUum', 'superadmin', 1, '2025-12-23 06:56:47', '2025-12-18 03:18:20', '2025-12-23 06:56:47', NULL),
 (2, 'Ibnu Fajar', 'ibnufajar', 'ibnufajar0104@gmail.com', '085245065929', '$2y$10$cTIB98bnxrxQAK5kosJfIeHaZxHUyFmuKPC.NtnDxDZXOrsz3NPu2', 'admin', 1, '2025-12-21 02:42:46', '2025-12-21 01:37:24', '2025-12-21 02:42:46', NULL);
 
 --
@@ -1122,7 +1135,7 @@ ALTER TABLE `banners`
 -- AUTO_INCREMENT for table `dokumen`
 --
 ALTER TABLE `dokumen`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `dokumen_kategori`
@@ -1140,7 +1153,7 @@ ALTER TABLE `dusun`
 -- AUTO_INCREMENT for table `galery`
 --
 ALTER TABLE `galery`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `jam_pelayanan`
@@ -1206,7 +1219,7 @@ ALTER TABLE `news`
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `penduduk`
