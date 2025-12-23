@@ -297,4 +297,23 @@ $routes->group('api', [
     $routes->get('penduduk/stats/wilayah',  'PendudukStats::wilayah'); // ?level=dusun|rt
     $routes->get('penduduk/stats/usia',     'PendudukStats::usia');    // ?mode=bucket|single
     $routes->get('penduduk/stats/tren',     'PendudukStats::tren');    // ?by=month|year&range=24
+
+
+
+    $routes->get('perangkat', 'Perangkat::index');          // ?active=1
+    $routes->get('perangkat/(:num)', 'Perangkat::show/$1'); // detail aman
+
+    // Penerima Bantuan - Statistik (public-safe)
+    $routes->get('penerima-bantuan/stats/overview',  'PenerimaBantuanStats::overview'); // ?tahun=2025&bantuan_id=1&status=1&periode=Jan
+    $routes->get('penerima-bantuan/stats/by-bantuan', 'PenerimaBantuanStats::byBantuan'); // ?tahun=2025&status=1
+    $routes->get('penerima-bantuan/stats/by-periode', 'PenerimaBantuanStats::byPeriode'); // ?tahun=2025&bantuan_id=1
+    $routes->get('penerima-bantuan/stats/tren',      'PenerimaBantuanStats::tren');     // ?by=month|year&range=24&tahun=2025
+    $routes->get('penerima-bantuan/stats/quality',   'PenerimaBantuanStats::quality');  // cek field null/invalid
+
+
+    $routes->get('sambutan-kades',        'SambutanKades::index');
+    $routes->get('jam-pelayanan',          'JamPelayanan::index');
+    $routes->get('kontak', 'Kontak::index');   // ambil kontak aktif
+
+
 });

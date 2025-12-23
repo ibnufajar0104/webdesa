@@ -202,19 +202,7 @@ $active = function ($key) use ($activeMenu) {
 
             <!-- Data Penduduk -->
 
-            <li>
-                <a href="<?= base_url('admin/data-penduduk') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('penduduk') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M8 13.5c-2.2 0-4 1.3-4 3v1.5h8v-1.5c0-1.7-1.8-3-4-3z" />
-                            <circle cx="8" cy="8.5" r="2.5" />
-                            <path d="M16 12.5c1.7 0 3 1.1 3 2.6V18" />
-                            <circle cx="16" cy="8.5" r="2.1" />
-                        </svg>
-                    </span>
-                    <span>Data Penduduk</span>
-                </a>
-            </li>
+
 
             <!-- Daftar Perangkat Desa -->
             <li>
@@ -229,7 +217,19 @@ $active = function ($key) use ($activeMenu) {
                     <span>Daftar Perangkat Desa</span>
                 </a>
             </li>
-
+            <li>
+                <a href="<?= base_url('admin/data-penduduk') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('penduduk') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M8 13.5c-2.2 0-4 1.3-4 3v1.5h8v-1.5c0-1.7-1.8-3-4-3z" />
+                            <circle cx="8" cy="8.5" r="2.5" />
+                            <path d="M16 12.5c1.7 0 3 1.1 3 2.6V18" />
+                            <circle cx="16" cy="8.5" r="2.1" />
+                        </svg>
+                    </span>
+                    <span>Data Penduduk</span>
+                </a>
+            </li>
             <li>
                 <a href="<?= base_url('admin/penerima-bantuan') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('penerima_bantuan') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
