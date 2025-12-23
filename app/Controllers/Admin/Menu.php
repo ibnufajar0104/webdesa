@@ -111,4 +111,21 @@ class Menu extends BaseController
 
         return $this->response->setJSON(['status' => true, 'msg' => 'Urutan tersimpan (realtime).']);
     }
+
+    public function show($id)
+    {
+        $row = $this->menu->find((int)$id);
+
+        if (!$row) {
+            return $this->response->setStatusCode(404)->setJSON([
+                'status' => false,
+                'msg'    => 'Menu tidak ditemukan',
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status' => true,
+            'data'   => $row,
+        ]);
+    }
 }

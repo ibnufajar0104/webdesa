@@ -155,23 +155,94 @@ Dokumen
                         const fileUrl = row.file_path ? (baseUrl + '/file/dokumen/' + row.file_path) : null;
 
                         return `
-                            <div class="flex items-center gap-1.5">
-                                ${fileUrl ? `<a href="${fileUrl}" target="_blank"
-                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 text-[11px] font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
-                                    File
-                                </a>` : ''}
+                        <div class="flex items-center gap-1.5">
 
-                                <a href="${editUrl}"
-                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200">
-                                    Edit
-                                </a>
+                        <!-- FILE -->
+                        ${fileUrl ? `
+                        <a href="${fileUrl}" target="_blank"
+                        title="Lihat File"
+                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full
+                                border border-slate-200 bg-slate-50 text-[11px] font-medium
+                                text-slate-700 hover:bg-slate-100
+                                dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
 
-                                <button type="button"
-                                        class="btnDelete inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] font-medium text-rose-700 hover:bg-rose-100 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200"
-                                        data-id="${row.id}">
-                                    Hapus
-                                </button>
-                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-3.5 h-3.5">
+                                <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+                                <path d="M14 2v6h6"/>
+                                <path d="M9 13h6"/>
+                                <path d="M9 17h6"/>
+                            </svg>
+
+                            <span>File</span>
+                        </a>
+                        ` : ''}
+
+                        <!-- EDIT -->
+                        <a href="${editUrl}"
+                        title="Edit"
+                        class="js-keep-page inline-flex items-center gap-1 px-2.5 py-1 rounded-full
+                                border border-sky-200 bg-sky-50 text-[11px] font-medium
+                                text-sky-700 hover:bg-sky-100
+                                focus:outline-none focus:ring-1 focus:ring-sky-400/70
+                                dark:border-sky-500/40 dark:bg-sky-500/10
+                                dark:text-sky-200 dark:hover:bg-sky-500/20">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-3.5 h-3.5">
+                                <path d="m16.862 4.487 1.687 1.688a1.875 1.875 0 0 1 0 2.652L8.21 19.167
+                                        A4.5 4.5 0 0 1 6.678 20l-2.135.534
+                                        A.75.75 0 0 1 4 19.808l.534-2.135
+                                        a4.5 4.5 0 0 1 1.334-2.531
+                                        l10.338-10.338a1.875 1.875 0 0 1 2.652 0z"/>
+                                <path d="M16.5 4.5 19.5 7.5"/>
+                            </svg>
+
+                            <span>Edit</span>
+                        </a>
+
+                        <!-- HAPUS -->
+                        <button type="button"
+                                title="Hapus"
+                                data-id="${row.id}"
+                                class="btnDelete inline-flex items-center gap-1 px-2.5 py-1 rounded-full
+                                    border border-rose-200 bg-rose-50 text-[11px] font-medium
+                                    text-rose-700 hover:bg-rose-100
+                                    focus:outline-none focus:ring-1 focus:ring-rose-400/70
+                                    dark:border-rose-500/40 dark:bg-rose-500/10
+                                    dark:text-rose-200 dark:hover:bg-rose-500/20">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-3.5 h-3.5">
+                                <path d="M6 7h12"/>
+                                <path d="M9 7V5h6v2"/>
+                                <rect x="7" y="7" width="10" height="12" rx="1.5"/>
+                                <path d="M10 11v5"/>
+                                <path d="M14 11v5"/>
+                            </svg>
+
+                            <span>Hapus</span>
+                        </button>
+
+                    </div>
                         `;
                     },
                     className: 'px-3 py-2 whitespace-nowrap'

@@ -12,7 +12,7 @@ class PageModel extends Model
 
     protected $returnType       = 'array';
 
-    // ✅ Aktifkan soft delete
+    // Aktifkan soft delete
     protected $useSoftDeletes   = true;
 
     protected $allowedFields    = [
@@ -26,6 +26,6 @@ class PageModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // ✅ Kolom soft delete
+    // Kolom soft delete
     protected $deletedField  = 'deleted_at';
 }

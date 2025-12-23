@@ -219,6 +219,7 @@ $routes->group('admin', [
     // Manajemen Menu (dedup: reorder dobel dihapus)
     $routes->group('menu', static function ($routes) {
         $routes->get('/',                  'Menu::index');
+        $routes->get('(:num)',             'Menu::show/$1');
         $routes->post('save',              'Menu::save');
         $routes->post('reorder',           'Menu::reorder');
         $routes->post('toggle/(:num)',     'Menu::toggle/$1');
@@ -263,4 +264,37 @@ $routes->group('api', [
     // BANNER API
     $routes->get('banner',        'Banner::index');       // ?limit=
     $routes->get('banner/(:num)', 'Banner::show/$1');     // id
+
+
+    $routes->get('pages', 'Pages::index');
+    $routes->get('pages/latest', 'Pages::latest');
+    $routes->get('pages/search', 'Pages::search');
+    $routes->get('pages/(:segment)', 'Pages::show/$1');
+
+
+    $routes->get('menu', 'Menu::index');
+    $routes->get('menu/flat', 'Menu::flat');
+    $routes->get('menu/by-parent/(:segment)', 'Menu::byParent/$1');
+
+    $routes->get('gallery', 'Gallery::index');
+    $routes->get('gallery/latest', 'Gallery::latest');
+    $routes->get('gallery/search', 'Gallery::search');
+    $routes->get('gallery/(:num)', 'Gallery::show/$1');
+
+
+    $routes->get('dokumen-kategori', 'DokumenKategori::index');
+    $routes->get('dokumen-kategori/latest', 'DokumenKategori::latest');
+    $routes->get('dokumen-kategori/search', 'DokumenKategori::search');
+    $routes->get('dokumen-kategori/(:segment)', 'DokumenKategori::show/$1');
+
+
+    $routes->get('dokumen', 'Dokumen::index');
+    $routes->get('dokumen/latest', 'Dokumen::latest');
+    $routes->get('dokumen/search', 'Dokumen::search');
+    $routes->get('dokumen/(:segment)', 'Dokumen::show/$1');
+
+    $routes->get('penduduk/stats/overview', 'PendudukStats::overview');
+    $routes->get('penduduk/stats/wilayah',  'PendudukStats::wilayah'); // ?level=dusun|rt
+    $routes->get('penduduk/stats/usia',     'PendudukStats::usia');    // ?mode=bucket|single
+    $routes->get('penduduk/stats/tren',     'PendudukStats::tren');    // ?by=month|year&range=24
 });

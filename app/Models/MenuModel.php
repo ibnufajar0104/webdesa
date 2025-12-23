@@ -13,10 +13,9 @@ class MenuModel extends Model
         'parent_id',
         'label',
         'url',
-        'is_header',
         'sort_order',
         'is_active',
-        'roles',
+        'target'
     ];
 
     protected $useTimestamps = true;
