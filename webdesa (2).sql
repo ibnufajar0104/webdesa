@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 21, 2025 at 03:40 AM
+-- Generation Time: Dec 23, 2025 at 02:09 AM
 -- Server version: 8.0.30
--- PHP Version: 8.2.0
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,25 +29,89 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `banners` (
   `id` int UNSIGNED NOT NULL,
-  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `subtitle` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `button_text` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `button_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'file gambar utama banner',
+  `title` varchar(200) NOT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `description` text,
+  `button_text` varchar(100) DEFAULT NULL,
+  `button_url` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL COMMENT 'file gambar utama banner',
   `position` int NOT NULL DEFAULT '1' COMMENT 'urutan tampil',
-  `status` enum('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `banners`
 --
 
 INSERT INTO `banners` (`id`, `title`, `subtitle`, `description`, `button_text`, `button_url`, `image`, `position`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'asd', 'asdasd', 'asdasd', '', '', '1763567776_df97308f120abedba650.png', 1, 'active', '2025-11-19 15:56:16', '2025-11-19 15:57:00', '2025-11-19 15:57:00');
+(1, 'asd', 'asdasd', 'asdasd', '', '', '1763567776_df97308f120abedba650.png', 1, 'active', '2025-11-19 15:56:16', '2025-11-19 15:57:00', '2025-11-19 15:57:00'),
+(2, 'Selamat Datang di Website Desa Batilai', 'Kecamatan Pelaihari, Kabupaten Tanah Laut', 'Informasi layanan desa, jam operasional, dan kontak yang jelas dan mudah ditemukan.', 'Jelajahi', 'https://desabatilai.id#statistik', '1766334221_a751587a91c8aa2c16f0.jpg', 1, 'active', '2025-12-21 16:23:41', '2025-12-21 16:23:41', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dokumen`
+--
+
+CREATE TABLE `dokumen` (
+  `id` bigint UNSIGNED NOT NULL,
+  `kategori_id` bigint UNSIGNED NOT NULL,
+  `judul` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(220) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nomor` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tahun` smallint DEFAULT NULL,
+  `tanggal` date DEFAULT NULL,
+  `ringkasan` text COLLATE utf8mb4_unicode_ci,
+  `file_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mime` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `size` bigint UNSIGNED NOT NULL DEFAULT '0',
+  `views` int UNSIGNED NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dokumen_kategori`
+--
+
+CREATE TABLE `dokumen_kategori` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nama` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(160) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `urutan` int NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `dokumen_kategori`
+--
+
+INSERT INTO `dokumen_kategori` (`id`, `nama`, `slug`, `deskripsi`, `urutan`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Peraturan Desa', 'peraturan-desa', 'Peraturan Desa yang ditetapkan oleh Kepala Desa bersama BPD', 1, 1, '2025-12-23 09:14:09', NULL, NULL),
+(2, 'Keputusan Kepala Desa', 'keputusan-kepala-desa', 'Keputusan Kepala Desa terkait penyelenggaraan pemerintahan desa', 2, 1, '2025-12-23 09:14:09', NULL, NULL),
+(3, 'Surat Edaran', 'surat-edaran', 'Surat edaran resmi yang dikeluarkan oleh Pemerintah Desa', 3, 1, '2025-12-23 09:14:09', NULL, NULL),
+(4, 'Laporan Keuangan Desa', 'laporan-keuangan-desa', 'Dokumen laporan keuangan desa (APBDes, Realisasi, dll)', 4, 1, '2025-12-23 09:14:09', NULL, NULL),
+(5, 'APBDes', 'apbdes', 'Anggaran Pendapatan dan Belanja Desa', 5, 1, '2025-12-23 09:14:09', NULL, NULL),
+(6, 'RPJMDes', 'rpjmdes', 'Rencana Pembangunan Jangka Menengah Desa', 6, 1, '2025-12-23 09:14:09', NULL, NULL),
+(7, 'RKPDes', 'rkpdes', 'Rencana Kerja Pemerintah Desa', 7, 1, '2025-12-23 09:14:09', NULL, NULL),
+(8, 'Profil Desa', 'profil-desa', 'Dokumen profil dan gambaran umum desa', 8, 1, '2025-12-23 09:14:09', NULL, NULL),
+(9, 'Informasi Publik', 'informasi-publik', 'Dokumen informasi publik sesuai keterbukaan informasi', 9, 1, '2025-12-23 09:14:09', NULL, NULL),
+(10, 'Dokumen Layanan', 'dokumen-layanan', 'Dokumen pendukung pelayanan administrasi desa', 10, 1, '2025-12-23 09:14:09', NULL, NULL),
+(11, 'Data Statistik Desa', 'data-statistik-desa', 'Data statistik kependudukan dan potensi desa', 11, 1, '2025-12-23 09:14:09', NULL, NULL),
+(12, 'Dokumen Lainnya', 'dokumen-lainnya', 'Dokumen lain yang tidak termasuk kategori khusus', 99, 1, '2025-12-23 09:14:09', NULL, NULL),
+(13, 'dasd', 'dasd', 'sadasd', 0, 1, '2025-12-23 01:42:47', '2025-12-23 01:42:56', '2025-12-23 01:42:56');
 
 -- --------------------------------------------------------
 
@@ -57,13 +121,13 @@ INSERT INTO `banners` (`id`, `title`, `subtitle`, `description`, `button_text`, 
 
 CREATE TABLE `dusun` (
   `id` int UNSIGNED NOT NULL,
-  `nama_dusun` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_dusun` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_dusun` varchar(100) NOT NULL,
+  `kode_dusun` varchar(20) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `dusun`
@@ -93,7 +157,7 @@ CREATE TABLE `galery` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `galery`
@@ -110,14 +174,14 @@ INSERT INTO `galery` (`id`, `judul`, `caption`, `file_path`, `mime`, `ukuran`, `
 
 CREATE TABLE `jam_pelayanan` (
   `id` int UNSIGNED NOT NULL,
-  `hari` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `jam_mulai` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `jam_selesai` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `hari` varchar(150) NOT NULL,
+  `jam_mulai` varchar(20) DEFAULT NULL,
+  `jam_selesai` varchar(20) DEFAULT NULL,
+  `keterangan` text,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `jam_pelayanan`
@@ -134,16 +198,16 @@ INSERT INTO `jam_pelayanan` (`id`, `hari`, `jam_mulai`, `jam_selesai`, `keterang
 
 CREATE TABLE `kontak_desa` (
   `id` int UNSIGNED NOT NULL,
-  `alamat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `telepon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `whatsapp` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Nomor WA format internasional, contoh: 628xxxxxxxxxx',
-  `email` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `website` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `link_maps` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT 'URL Google Maps / embed link',
+  `alamat` text,
+  `telepon` varchar(50) DEFAULT NULL,
+  `whatsapp` varchar(50) DEFAULT NULL COMMENT 'Nomor WA format internasional, contoh: 628xxxxxxxxxx',
+  `email` varchar(120) DEFAULT NULL,
+  `website` varchar(150) DEFAULT NULL,
+  `link_maps` text COMMENT 'URL Google Maps / embed link',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `kontak_desa`
@@ -160,14 +224,14 @@ INSERT INTO `kontak_desa` (`id`, `alamat`, `telepon`, `whatsapp`, `email`, `webs
 
 CREATE TABLE `master_agama` (
   `id` int UNSIGNED NOT NULL,
-  `nama_agama` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_agama` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_agama` varchar(100) NOT NULL,
+  `kode_agama` varchar(20) DEFAULT NULL,
   `urut` int NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1=aktif,0=nonaktif',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `master_agama`
@@ -196,7 +260,7 @@ CREATE TABLE `master_bantuan` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `master_bantuan`
@@ -215,14 +279,14 @@ INSERT INTO `master_bantuan` (`id`, `nama_bantuan`, `kode_bantuan`, `is_active`,
 
 CREATE TABLE `master_jabatan` (
   `id` int UNSIGNED NOT NULL,
-  `nama_jabatan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_jabatan` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_jabatan` varchar(100) NOT NULL,
+  `kode_jabatan` varchar(20) DEFAULT NULL,
   `urut` int NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `master_jabatan`
@@ -248,14 +312,14 @@ INSERT INTO `master_jabatan` (`id`, `nama_jabatan`, `kode_jabatan`, `urut`, `is_
 
 CREATE TABLE `master_pekerjaan` (
   `id` int UNSIGNED NOT NULL,
-  `nama_pekerjaan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_pekerjaan` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_pekerjaan` varchar(100) NOT NULL,
+  `kode_pekerjaan` varchar(20) DEFAULT NULL,
   `urut` tinyint UNSIGNED NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `master_pekerjaan`
@@ -282,14 +346,14 @@ INSERT INTO `master_pekerjaan` (`id`, `nama_pekerjaan`, `kode_pekerjaan`, `urut`
 
 CREATE TABLE `master_pendidikan` (
   `id` int UNSIGNED NOT NULL,
-  `nama_pendidikan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `kode_pendidikan` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_pendidikan` varchar(100) NOT NULL,
+  `kode_pendidikan` varchar(20) DEFAULT NULL,
   `urut` tinyint UNSIGNED NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `master_pendidikan`
@@ -316,24 +380,24 @@ INSERT INTO `master_pendidikan` (`id`, `nama_pendidikan`, `kode_pendidikan`, `ur
 CREATE TABLE `menus` (
   `id` int UNSIGNED NOT NULL,
   `parent_id` int UNSIGNED DEFAULT NULL,
-  `label` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `label` varchar(150) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
   `is_header` tinyint(1) NOT NULL DEFAULT '0',
   `sort_order` int NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `roles` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `roles` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `menus`
 --
 
 INSERT INTO `menus` (`id`, `parent_id`, `label`, `url`, `is_header`, `sort_order`, `is_active`, `roles`, `created_at`, `updated_at`) VALUES
-(3, NULL, 'Beranda', 'beranda', 0, 2, 1, NULL, '2025-12-21 03:09:03', '2025-12-21 03:13:55'),
-(4, NULL, 'Statistik', 'statistik', 0, 3, 1, NULL, '2025-12-21 03:09:37', '2025-12-21 03:14:24'),
-(5, NULL, 'Perangkat Desa', 'perangkatdesa', 0, 1, 1, NULL, '2025-12-21 03:13:48', '2025-12-21 03:13:55');
+(3, NULL, 'Beranda', 'beranda', 0, 1, 1, NULL, '2025-12-21 03:09:03', '2025-12-21 09:22:05'),
+(4, NULL, 'Statistik', 'statistik', 0, 3, 1, NULL, '2025-12-21 03:09:37', '2025-12-21 09:22:05'),
+(5, NULL, 'Perangkat Desa', 'perangkatdesa', 0, 2, 1, NULL, '2025-12-21 03:13:48', '2025-12-21 09:22:05');
 
 -- --------------------------------------------------------
 
@@ -343,13 +407,13 @@ INSERT INTO `menus` (`id`, `parent_id`, `label`, `url`, `is_header`, `sort_order
 
 CREATE TABLE `migrations` (
   `id` bigint UNSIGNED NOT NULL,
-  `version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `class` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `group` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `namespace` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `version` varchar(255) NOT NULL,
+  `class` varchar(255) NOT NULL,
+  `group` varchar(255) NOT NULL,
+  `namespace` varchar(255) NOT NULL,
   `time` int NOT NULL,
   `batch` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -373,7 +437,9 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 (15, '2025-11-20-120000', 'App\\Database\\Migrations\\CreatePerangkatJabatanHistory', 'default', 'App', 1763652207, 14),
 (16, '2025-11-20-130000', 'App\\Database\\Migrations\\SeedDummyPerangkatDesa', 'default', 'App', 1763652848, 15),
 (17, '2025-11-20-150000', 'App\\Database\\Migrations\\ResetAndSeedPerangkatDesaDummy', 'default', 'App', 1763653349, 16),
-(18, '2025-12-18-153809', 'App\\Database\\Migrations\\CreateMenus', 'default', 'App', 1766072367, 17);
+(18, '2025-12-18-153809', 'App\\Database\\Migrations\\CreateMenus', 'default', 'App', 1766072367, 17),
+(19, '2025-12-23-011106', 'App\\Database\\Migrations\\CreateKategoriDokumen', 'default', 'App', 1766452407, 18),
+(20, '2025-12-23-011153', 'App\\Database\\Migrations\\CreateDokumenTables', 'default', 'App', 1766452407, 18);
 
 -- --------------------------------------------------------
 
@@ -383,15 +449,15 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 
 CREATE TABLE `news` (
   `id` int UNSIGNED NOT NULL,
-  `slug` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` enum('published','draft') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'published',
-  `cover_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `slug` varchar(191) NOT NULL,
+  `title` varchar(191) NOT NULL,
+  `content` longtext,
+  `status` enum('published','draft') NOT NULL DEFAULT 'published',
+  `cover_image` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `news`
@@ -402,7 +468,7 @@ INSERT INTO `news` (`id`, `slug`, `title`, `content`, `status`, `cover_image`, `
 (2, 'sss', 'sss', '<p>fff</p>', 'published', 'cover_69196ceb7c07f4.88195075.jpg', '2025-11-16 06:19:23', '2025-11-19 14:25:35', '2025-11-19 14:25:35'),
 (3, 'aaa', 'aaa', '<p>aaa</p>', 'published', NULL, '2025-11-19 14:29:28', '2025-11-19 14:29:41', '2025-11-19 14:29:41'),
 (4, 'aaaa', 'aaaa', '<p>aa</p>', 'published', '1763562646_5751ce4a0656df8444d4.png', '2025-11-19 14:30:46', '2025-11-19 14:31:04', '2025-11-19 14:31:04'),
-(5, 'asd', 'asd', '<p>asd<br><img src=\"http://localhost:8080/file/pages/img_691de3616685b8.30555406.jpg\" alt=\"\"></p>', 'published', 'cover_691de3d8c61228.64353158.jpg', '2025-11-19 14:32:17', '2025-11-19 15:35:52', NULL);
+(5, 'musyawarah-pembangunan-desa-2025', 'Musyawarah Pembangunan Desa 2025', '<p><span>Kegiatan musyawarah pembangunan desa melibatkan warga untuk menentukan program prioritas...</span></p>', 'published', '1766334281_d25a927594c5045d6686.jpg', '2025-11-19 14:32:17', '2025-12-21 16:24:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -412,14 +478,14 @@ INSERT INTO `news` (`id`, `slug`, `title`, `content`, `status`, `cover_image`, `
 
 CREATE TABLE `pages` (
   `id` int UNSIGNED NOT NULL,
-  `slug` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'published',
+  `slug` varchar(150) NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `content` text,
+  `status` varchar(20) NOT NULL DEFAULT 'published',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `pages`
@@ -442,32 +508,32 @@ INSERT INTO `pages` (`id`, `slug`, `title`, `content`, `status`, `created_at`, `
 
 CREATE TABLE `penduduk` (
   `id` int UNSIGNED NOT NULL,
-  `nik` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `no_kk` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nama_lengkap` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `jenis_kelamin` enum('L','P') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'L',
-  `tempat_lahir` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nik` char(16) NOT NULL,
+  `no_kk` char(16) DEFAULT NULL,
+  `nama_lengkap` varchar(150) NOT NULL,
+  `jenis_kelamin` enum('L','P') NOT NULL DEFAULT 'L',
+  `tempat_lahir` varchar(100) NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `golongan_darah` enum('A','B','AB','O','-') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `golongan_darah` enum('A','B','AB','O','-') DEFAULT NULL,
   `agama_id` int DEFAULT NULL,
-  `status_perkawinan` enum('Belum Kawin','Kawin','Cerai Hidup','Cerai Mati') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Belum Kawin',
+  `status_perkawinan` enum('Belum Kawin','Kawin','Cerai Hidup','Cerai Mati') NOT NULL DEFAULT 'Belum Kawin',
   `pendidikan_id` int UNSIGNED DEFAULT NULL,
   `pekerjaan_id` int UNSIGNED DEFAULT NULL,
-  `kewarganegaraan` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'WNI',
-  `status_penduduk` enum('Tetap','Pendatang') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Tetap',
-  `status_dasar` enum('Hidup','Meninggal','Pindah','Hilang') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Hidup',
+  `kewarganegaraan` varchar(50) NOT NULL DEFAULT 'WNI',
+  `status_penduduk` enum('Tetap','Pendatang') NOT NULL DEFAULT 'Tetap',
+  `status_dasar` enum('Hidup','Meninggal','Pindah','Hilang') NOT NULL DEFAULT 'Hidup',
   `rt_id` int UNSIGNED DEFAULT NULL,
-  `alamat` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `desa` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `kecamatan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `no_hp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ktp_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `alamat` varchar(200) DEFAULT NULL,
+  `desa` varchar(100) DEFAULT NULL,
+  `kecamatan` varchar(100) DEFAULT NULL,
+  `no_hp` varchar(20) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `ktp_file` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `penduduk`
@@ -506,7 +572,7 @@ CREATE TABLE `penerima_bantuan` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `penerima_bantuan`
@@ -524,22 +590,22 @@ INSERT INTO `penerima_bantuan` (`id`, `penduduk_id`, `bantuan_id`, `tahun`, `per
 
 CREATE TABLE `perangkat_desa` (
   `id` int UNSIGNED NOT NULL,
-  `nama` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `nip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nik` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `jenis_kelamin` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama` varchar(150) NOT NULL,
+  `nip` varchar(50) DEFAULT NULL,
+  `nik` varchar(50) DEFAULT NULL,
+  `jenis_kelamin` char(1) DEFAULT NULL,
   `jabatan_id` int UNSIGNED DEFAULT NULL,
   `pendidikan_id` int UNSIGNED DEFAULT NULL,
   `tmt_jabatan` date DEFAULT NULL,
   `status_aktif` tinyint(1) NOT NULL DEFAULT '1',
-  `no_hp` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `alamat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `foto_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `no_hp` varchar(30) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `alamat` text,
+  `foto_file` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `perangkat_desa`
@@ -577,17 +643,17 @@ CREATE TABLE `perangkat_jabatan_history` (
   `id` int UNSIGNED NOT NULL,
   `perangkat_id` int UNSIGNED NOT NULL,
   `jabatan_id` int UNSIGNED DEFAULT NULL,
-  `nama_unit` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sk_nomor` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_unit` varchar(150) DEFAULT NULL,
+  `sk_nomor` varchar(100) DEFAULT NULL,
   `sk_tanggal` date DEFAULT NULL,
   `tmt_mulai` date DEFAULT NULL,
   `tmt_selesai` date DEFAULT NULL,
-  `sk_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `keterangan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sk_file` varchar(255) DEFAULT NULL,
+  `keterangan` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `perangkat_jabatan_history`
@@ -646,15 +712,15 @@ CREATE TABLE `perangkat_pendidikan_history` (
   `id` int UNSIGNED NOT NULL,
   `perangkat_id` int UNSIGNED NOT NULL,
   `pendidikan_id` int UNSIGNED DEFAULT NULL,
-  `nama_lembaga` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `jurusan` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nama_lembaga` varchar(150) DEFAULT NULL,
+  `jurusan` varchar(150) DEFAULT NULL,
   `tahun_masuk` smallint DEFAULT NULL,
   `tahun_lulus` smallint DEFAULT NULL,
-  `ijazah_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ijazah_file` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `perangkat_pendidikan_history`
@@ -713,12 +779,12 @@ CREATE TABLE `rt` (
   `id` int UNSIGNED NOT NULL,
   `id_dusun` int DEFAULT NULL,
   `rw_id` int UNSIGNED NOT NULL,
-  `no_rt` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `no_rt` varchar(5) NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rt`
@@ -753,7 +819,7 @@ CREATE TABLE `rt_identitas` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `rt_identitas`
@@ -776,7 +842,7 @@ CREATE TABLE `rw` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rw`
@@ -797,13 +863,13 @@ INSERT INTO `rw` (`id`, `dusun_id`, `no_rw`, `is_active`, `created_at`, `updated
 
 CREATE TABLE `sambutan_kades` (
   `id` int UNSIGNED NOT NULL,
-  `judul` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `isi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `foto_kades` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `judul` varchar(150) NOT NULL,
+  `isi` text,
+  `foto_kades` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `sambutan_kades`
@@ -831,14 +897,14 @@ CREATE TABLE `users` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `nama`, `username`, `email`, `no_hp`, `password_hash`, `role`, `is_active`, `last_login_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Administrator', 'admin@admin.com', 'admin@admin.com', '085245065929', '$2y$10$IB0FbQFRiyvlhW3oLXGCMejPSesHH3MHE9ItUYNTNX7dRWwr7jUum', 'superadmin', 1, '2025-12-21 01:36:06', '2025-12-18 03:18:20', '2025-12-21 01:36:06', NULL),
+(1, 'Administrator', 'admin@admin.com', 'admin@admin.com', '085245065929', '$2y$10$IB0FbQFRiyvlhW3oLXGCMejPSesHH3MHE9ItUYNTNX7dRWwr7jUum', 'superadmin', 1, '2025-12-23 01:04:13', '2025-12-18 03:18:20', '2025-12-23 01:04:13', NULL),
 (2, 'Ibnu Fajar', 'ibnufajar', 'ibnufajar0104@gmail.com', '085245065929', '$2y$10$cTIB98bnxrxQAK5kosJfIeHaZxHUyFmuKPC.NtnDxDZXOrsz3NPu2', 'admin', 1, '2025-12-21 02:42:46', '2025-12-21 01:37:24', '2025-12-21 02:42:46', NULL);
 
 --
@@ -850,6 +916,24 @@ INSERT INTO `users` (`id`, `nama`, `username`, `email`, `no_hp`, `password_hash`
 --
 ALTER TABLE `banners`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dokumen`
+--
+ALTER TABLE `dokumen`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_dokumen_slug` (`slug`),
+  ADD KEY `idx_dokumen_kategori` (`kategori_id`),
+  ADD KEY `idx_dokumen_tahun` (`tahun`),
+  ADD KEY `idx_dokumen_active_tanggal` (`is_active`,`tanggal`);
+
+--
+-- Indexes for table `dokumen_kategori`
+--
+ALTER TABLE `dokumen_kategori`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_dokumen_kategori_slug` (`slug`),
+  ADD KEY `idx_dokumen_kategori_active_urutan` (`is_active`,`urutan`);
 
 --
 -- Indexes for table `dusun`
@@ -1032,7 +1116,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `banners`
 --
 ALTER TABLE `banners`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `dokumen`
+--
+ALTER TABLE `dokumen`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `dokumen_kategori`
+--
+ALTER TABLE `dokumen_kategori`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `dusun`
@@ -1098,7 +1194,7 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `news`
@@ -1177,18 +1273,18 @@ ALTER TABLE `users`
 --
 
 --
+-- Constraints for table `dokumen`
+--
+ALTER TABLE `dokumen`
+  ADD CONSTRAINT `fk_dokumen_kategori` FOREIGN KEY (`kategori_id`) REFERENCES `dokumen_kategori` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+--
 -- Constraints for table `penduduk`
 --
 ALTER TABLE `penduduk`
   ADD CONSTRAINT `penduduk_pekerjaan_id_foreign` FOREIGN KEY (`pekerjaan_id`) REFERENCES `master_pekerjaan` (`id`) ON DELETE CASCADE ON UPDATE SET NULL,
   ADD CONSTRAINT `penduduk_pendidikan_id_foreign` FOREIGN KEY (`pendidikan_id`) REFERENCES `master_pendidikan` (`id`) ON DELETE CASCADE ON UPDATE SET NULL,
   ADD CONSTRAINT `penduduk_rt_id_foreign` FOREIGN KEY (`rt_id`) REFERENCES `rt` (`id`) ON DELETE CASCADE ON UPDATE SET NULL;
-
---
--- Constraints for table `penerima_bantuan`
---
-ALTER TABLE `penerima_bantuan`
-  ADD CONSTRAINT `fk_pb_bantuan` FOREIGN KEY (`bantuan_id`) REFERENCES `master_bantuan` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
 -- Constraints for table `rt`
