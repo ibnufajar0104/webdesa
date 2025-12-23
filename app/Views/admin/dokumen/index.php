@@ -1,7 +1,7 @@
 <?= $this->extend('layout/admin') ?>
 
 <?= $this->section('title') ?>
-Banner
+Dokumen
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -9,41 +9,42 @@ Banner
 <div class="flex items-center justify-between mb-4">
     <div>
         <h2 class="text-sm md:text-base font-semibold text-slate-800 dark:text-slate-100">
-            Banner
+            Dokumen
         </h2>
         <p class="text-xs text-slate-500 dark:text-slate-400">
-            Kelola banner yang tampil pada halaman utama website desa.
+            Kelola dokumen publik untuk website desa (Perdes, APBDes, RPJMDes, dll).
         </p>
     </div>
-    <a href="<?= base_url('admin/banner/create') ?>"
-        class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-primary-600 text-white text-xs md:text-sm font-medium shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/70 focus:ring-offset-1 focus:ring-offset-slate-50 dark:focus:ring-offset-slate-900">
-
+    <a href="<?= base_url('admin/dokumen/create') ?>"
+        class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-primary-600 text-white text-xs md:text-sm font-medium shadow-sm hover:bg-primary-700">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="w-4 h-4">
             <path stroke-linecap="round" stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
-
-        <span>Tambah Banner</span>
+        <span>Tambah Dokumen</span>
     </a>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden dark:bg-slate-900 dark:border-slate-800">
     <div class="p-3 border-b border-slate-100 dark:border-slate-800">
         <p class="text-xs text-slate-500 dark:text-slate-400">
-            Daftar banner yang digunakan pada header/slider halaman utama.
+            Daftar dokumen yang tampil di website desa.
         </p>
     </div>
+
     <div class="p-3 overflow-x-auto">
-        <table id="tableBanner" class="min-w-full text-xs md:text-sm">
+        <table id="tableDokumen" class="min-w-full text-xs md:text-sm">
             <thead>
                 <tr class="bg-slate-50 text-slate-600 border-b border-slate-100 dark:bg-slate-900/60 dark:text-slate-200 dark:border-slate-800">
                     <th class="px-3 py-2 text-left font-medium">#</th>
-                    <th class="px-3 py-2 text-left font-medium">Gambar</th>
                     <th class="px-3 py-2 text-left font-medium">Judul</th>
+                    <th class="px-3 py-2 text-left font-medium">Kategori</th>
+                    <th class="px-3 py-2 text-left font-medium">Tahun</th>
+                    <th class="px-3 py-2 text-left font-medium">Tanggal</th>
                     <th class="px-3 py-2 text-left font-medium">Status</th>
-                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Urutan</th>
+                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Diperbarui</th>
                     <th class="px-3 py-2 text-left font-medium">Aksi</th>
                 </tr>
             </thead>
@@ -53,8 +54,7 @@ Banner
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet"
-    href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
 <script>
@@ -63,18 +63,18 @@ Banner
         const csrfName = "<?= csrf_token() ?>";
         let csrfHash = "<?= csrf_hash() ?>";
 
-        let table = $('#tableBanner').DataTable({
+        let table = $('#tableDokumen').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: baseUrl + '/admin/banner/datatable',
+                url: baseUrl + '/admin/dokumen/datatable',
                 type: 'POST',
                 data: function(d) {
                     d[csrfName] = csrfHash;
                 }
             },
             order: [
-                [4, 'asc'] // kolom Urutan
+                [6, 'desc']
             ],
             language: {
                 processing: "Memproses...",
@@ -91,13 +91,9 @@ Banner
                     last: "»",
                     previous: "&lt;",
                     next: "&gt;"
-                },
-                aria: {
-                    sortAscending: ": aktifkan untuk mengurutkan kolom naik",
-                    sortDescending: ": aktifkan untuk mengurutkan kolom turun"
                 }
             },
-            columns: [{ // index
+            columns: [{
                     data: null,
                     orderable: false,
                     searchable: false,
@@ -106,93 +102,76 @@ Banner
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
                 },
-                { // image
-                    data: 'image',
-                    orderable: false,
-                    searchable: false,
-                    render: function(data) {
-                        if (!data) {
-                            return '<div class="w-20 h-10 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] text-slate-400">No Img</div>';
-                        }
-                        const url = baseUrl + '/file/banner/' + data;
-                        return `
-                            <div class="w-24 h-12 rounded-md overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                <img src="${url}" alt="banner" class="w-full h-full object-cover" loading="lazy">
-                            </div>
-                        `;
+                {
+                    data: 'judul',
+                    className: 'px-3 py-2 text-slate-800 dark:text-slate-100'
+                },
+                {
+                    data: 'kategori_nama',
+                    render: function(v) {
+                        return v ? v : '-';
                     },
                     className: 'px-3 py-2'
                 },
-                { // title
-                    data: 'title',
-                    className: 'px-3 py-2 text-slate-800 dark:text-slate-100'
+                {
+                    data: 'tahun',
+                    render: function(v) {
+                        return v ? v : '-';
+                    },
+                    className: 'px-3 py-2 whitespace-nowrap'
                 },
-                { // status
-                    data: 'status',
-                    render: function(data) {
-                        let color = data === 'active' ?
+                {
+                    data: 'tanggal',
+                    render: function(v) {
+                        return v ? v : '-';
+                    },
+                    className: 'px-3 py-2 whitespace-nowrap'
+                },
+                {
+                    data: 'is_active',
+                    render: function(val) {
+                        const isOn = Number(val) === 1;
+                        const color = isOn ?
                             'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700' :
                             'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/60 dark:text-slate-200 dark:border-slate-700';
-                        let label = data === 'active' ? 'Aktif' : 'Nonaktif';
+                        const label = isOn ? 'Aktif' : 'Nonaktif';
                         return `<span class="inline-flex px-2 py-0.5 rounded-full border text-[11px] ${color}">${label}</span>`;
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
                 },
-                { // position
-                    data: 'position',
-                    render: function(data) {
-                        return data || '-';
+                {
+                    data: 'updated_at',
+                    render: function(v) {
+                        return v ? v : '-';
                     },
                     className: 'px-3 py-2 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400'
                 },
-                { // actions
+                {
                     data: null,
                     orderable: false,
                     searchable: false,
                     render: function(row) {
-                        let editUrl = baseUrl + '/admin/banner/edit/' + row.id;
+                        const editUrl = baseUrl + '/admin/dokumen/edit/' + row.id;
+                        const fileUrl = row.file_path ? (baseUrl + '/file/dokumen/' + row.file_path) : null;
+
                         return `
-                                 <div class="flex items-center gap-1.5">
-            
+                            <div class="flex items-center gap-1.5">
+                                ${fileUrl ? `<a href="${fileUrl}" target="_blank"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 text-[11px] font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
+                                    File
+                                </a>` : ''}
 
-                <!-- EDIT: icon sama dengan Data Penduduk -->
-                <a href="${editUrl}"
-                   class="js-keep-page inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 focus:outline-none focus:ring-1 focus:ring-sky-400/70 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20"
-                   title="Edit">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                         class="w-3.5 h-3.5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="m16.862 4.487 1.687 1.688a1.875 1.875 0 0 1 0 2.652L8.21 19.167A4.5 4.5 0 0 1 6.678 20l-2.135.534A.75.75 0 0 1 4 19.808l.534-2.135a4.5 4.5 0 0 1 1.334-2.531l10.338-10.338a1.875 1.875 0 0 1 2.652 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M16.5 4.5 19.5 7.5" />
-                    </svg>
-                    <span>Edit</span>
-                </a>
+                                <a href="${editUrl}"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200">
+                                    Edit
+                                </a>
 
-                <!-- HAPUS: icon sama dengan Data Penduduk -->
-                <button type="button"
-                        class="btnDelete inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] font-medium text-rose-700 hover:bg-rose-100 focus:outline-none focus:ring-1 focus:ring-rose-400/70 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
-                        data-id="${row.id}" title="Hapus">
-                 <svg xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="w-3.5 h-3.5">
-                    <path d="M6 7h12" />
-                    <path d="M9 7V5h6v2" />
-                    <rect x="7" y="7" width="10" height="12" rx="1.5" />
-                    <path d="M10 11v5" />
-                    <path d="M14 11v5" />
-                </svg>
-
-
-                    <span>Hapus</span>
-                </button>
-            </div>
+                                <button type="button"
+                                        class="btnDelete inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] font-medium text-rose-700 hover:bg-rose-100 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200"
+                                        data-id="${row.id}">
+                                    Hapus
+                                </button>
+                            </div>
                         `;
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
@@ -200,11 +179,11 @@ Banner
             ]
         });
 
-        $('#tableBanner').on('click', '.btnDelete', function() {
-            let id = $(this).data('id');
+        $('#tableDokumen').on('click', '.btnDelete', function() {
+            const id = $(this).data('id');
 
             Swal.fire({
-                title: 'Hapus banner?',
+                title: 'Hapus dokumen?',
                 text: 'Data yang dihapus tidak dapat dikembalikan.',
                 icon: 'warning',
                 showCancelButton: true,
@@ -215,7 +194,7 @@ Banner
                 if (!result.isConfirmed) return;
 
                 $.ajax({
-                    url: baseUrl + '/admin/banner/delete',
+                    url: baseUrl + '/admin/dokumen/delete',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -223,15 +202,11 @@ Banner
                         [csrfName]: csrfHash
                     },
                     success: function(res) {
-                        if (res.newToken) {
-                            csrfHash = res.newToken;
-                        }
-
                         if (res.status) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
-                                text: res.message || 'Banner berhasil dihapus',
+                                text: res.message || 'Dokumen berhasil dihapus',
                                 timer: 2000,
                                 showConfirmButton: false
                             });

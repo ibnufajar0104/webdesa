@@ -18,17 +18,77 @@ class JamPelayanan extends BaseController
 
     public function index()
     {
-        $row = $this->model->orderBy('id', 'ASC')->first();
-
         return view('admin/jam_pelayanan/index', [
             'pageTitle'  => 'Jam Pelayanan',
             'activeMenu' => 'jam_pelayanan',
-            'data'       => $row,
         ]);
     }
 
+    /**
+     * DataTables server-side
+     */
+    public function datatable()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(405);
+        }
+
+        $request = $this->request;
+
+        $draw   = (int) $request->getPost('draw');
+        $start  = (int) $request->getPost('start');
+        $length = (int) $request->getPost('length');
+        $search = $request->getPost('search')['value'] ?? '';
+
+        $order  = $request->getPost('order');
+        $orderColumnIdx = $order[0]['column'] ?? 5; // default updated_at
+        $orderDir       = $order[0]['dir'] ?? 'desc';
+
+        // index DT -> field db (tanpa kolom #)
+        $columns = [
+            0 => 'id',          // virtual
+            1 => 'hari',
+            2 => 'jam_mulai',
+            3 => 'jam_selesai',
+            4 => 'is_active',
+            5 => 'updated_at',
+        ];
+        $orderColumn = $columns[$orderColumnIdx] ?? 'updated_at';
+
+        $builder = $this->model->builder();
+
+        $recordsTotal = $builder->countAllResults(false);
+
+        if ($search) {
+            $builder->groupStart()
+                ->like('hari', $search)
+                ->orLike('jam_mulai', $search)
+                ->orLike('jam_selesai', $search)
+                ->orLike('keterangan', $search)
+                ->groupEnd();
+        }
+
+        $recordsFiltered = $builder->countAllResults(false);
+
+        $builder->orderBy($orderColumn, $orderDir)
+            ->limit($length, $start);
+
+        $data = $builder->get()->getResultArray();
+
+        return $this->response->setJSON([
+            'draw'            => $draw,
+            'recordsTotal'    => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data'            => $data,
+        ]);
+    }
+
+    /**
+     * Save (insert/update) via modal (AJAX friendly)
+     */
     public function save()
     {
+        // boleh AJAX / non-AJAX, tapi kita utamakan AJAX
         $id = $this->request->getPost('id');
 
         $rules = [
@@ -54,10 +114,20 @@ class JamPelayanan extends BaseController
             ],
         ];
 
-        if (! $this->validate($rules)) {
+        if (!$this->validate($rules)) {
+            $errors = $this->validation->getErrors();
+
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'status'  => false,
+                    'message' => 'Validasi gagal',
+                    'errors'  => $errors,
+                ]);
+            }
+
             return redirect()->back()
                 ->withInput()
-                ->with('errors', $this->validation->getErrors())
+                ->with('errors', $errors)
                 ->with('error', 'Jam pelayanan gagal disimpan.');
         }
 
@@ -70,13 +140,58 @@ class JamPelayanan extends BaseController
         ];
 
         if ($id) {
+            $row = $this->model->find($id);
+            if (!$row) {
+                return $this->response->setJSON([
+                    'status'  => false,
+                    'message' => 'Data tidak ditemukan',
+                ]);
+            }
             $this->model->update($id, $data);
             $msg = 'Jam pelayanan berhasil diperbarui.';
         } else {
             $this->model->insert($data);
-            $msg = 'Jam pelayanan berhasil disimpan.';
+            $msg = 'Jam pelayanan berhasil ditambahkan.';
+        }
+
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status'  => true,
+                'message' => $msg,
+            ]);
         }
 
         return redirect()->to('admin/jam-pelayanan')->with('success', $msg);
+    }
+
+    public function delete()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(405);
+        }
+
+        $id = $this->request->getPost('id');
+
+        if (!$id) {
+            return $this->response->setJSON([
+                'status'  => false,
+                'message' => 'ID tidak valid',
+            ]);
+        }
+
+        $row = $this->model->find($id);
+        if (!$row) {
+            return $this->response->setJSON([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan',
+            ]);
+        }
+
+        $this->model->delete($id); // hard delete (karena useSoftDeletes=false)
+
+        return $this->response->setJSON([
+            'status'  => true,
+            'message' => 'Jam pelayanan berhasil dihapus.',
+        ]);
     }
 }

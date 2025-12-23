@@ -122,7 +122,86 @@ $active = function ($key) use ($activeMenu) {
                     <span>Galery</span>
                 </a>
             </li>
+            <?php
+            $activeMenu = $activeMenu ?? '';
+
+            $active = function ($key) use ($activeMenu) {
+                return $activeMenu === $key
+                    ? 'bg-primary-700 text-white shadow-inner'
+                    : 'text-primary-100/90 hover:bg-primary-800 hover:text-white';
+            };
+
+            // helper: cek salah satu submenu aktif
+            $isDokumenOpen = in_array($activeMenu, ['dokumen_kategori', 'dokumen'], true);
+            ?>
+
+            <!-- MENU DOKUMEN (dengan sub menu) -->
+            <li>
+                <button type="button"
+                    class="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl transition <?= $isDokumenOpen ? 'bg-primary-800/60 text-white' : 'text-primary-100/90 hover:bg-primary-800 hover:text-white' ?>"
+                    aria-controls="submenu-dokumen"
+                    aria-expanded="<?= $isDokumenOpen ? 'true' : 'false' ?>"
+                    onclick="(function(){
+            const box = document.getElementById('submenu-dokumen');
+            const btn = event.currentTarget;
+            const isOpen = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            box.classList.toggle('hidden');
+        })()">
+                    <span class="flex items-center gap-2">
+                        <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 3.5h7.5L19 8v12H7z" />
+                                <path d="M14.5 3.5V8H19" />
+                                <path d="M9.5 12h5M9.5 15h5M9.5 18h3" />
+                            </svg>
+                        </span>
+                        <span>Dokumen</span>
+                    </span>
+
+                    <!-- chevron -->
+                    <svg class="w-4 h-4 transition-transform <?= $isDokumenOpen ? 'rotate-180' : '' ?>"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9l6 6 6-6" />
+                    </svg>
+                </button>
+
+                <ul id="submenu-dokumen"
+                    class="mt-1 ml-3 pl-3 border-l border-primary-700/50 space-y-1 <?= $isDokumenOpen ? '' : 'hidden' ?>">
+
+                    <!-- Kategori Dokumen -->
+                    <li>
+                        <a href="<?= base_url('admin/kategori-dokumen') ?>"
+                            class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('dokumen_kategori') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 7h7l2 2h7v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z" />
+                                </svg>
+                            </span>
+                            <span>Kategori Dokumen</span>
+                        </a>
+                    </li>
+
+                    <!-- Dokumen -->
+                    <li>
+                        <a href="<?= base_url('admin/dokumen') ?>"
+                            class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('dokumen') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 3.5h7.5L19 8v12H7z" />
+                                    <path d="M14.5 3.5V8H19" />
+                                    <path d="M9.5 12h5M9.5 15h5" />
+                                </svg>
+                            </span>
+                            <span>Dokumen</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
             <!-- Data Penduduk -->
+
             <li>
                 <a href="<?= base_url('admin/data-penduduk') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('penduduk') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">

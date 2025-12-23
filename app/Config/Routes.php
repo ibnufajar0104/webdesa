@@ -33,6 +33,7 @@ $routes->group('file', static function ($routes) {
     $routes->get('ijazah/(:any)',    'FileHandler::ijazah/$1');
     $routes->get('sk/(:any)',        'FileHandler::sk/$1');
     $routes->get('galery/(:any)',    'FileHandler::galery/$1');
+    $routes->get('dokumen/(:any)', 'FileHandler::dokumen/$1');
 });
 
 
@@ -127,9 +128,12 @@ $routes->group('admin', [
 
     // Jam Pelayanan
     $routes->group('jam-pelayanan', static function ($routes) {
-        $routes->get('/',      'JamPelayanan::index');
-        $routes->post('save',  'JamPelayanan::save');
+        $routes->get('/',          'JamPelayanan::index');
+        $routes->post('datatable', 'JamPelayanan::datatable');
+        $routes->post('save',      'JamPelayanan::save');
+        $routes->post('delete',    'JamPelayanan::delete');
     });
+
 
     // Kontak
     $routes->group('kontak', static function ($routes) {
@@ -227,5 +231,25 @@ $routes->group('admin', [
         $routes->post('delete/(:num)',   'Menu::delete/$1');
         $routes->post('reorder', 'Menu::reorder');
         $routes->post('set-active/(:num)', 'Menu::setActive/$1');
+    });
+
+    $routes->group('kategori-dokumen', static function ($routes) {
+        $routes->get('/',           'KategoriDokumen::index');
+        $routes->post('datatable',  'KategoriDokumen::datatable');
+        $routes->get('create',      'KategoriDokumen::create');
+        $routes->get('edit/(:num)', 'KategoriDokumen::edit/$1');
+        $routes->post('save',       'KategoriDokumen::save');
+        $routes->post('delete',     'KategoriDokumen::delete');
+    });
+
+
+    // Dokumen
+    $routes->group('dokumen', static function ($routes) {
+        $routes->get('/',           'Dokumen::index');
+        $routes->post('datatable',  'Dokumen::datatable');
+        $routes->get('create',      'Dokumen::create');
+        $routes->get('edit/(:num)', 'Dokumen::edit/$1');
+        $routes->post('save',       'Dokumen::save');
+        $routes->post('delete',     'Dokumen::delete');
     });
 });

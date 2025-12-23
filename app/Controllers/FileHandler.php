@@ -274,4 +274,59 @@ class FileHandler extends BaseController
 
         return $this->response->setBody(file_get_contents($filePath));
     }
+
+    public function dokumen($filename = null)
+    {
+        if (!$filename) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Sanitasi nama file (anti path traversal)
+        $safeName = basename($filename);
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $safeName)) {
+            return $this->response->setStatusCode(400, 'Invalid file name');
+        }
+
+        $filePath = WRITEPATH . 'uploads/dokumen/' . $safeName;
+
+        if (!is_file($filePath)) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+
+        // Izinkan dokumen + gambar
+        $allowed = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'image/png',
+            'image/jpeg',
+            'image/jpg',
+            'image/gif',
+            'image/webp',
+        ];
+
+        if (!in_array($mimeType, $allowed, true)) {
+            return $this->response->setStatusCode(403, 'File type forbidden');
+        }
+
+        // Inline hanya untuk PDF + image, selain itu attachment (download)
+        $inlineMimes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+        $disposition = in_array($mimeType, $inlineMimes, true)
+            ? 'inline'
+            : 'attachment';
+
+        $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Content-Disposition', $disposition . '; filename="' . $safeName . '"')
+            ->setHeader('X-Content-Type-Options', 'nosniff')
+            ->setHeader('Cache-Control', 'public, max-age=604800'); // 7 hari
+
+        return $this->response->setBody(file_get_contents($filePath));
+    }
 }

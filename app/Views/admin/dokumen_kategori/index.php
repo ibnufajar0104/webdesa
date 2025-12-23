@@ -1,7 +1,7 @@
 <?= $this->extend('layout/admin') ?>
 
 <?= $this->section('title') ?>
-Banner
+Kategori Dokumen
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -9,41 +9,40 @@ Banner
 <div class="flex items-center justify-between mb-4">
     <div>
         <h2 class="text-sm md:text-base font-semibold text-slate-800 dark:text-slate-100">
-            Banner
+            Kategori Dokumen
         </h2>
         <p class="text-xs text-slate-500 dark:text-slate-400">
-            Kelola banner yang tampil pada halaman utama website desa.
+            Kelola kategori dokumen untuk kebutuhan website desa (Perdes, APBDes, RPJMDes, dll).
         </p>
     </div>
-    <a href="<?= base_url('admin/banner/create') ?>"
+    <a href="<?= base_url('admin/kategori-dokumen/create') ?>"
         class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-primary-600 text-white text-xs md:text-sm font-medium shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/70 focus:ring-offset-1 focus:ring-offset-slate-50 dark:focus:ring-offset-slate-900">
-
         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="w-4 h-4">
             <path stroke-linecap="round" stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
-
-        <span>Tambah Banner</span>
+        <span>Tambah Kategori</span>
     </a>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden dark:bg-slate-900 dark:border-slate-800">
     <div class="p-3 border-b border-slate-100 dark:border-slate-800">
         <p class="text-xs text-slate-500 dark:text-slate-400">
-            Daftar banner yang digunakan pada header/slider halaman utama.
+            Daftar kategori dokumen.
         </p>
     </div>
     <div class="p-3 overflow-x-auto">
-        <table id="tableBanner" class="min-w-full text-xs md:text-sm">
+        <table id="tableKategori" class="min-w-full text-xs md:text-sm">
             <thead>
                 <tr class="bg-slate-50 text-slate-600 border-b border-slate-100 dark:bg-slate-900/60 dark:text-slate-200 dark:border-slate-800">
                     <th class="px-3 py-2 text-left font-medium">#</th>
-                    <th class="px-3 py-2 text-left font-medium">Gambar</th>
-                    <th class="px-3 py-2 text-left font-medium">Judul</th>
+                    <th class="px-3 py-2 text-left font-medium">Nama</th>
+                    <th class="px-3 py-2 text-left font-medium">Slug</th>
                     <th class="px-3 py-2 text-left font-medium">Status</th>
-                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Urutan</th>
+                    <th class="px-3 py-2 text-left font-medium">Urutan</th>
+                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Diperbarui</th>
                     <th class="px-3 py-2 text-left font-medium">Aksi</th>
                 </tr>
             </thead>
@@ -53,6 +52,7 @@ Banner
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <link rel="stylesheet"
     href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
@@ -63,18 +63,18 @@ Banner
         const csrfName = "<?= csrf_token() ?>";
         let csrfHash = "<?= csrf_hash() ?>";
 
-        let table = $('#tableBanner').DataTable({
+        let table = $('#tableKategori').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: baseUrl + '/admin/banner/datatable',
+                url: baseUrl + '/admin/kategori-dokumen/datatable',
                 type: 'POST',
                 data: function(d) {
                     d[csrfName] = csrfHash;
                 }
             },
             order: [
-                [4, 'asc'] // kolom Urutan
+                [5, 'desc']
             ],
             language: {
                 processing: "Memproses...",
@@ -91,13 +91,9 @@ Banner
                     last: "»",
                     previous: "&lt;",
                     next: "&gt;"
-                },
-                aria: {
-                    sortAscending: ": aktifkan untuk mengurutkan kolom naik",
-                    sortDescending: ": aktifkan untuk mengurutkan kolom turun"
                 }
             },
-            columns: [{ // index
+            columns: [{
                     data: null,
                     orderable: false,
                     searchable: false,
@@ -106,53 +102,45 @@ Banner
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
                 },
-                { // image
-                    data: 'image',
-                    orderable: false,
-                    searchable: false,
-                    render: function(data) {
-                        if (!data) {
-                            return '<div class="w-20 h-10 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] text-slate-400">No Img</div>';
-                        }
-                        const url = baseUrl + '/file/banner/' + data;
-                        return `
-                            <div class="w-24 h-12 rounded-md overflow-hidden bg-slate-100 dark:bg-slate-800">
-                                <img src="${url}" alt="banner" class="w-full h-full object-cover" loading="lazy">
-                            </div>
-                        `;
-                    },
-                    className: 'px-3 py-2'
-                },
-                { // title
-                    data: 'title',
+                {
+                    data: 'nama',
                     className: 'px-3 py-2 text-slate-800 dark:text-slate-100'
                 },
-                { // status
-                    data: 'status',
-                    render: function(data) {
-                        let color = data === 'active' ?
+                {
+                    data: 'slug',
+                    className: 'px-3 py-2 text-slate-600 dark:text-slate-300'
+                },
+                {
+                    data: 'is_active',
+                    render: function(val) {
+                        const isOn = Number(val) === 1;
+                        const color = isOn ?
                             'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700' :
                             'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/60 dark:text-slate-200 dark:border-slate-700';
-                        let label = data === 'active' ? 'Aktif' : 'Nonaktif';
+                        const label = isOn ? 'Aktif' : 'Nonaktif';
                         return `<span class="inline-flex px-2 py-0.5 rounded-full border text-[11px] ${color}">${label}</span>`;
                     },
                     className: 'px-3 py-2 whitespace-nowrap'
                 },
-                { // position
-                    data: 'position',
+                {
+                    data: 'urutan',
+                    className: 'px-3 py-2 whitespace-nowrap'
+                },
+                {
+                    data: 'updated_at',
                     render: function(data) {
-                        return data || '-';
+                        return data ? data : '-';
                     },
                     className: 'px-3 py-2 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400'
                 },
-                { // actions
+                {
                     data: null,
                     orderable: false,
                     searchable: false,
                     render: function(row) {
-                        let editUrl = baseUrl + '/admin/banner/edit/' + row.id;
+                        const editUrl = baseUrl + '/admin/kategori-dokumen/edit/' + row.id;
                         return `
-                                 <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5">
             
 
                 <!-- EDIT: icon sama dengan Data Penduduk -->
@@ -200,11 +188,11 @@ Banner
             ]
         });
 
-        $('#tableBanner').on('click', '.btnDelete', function() {
-            let id = $(this).data('id');
+        $('#tableKategori').on('click', '.btnDelete', function() {
+            const id = $(this).data('id');
 
             Swal.fire({
-                title: 'Hapus banner?',
+                title: 'Hapus kategori?',
                 text: 'Data yang dihapus tidak dapat dikembalikan.',
                 icon: 'warning',
                 showCancelButton: true,
@@ -215,7 +203,7 @@ Banner
                 if (!result.isConfirmed) return;
 
                 $.ajax({
-                    url: baseUrl + '/admin/banner/delete',
+                    url: baseUrl + '/admin/kategori-dokumen/delete',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -223,15 +211,13 @@ Banner
                         [csrfName]: csrfHash
                     },
                     success: function(res) {
-                        if (res.newToken) {
-                            csrfHash = res.newToken;
-                        }
+                        if (res.newToken) csrfHash = res.newToken;
 
                         if (res.status) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
-                                text: res.message || 'Banner berhasil dihapus',
+                                text: res.message || 'Kategori berhasil dihapus',
                                 timer: 2000,
                                 showConfirmButton: false
                             });
