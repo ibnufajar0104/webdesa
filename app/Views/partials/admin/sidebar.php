@@ -6,9 +6,25 @@ $active = function ($key) use ($activeMenu) {
         ? 'bg-primary-700 text-white shadow-inner'
         : 'text-primary-100/90 hover:bg-primary-800 hover:text-white';
 };
-?>
 
-<?php $sidebarId = $sidebarId ?? 'sidebar'; ?>
+// Helper untuk Submenu Master Data
+// Daftar key yang termasuk dalam group Master Data
+$masterKeys = [
+    'master_pendidikan',
+    'master_pekerjaan',
+    'master_agama',
+    'master_dusun',
+    'master_rt',
+    'master_jabatan'
+];
+// Cek apakah salah satu menu di atas sedang aktif
+$isMasterOpen = in_array($activeMenu, $masterKeys, true);
+
+// Helper untuk Submenu Dokumen (yang sudah ada sebelumnya)
+$isDokumenOpen = in_array($activeMenu, ['dokumen_kategori', 'dokumen'], true);
+
+$sidebarId = $sidebarId ?? 'sidebar'; 
+?>
 
 <aside id="<?= esc($sidebarId) ?>"
     class="fixed inset-y-0 left-0 z-50 w-72
@@ -18,12 +34,8 @@ $active = function ($key) use ($activeMenu) {
          md:static md:translate-x-0 md:w-64 md:flex md:flex-col
          md:sticky md:top-0 md:h-screen
          dark:bg-primary-950">
-    <!-- Brand -->
     <div class="h-16 flex items-center px-6 border-b border-primary-700/60">
         <div class="flex items-center gap-3">
-            <!-- <div class="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-md">
-                <span class="text-sm font-bold tracking-tight">WD</span>
-            </div> -->
             <div>
                 <p class="text-sm font-semibold leading-tight">CMS Web Desa</p>
                 <p class="text-xs text-primary-200/80">Panel Admin</p>
@@ -31,13 +43,10 @@ $active = function ($key) use ($activeMenu) {
         </div>
     </div>
 
-    <!-- MENU -->
-    <!-- <nav class="flex-1 overflow-y-auto scroll-thin py-4"> -->
     <nav class="flex-1 overflow-y-auto scroll-thin py-4">
 
         <ul class="px-3 space-y-1 text-sm">
 
-            <!-- Dashboard -->
             <li>
                 <a href="<?= base_url('admin/dashboard') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('dashboard') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -54,7 +63,6 @@ $active = function ($key) use ($activeMenu) {
                 Konten Situs
             </li>
 
-            <!-- Halaman Statis -->
             <li>
                 <a href="<?= base_url('admin/halaman-statis') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('halaman_statis') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -67,7 +75,6 @@ $active = function ($key) use ($activeMenu) {
                     <span>Halaman Statis</span>
                 </a>
             </li>
-            <!-- Manajemen Menu -->
             <li>
                 <a href="<?= base_url('admin/menu') ?>"
                     class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('menu') ?>">
@@ -83,7 +90,6 @@ $active = function ($key) use ($activeMenu) {
                 </a>
             </li>
 
-            <!-- Banner -->
             <li>
                 <a href="<?= base_url('admin/banner') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('banner') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -97,7 +103,6 @@ $active = function ($key) use ($activeMenu) {
                 </a>
             </li>
 
-            <!-- Berita -->
             <li>
                 <a href="<?= base_url('admin/berita') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('berita') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -122,32 +127,19 @@ $active = function ($key) use ($activeMenu) {
                     <span>Galery</span>
                 </a>
             </li>
-            <?php
-            $activeMenu = $activeMenu ?? '';
-
-            $active = function ($key) use ($activeMenu) {
-                return $activeMenu === $key
-                    ? 'bg-primary-700 text-white shadow-inner'
-                    : 'text-primary-100/90 hover:bg-primary-800 hover:text-white';
-            };
-
-            // helper: cek salah satu submenu aktif
-            $isDokumenOpen = in_array($activeMenu, ['dokumen_kategori', 'dokumen'], true);
-            ?>
-
-            <!-- MENU DOKUMEN (dengan sub menu) -->
+            
             <li>
                 <button type="button"
                     class="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl transition <?= $isDokumenOpen ? 'bg-primary-800/60 text-white' : 'text-primary-100/90 hover:bg-primary-800 hover:text-white' ?>"
                     aria-controls="submenu-dokumen"
                     aria-expanded="<?= $isDokumenOpen ? 'true' : 'false' ?>"
                     onclick="(function(){
-            const box = document.getElementById('submenu-dokumen');
-            const btn = event.currentTarget;
-            const isOpen = btn.getAttribute('aria-expanded') === 'true';
-            btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-            box.classList.toggle('hidden');
-        })()">
+                        const box = document.getElementById('submenu-dokumen');
+                        const btn = event.currentTarget;
+                        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+                        btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+                        box.classList.toggle('hidden');
+                    })()">
                     <span class="flex items-center gap-2">
                         <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -159,7 +151,6 @@ $active = function ($key) use ($activeMenu) {
                         <span>Dokumen</span>
                     </span>
 
-                    <!-- chevron -->
                     <svg class="w-4 h-4 transition-transform <?= $isDokumenOpen ? 'rotate-180' : '' ?>"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 9l6 6 6-6" />
@@ -169,7 +160,6 @@ $active = function ($key) use ($activeMenu) {
                 <ul id="submenu-dokumen"
                     class="mt-1 ml-3 pl-3 border-l border-primary-700/50 space-y-1 <?= $isDokumenOpen ? '' : 'hidden' ?>">
 
-                    <!-- Kategori Dokumen -->
                     <li>
                         <a href="<?= base_url('admin/kategori-dokumen') ?>"
                             class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('dokumen_kategori') ?>">
@@ -182,7 +172,6 @@ $active = function ($key) use ($activeMenu) {
                         </a>
                     </li>
 
-                    <!-- Dokumen -->
                     <li>
                         <a href="<?= base_url('admin/dokumen') ?>"
                             class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('dokumen') ?>">
@@ -196,15 +185,9 @@ $active = function ($key) use ($activeMenu) {
                             <span>Dokumen</span>
                         </a>
                     </li>
-
                 </ul>
             </li>
 
-            <!-- Data Penduduk -->
-
-
-
-            <!-- Daftar Perangkat Desa -->
             <li>
                 <a href="<?= base_url('admin/perangkat-desa') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('perangkat_desa') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -217,6 +200,21 @@ $active = function ($key) use ($activeMenu) {
                     <span>Daftar Perangkat Desa</span>
                 </a>
             </li>
+
+            <li>
+                <a href="<?= base_url('admin/bpd') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('bpd') ?>">
+                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                           <circle cx="9" cy="7" r="4" />
+                           <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </span>
+                    <span>Anggota BPD</span>
+                </a>
+            </li>
+
             <li>
                 <a href="<?= base_url('admin/data-penduduk') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('penduduk') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -241,7 +239,6 @@ $active = function ($key) use ($activeMenu) {
                     <span>Penerima Bantuan</span>
                 </a>
             </li>
-            <!-- RT (Identitas) -->
             <li>
                 <a href="<?= base_url('admin/rt-identitas') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('rt_identitas') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -255,101 +252,120 @@ $active = function ($key) use ($activeMenu) {
             </li>
 
 
-            <!-- MASTER DATA -->
-            <li class="mt-4 mb-1 px-2 text-[11px] font-semibold uppercase tracking-wide text-primary-300/70">
-                Master Data
-            </li>
-
-            <!-- Master Pendidikan -->
             <li>
-                <a href="<?= base_url('admin/master-pendidikan') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_pendidikan') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M3 9.5L12 5l9 4.5-9 4.5-9-4.5z" />
-                            <path d="M7 12.5v3.5c0 1 2.2 2 5 2s5-1 5-2v-3.5" />
-                            <path d="M21 10v4" />
-                        </svg>
+                <button type="button"
+                    class="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl transition <?= $isMasterOpen ? 'bg-primary-800/60 text-white' : 'text-primary-100/90 hover:bg-primary-800 hover:text-white' ?>"
+                    aria-controls="submenu-master"
+                    aria-expanded="<?= $isMasterOpen ? 'true' : 'false' ?>"
+                    onclick="(function(){
+                        const box = document.getElementById('submenu-master');
+                        const btn = event.currentTarget;
+                        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+                        btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+                        box.classList.toggle('hidden');
+                    })()">
+                    <span class="flex items-center gap-2">
+                        <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2c5.52 0 10 2.24 10 5s-4.48 5-10 5-10-2.24-10-5 4.48-5 10-5zm0 14c5.52 0 10-2.24 10-5" />
+                                <path d="M22 13c0 2.76-4.48 5-10 5S2 15.76 2 13" />
+                                <path d="M22 17c0 2.76-4.48 5-10 5S2 19.76 2 17" />
+                            </svg>
+                        </span>
+                        <span>Master Data</span>
                     </span>
-                    <span>Master Pendidikan</span>
-                </a>
+
+                    <svg class="w-4 h-4 transition-transform <?= $isMasterOpen ? 'rotate-180' : '' ?>"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9l6 6 6-6" />
+                    </svg>
+                </button>
+
+                <ul id="submenu-master"
+                    class="mt-1 ml-3 pl-3 border-l border-primary-700/50 space-y-1 <?= $isMasterOpen ? '' : 'hidden' ?>">
+
+                    <li>
+                        <a href="<?= base_url('admin/master-pendidikan') ?>" class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('master_pendidikan') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M3 9.5L12 5l9 4.5-9 4.5-9-4.5z" />
+                                    <path d="M7 12.5v3.5c0 1 2.2 2 5 2s5-1 5-2v-3.5" />
+                                    <path d="M21 10v4" />
+                                </svg>
+                            </span>
+                            <span>Pendidikan</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="<?= base_url('admin/master-pekerjaan') ?>" class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('master_pekerjaan') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M10 6V4.5A1.5 1.5 0 0 1 11.5 3h1A1.5 1.5 0 0 1 14 4.5V6" />
+                                    <rect x="4" y="6" width="16" height="12" rx="2" />
+                                    <path d="M4 12h16" />
+                                </svg>
+                            </span>
+                            <span>Pekerjaan</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="<?= base_url('admin/master-agama') ?>" class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('master_agama') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 4l9 5-9 5-9-5 9-5z" />
+                                    <path d="M3 14l9 5 9-5" />
+                                </svg>
+                            </span>
+                            <span>Agama</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="<?= base_url('admin/master-dusun') ?>"
+                            class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('master_dusun') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 20V10l8-5 8 5v10" />
+                                    <path d="M9 20v-6h6v6" />
+                                    <path d="M7.5 12.5h.01M10.5 12.5h.01M13.5 12.5h.01M16.5 12.5h.01" />
+                                </svg>
+                            </span>
+                            <span>Dusun</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="<?= base_url('admin/master-rt') ?>" class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('master_rt') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+                                    <path d="M7 9h10M7 12h10M7 15h6" />
+                                </svg>
+                            </span>
+                            <span>Data RT</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="<?= base_url('admin/master-jabatan') ?>" class="flex items-center gap-2 px-3 py-2 rounded-xl transition <?= $active('master_jabatan') ?>">
+                            <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/40 items-center justify-center">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="4" y="4" width="6" height="6" rx="1.2" />
+                                    <rect x="14" y="4" width="6" height="6" rx="1.2" />
+                                    <rect x="4" y="14" width="6" height="6" rx="1.2" />
+                                    <rect x="14" y="14" width="6" height="6" rx="1.2" />
+                                </svg>
+                            </span>
+                            <span>Jabatan</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
-            <!-- Master Pekerjaan -->
-            <li>
-                <a href="<?= base_url('admin/master-pekerjaan') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_pekerjaan') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M10 6V4.5A1.5 1.5 0 0 1 11.5 3h1A1.5 1.5 0 0 1 14 4.5V6" />
-                            <rect x="4" y="6" width="16" height="12" rx="2" />
-                            <path d="M4 12h16" />
-                        </svg>
-                    </span>
-                    <span>Master Pekerjaan</span>
-                </a>
-            </li>
-
-
-            <!-- Master Agama -->
-
-            <li>
-                <a href="<?= base_url('admin/master-agama') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_agama') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 4l9 5-9 5-9-5 9-5z" />
-                            <path d="M3 14l9 5 9-5" />
-                        </svg>
-
-
-                    </span>
-                    <span>Master Agama</span>
-                </a>
-            </li>
-
-            <!-- Master Dusun -->
-            <li>
-                <a href="<?= base_url('admin/master-dusun') ?>"
-                    class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_dusun') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 20V10l8-5 8 5v10" />
-                            <path d="M9 20v-6h6v6" />
-                            <path d="M7.5 12.5h.01M10.5 12.5h.01M13.5 12.5h.01M16.5 12.5h.01" />
-                        </svg>
-                    </span>
-                    <span>Master Dusun</span>
-                </a>
-            </li>
-
-            <!-- Data RT (Master) -->
-            <li>
-                <a href="<?= base_url('admin/master-rt') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_rt') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
-                            <path d="M7 9h10M7 12h10M7 15h6" />
-                        </svg>
-                    </span>
-                    <span>Master RT</span>
-                </a>
-            </li>
-
-            <!-- Master Jabatan -->
-            <li>
-                <a href="<?= base_url('admin/master-jabatan') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('master_jabatan') ?>">
-                    <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <rect x="4" y="4" width="6" height="6" rx="1.2" />
-                            <rect x="14" y="4" width="6" height="6" rx="1.2" />
-                            <rect x="4" y="14" width="6" height="6" rx="1.2" />
-                            <rect x="14" y="14" width="6" height="6" rx="1.2" />
-                        </svg>
-                    </span>
-                    <span>Master Jabatan</span>
-                </a>
-            </li>
-            <!-- Pengguna -->
             <li>
                 <a href="<?= base_url('admin/pengguna') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('pengguna') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -363,12 +379,10 @@ $active = function ($key) use ($activeMenu) {
                 </a>
             </li>
 
-            <!-- KONTEN PROFIL -->
             <li class="mt-4 mb-1 px-2 text-[11px] font-semibold uppercase tracking-wide text-primary-300/70">
                 Konten Profil
             </li>
 
-            <!-- Sambutan Kepala Desa -->
             <li>
                 <a href="<?= base_url('admin/sambutan-kades') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('sambutan_kades') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -382,7 +396,6 @@ $active = function ($key) use ($activeMenu) {
                 </a>
             </li>
 
-            <!-- Jam Pelayanan -->
             <li>
                 <a href="<?= base_url('admin/jam-pelayanan') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('jam_pelayanan') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">
@@ -395,7 +408,6 @@ $active = function ($key) use ($activeMenu) {
                 </a>
             </li>
 
-            <!-- Kontak -->
             <li>
                 <a href="<?= base_url('admin/kontak') ?>" class="flex items-center gap-2 px-3 py-2.5 rounded-xl transition <?= $active('kontak') ?>">
                     <span class="inline-flex w-6 h-6 rounded-lg bg-primary-700/60 items-center justify-center">

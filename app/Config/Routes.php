@@ -165,6 +165,24 @@ $routes->group('admin', [
         $routes->post('jabatan/delete',    'PerangkatDesa::deleteJabatanHistory');
     });
 
+
+
+
+    $routes->group('bpd', static function ($routes) {
+        $routes->get('/',             'Bpd::index');
+        $routes->post('datatable',    'Bpd::datatable');
+        $routes->get('create',        'Bpd::create');
+        $routes->get('edit/(:num)',   'Bpd::edit/$1');
+        $routes->get('detail/(:num)', 'Bpd::detail/$1');
+        $routes->post('save',         'Bpd::save');
+        $routes->post('delete',       'Bpd::delete');
+
+        $routes->post('pendidikan/save',   'Bpd::savePendidikanHistory');
+        $routes->post('pendidikan/delete', 'Bpd::deletePendidikanHistory');
+        $routes->post('jabatan/save',      'Bpd::saveJabatanHistory');
+        $routes->post('jabatan/delete',    'Bpd::deleteJabatanHistory');
+    });
+
     // Master RT
     $routes->group('master-rt', static function ($routes) {
         $routes->get('/',              'MasterRt::index');
