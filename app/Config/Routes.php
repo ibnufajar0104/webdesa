@@ -315,6 +315,7 @@ $routes->group('api', [
     $routes->get('penduduk/stats/wilayah',  'PendudukStats::wilayah'); // ?level=dusun|rt
     $routes->get('penduduk/stats/usia',     'PendudukStats::usia');    // ?mode=bucket|single
     $routes->get('penduduk/stats/tren',     'PendudukStats::tren');    // ?by=month|year&range=24
+    $routes->get('penduduk/stats/kk',       'PendudukStats::kk');
 
 
 

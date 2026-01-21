@@ -200,6 +200,64 @@ class PendudukStats extends BaseController
         return $this->response->setJSON(['status' => true, 'data' => $rows]);
     }
 
+    /**
+     * GET /api/penduduk/stats/kk
+     * Statistik berbasis Keluarga (KK)
+     */
+    public function kk()
+    {
+        $f = $this->filters();
+
+        // 1. Hitung jumlah anggota per No KK
+        // Select No KK, count(id) as jml_anggota
+        // Dari basePenduduk
+        $rows = $this->basePenduduk($f)
+            ->select('penduduk.no_kk, COUNT(*) as jml_anggota', false)
+            ->where('penduduk.no_kk IS NOT NULL', null, false)
+            ->where("penduduk.no_kk != ''", null, false)
+            ->groupBy('penduduk.no_kk')
+            ->get()->getResultArray();
+
+        $totalKK = count($rows);
+        $totalPendudukInKK = array_sum(array_column($rows, 'jml_anggota'));
+        
+        $avg = $totalKK > 0 ? round($totalPendudukInKK / $totalKK, 2) : 0;
+
+        // 2. Distribusi Ukuran Keluarga (misal: 1 orang: 5 KK, 2 orang: 10 KK, dst)
+        $distribution = [];
+        foreach ($rows as $r) {
+            $size = (int)$r['jml_anggota'];
+            if (!isset($distribution[$size])) {
+                $distribution[$size] = 0;
+            }
+            $distribution[$size]++;
+        }
+        ksort($distribution); // urut key (jumlah anggota)
+
+        // Format untuk chart/frontend
+        $sebaran = [];
+        foreach ($distribution as $size => $count) {
+             // Privacy masking count jika perlu, tapi jumlah KK biasanya aman publik, 
+             // kecuali sangat sedikit. Kita terapkan minBucket juga biar konsisten.
+             $displayCount = ($count < $this->minBucket) ? '<' . $this->minBucket : $count;
+             
+             $sebaran[] = [
+                 'jumlah_anggota' => $size,
+                 'jumlah_kk'      => $displayCount,
+                 '_masked'        => ($count < $this->minBucket)
+             ];
+        }
+
+        return $this->response->setJSON([
+            'status' => true,
+            'data' => [
+                'total_kk' => $totalKK, 
+                'rata_rata_anggota' => $avg,
+                'sebaran_anggota' => $sebaran
+            ]
+        ]);
+    }
+
     /* =========================
        HELPERS
     ========================= */
