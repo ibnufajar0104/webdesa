@@ -56,61 +56,40 @@ class HalamanStatis extends BaseController
     /**
      * DataTables server-side
      */
+    /**
+     * DataTables server-side
+     */
     public function datatable()
     {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setStatusCode(405);
-        }
+        return $this->processDataTable(
+            $this->pageModel->builder()->where('deleted_at', null),
+            [
+                0 => 'id',
+                1 => 'title',
+                2 => 'slug',
+                3 => 'status',
+                4 => 'updated_at',
+            ],
+            ['title', 'slug'],
+            function ($row) {
+                // Action
+                $editUrl = base_url('admin/halaman-statis/edit/' . $row['id']);
+                $action = '<div class="flex items-center gap-1.5">' .
+                    btn_edit($editUrl) .
+                    btn_delete($row['id']) .
+                    '</div>';
 
-        $request = $this->request;
-
-        $draw   = (int) $request->getPost('draw');
-        $start  = (int) $request->getPost('start');
-        $length = (int) $request->getPost('length');
-        $search = $request->getPost('search')['value'] ?? '';
-
-        $order  = $request->getPost('order');
-        $orderColumnIdx = $order[0]['column'] ?? 1;   // default: title
-        $orderDir       = $order[0]['dir'] ?? 'asc';
-
-        // mapping index kolom DataTables -> field database
-        $columns = [
-            0 => 'id',
-            1 => 'title',
-            2 => 'slug',
-            3 => 'status',
-            4 => 'updated_at',
-        ];
-        $orderColumn = $columns[$orderColumnIdx] ?? 'title';
-
-        // total tanpa filter (hanya yang belum di-soft-delete)
-        $builder = $this->pageModel->builder();
-        $builder->where('deleted_at', null);
-        $recordsTotal = $builder->countAllResults(false);
-
-        // filter search
-        if ($search) {
-            $builder->groupStart()
-                ->like('title', $search)
-                ->orLike('slug', $search)
-                ->groupEnd();
-        }
-
-        $recordsFiltered = $builder->countAllResults(false);
-
-        // order + limit
-        $builder->orderBy($orderColumn, $orderDir)
-            ->limit($length, $start);
-
-        $query = $builder->get();
-        $data  = $query->getResultArray();
-
-        return $this->response->setJSON([
-            'draw'            => $draw,
-            'recordsTotal'    => $recordsTotal,
-            'recordsFiltered' => $recordsFiltered,
-            'data'            => $data,
-        ]);
+                return [
+                    'id'         => $row['id'],
+                    'title'      => esc($row['title']),
+                    'slug'       => esc($row['slug']),
+                    'status'     => status_badge($row['status']),
+                    'updated_at' => $row['updated_at'] ? date('d/m/Y H:i', strtotime($row['updated_at'])) : '-',
+                    'action'     => $action,
+                ];
+            },
+            ['updated_at' => 'desc']
+        );
     }
 
     public function create()

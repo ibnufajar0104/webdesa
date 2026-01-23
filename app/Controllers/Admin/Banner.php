@@ -27,59 +27,50 @@ class Banner extends BaseController
     /**
      * DataTables server-side
      */
+    /**
+     * DataTables server-side
+     */
     public function datatable()
     {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setStatusCode(405);
-        }
+        return $this->processDataTable(
+            $this->bannerModel->builder()->where('deleted_at', null),
+            [
+                0 => 'id',
+                1 => 'image',
+                2 => 'title',
+                3 => 'status',
+                4 => 'position',
+                5 => 'updated_at',
+            ],
+            ['title', 'subtitle'],
+            function ($row) {
+                // Image
+                $imgHtml = '<div class="w-20 h-10 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] text-slate-400">No Img</div>';
+                if (!empty($row['image'])) {
+                    $url = base_url('file/banner/' . $row['image']);
+                    $imgHtml = '<div class="w-24 h-12 rounded-md overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                    <img src="' . $url . '" alt="banner" class="w-full h-full object-cover" loading="lazy">
+                                </div>';
+                }
 
-        $request = $this->request;
+                // Action
+                $editUrl = base_url('admin/banner/edit/' . $row['id']);
+                $action = '<div class="flex items-center gap-1.5">' .
+                    btn_edit($editUrl) .
+                    btn_delete($row['id']) .
+                    '</div>';
 
-        $draw   = (int) $request->getPost('draw');
-        $start  = (int) $request->getPost('start');
-        $length = (int) $request->getPost('length');
-        $search = $request->getPost('search')['value'] ?? '';
-
-        $order         = $request->getPost('order');
-        $orderColumnIdx = $order[0]['column'] ?? 4; // default: position
-        $orderDir       = $order[0]['dir'] ?? 'asc';
-
-        $columns = [
-            0 => 'id',         // index virtual
-            1 => 'image',      // gambar
-            2 => 'title',      // judul
-            3 => 'status',     // status
-            4 => 'position',   // urutan
-            5 => 'updated_at', // diperbarui
-        ];
-        $orderColumn = $columns[$orderColumnIdx] ?? 'position';
-
-        $builder = $this->bannerModel->builder();
-        $builder->where('deleted_at', null);
-
-        $recordsTotal = $builder->countAllResults(false);
-
-        if ($search) {
-            $builder->groupStart()
-                ->like('title', $search)
-                ->orLike('subtitle', $search)
-                ->groupEnd();
-        }
-
-        $recordsFiltered = $builder->countAllResults(false);
-
-        $builder->orderBy($orderColumn, $orderDir)
-            ->orderBy('updated_at', 'desc')
-            ->limit($length, $start);
-
-        $data = $builder->get()->getResultArray();
-
-        return $this->response->setJSON([
-            'draw'            => $draw,
-            'recordsTotal'    => $recordsTotal,
-            'recordsFiltered' => $recordsFiltered,
-            'data'            => $data,
-        ]);
+                return [
+                    'id'       => $row['id'],
+                    'image'    => $imgHtml,
+                    'title'    => esc($row['title']),
+                    'status'   => status_badge($row['status']),
+                    'position' => $row['position'] ?: '-',
+                    'action'   => $action,
+                ];
+            },
+            ['updated_at' => 'desc']
+        );
     }
 
     public function create()

@@ -16,18 +16,7 @@
                 Kelola banner untuk ditampilkan pada halaman utama website desa.
             </p>
         </div>
-        <a href="<?= base_url('admin/banner') ?>"
-            class="inline-flex h-9 items-center gap-1.5 px-3 rounded-xl border 
-                        border-blue-500 text-blue-600 text-xs md:text-sm
-                        hover:bg-blue-50 active:bg-blue-100
-                        dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-900/30">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 19l-7-7 7-7" />
-            </svg>
-            Kembali
-        </a>
+        <?= btn_back(base_url('admin/banner')) ?>
     </div>
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
@@ -156,32 +145,10 @@
                 <div class="pt-3 mt-2 flex flex-col gap-2 border-t border-slate-100 
                                 md:flex-row md:items-center md:justify-end dark:border-slate-800">
 
-                    <a href="<?= base_url('admin/banner') ?>"
-                        class="inline-flex h-9 items-center gap-1.5 px-3 rounded-xl border
-                            border-red-500 text-red-600 text-xs md:text-sm
-                            hover:bg-red-50 active:bg-red-100
-                            dark:border-red-400 dark:text-red-300 dark:hover:bg-red-900/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Batal
-                    </a>
 
-                    <button type="submit"
-                        class="inline-flex h-9 items-center gap-1.5 px-3 rounded-xl 
-                            bg-primary-600 text-white text-xs md:text-sm font-medium 
-                            hover:bg-primary-700 focus:outline-none focus:ring-2 
-                            focus:ring-primary-500/70 focus:ring-offset-1 
-                            focus:ring-offset-white dark:focus:ring-offset-slate-900">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 13l4 4L19 7" />
-                        </svg>
-                        Simpan
-                    </button>
+                    <?= btn_cancel(base_url('admin/banner')) ?>
+            
+                    <?= btn_save() ?>
 
                 </div>
 
