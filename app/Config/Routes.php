@@ -16,7 +16,8 @@ $routes->post('login', 'Auth::attempt');
 $routes->get('logout', 'Auth::logout');
 
 // / langsung ke login
-$routes->get('/', static fn() => redirect()->to(site_url('login')));
+// / to Home::index
+$routes->get('/', 'Home::index');
 
 // =======================
 // FILE HANDLER
@@ -271,7 +272,7 @@ $routes->group('admin', [
 // =======================
 $routes->group('api', [
     'namespace' => 'App\Controllers\Api',
-    'filter'    => 'basicAuth',
+//    'filter'    => 'basicAuth', // Disable BasicAuth for public frontend access
 ], static function ($routes) {
     // NEWS API
     $routes->get('news',            'News::index');       // ?page=&per_page=

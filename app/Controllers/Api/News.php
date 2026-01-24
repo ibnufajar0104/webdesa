@@ -20,7 +20,7 @@ class News extends BaseController
      */
     public function index()
     {
-        helper('app_text');
+
         $page    = max(1, (int) ($this->request->getGet('page') ?? 1));
         $perPage = (int) ($this->request->getGet('per_page') ?? 10);
         $perPage = min(max($perPage, 1), 50);
@@ -106,7 +106,7 @@ class News extends BaseController
         $perPage = min(max($perPage, 1), 50);
 
         $builder = $this->newsModel->builder()
-            ->select('id, title, slug, cover_image, updated_at, created_at')
+            ->select('id, title, slug, cover_image, updated_at,content, created_at')
             ->where('deleted_at', null)
             ->where('status', 'published')
             ->groupStart()
@@ -123,6 +123,7 @@ class News extends BaseController
 
         $rows = array_map(function ($r) {
             $r['cover_url'] = $this->coverUrl($r['cover_image'] ?? null);
+              $r['content']   = extract_snippet($r['content'] ?? '', 150); // Cut text max 150 chars
             return $r;
         }, $rows);
 
@@ -147,7 +148,7 @@ class News extends BaseController
         $limit = min(max($limit, 1), 20);
 
         $rows = $this->newsModel->builder()
-            ->select('id, title, slug, cover_image, updated_at, created_at')
+            ->select('id, title, slug, cover_image, updated_at,content, created_at')
             ->where('deleted_at', null)
             ->where('status', 'published')
             ->orderBy('updated_at', 'desc')
@@ -157,6 +158,7 @@ class News extends BaseController
 
         $rows = array_map(function ($r) {
             $r['cover_url'] = $this->coverUrl($r['cover_image'] ?? null);
+            $r['content']   = extract_snippet($r['content'] ?? '', 150); // Cut text max 150 chars
             return $r;
         }, $rows);
 
