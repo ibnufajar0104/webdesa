@@ -82,9 +82,27 @@ class News extends BaseController
 
         $row['cover_url'] = $this->coverUrl($row['cover_image'] ?? null);
 
+        // Fetch 10 random other news (kecuali berita ini)
+        $others = $this->newsModel->builder()
+            ->select('id, title, slug, cover_image, updated_at, created_at')
+            ->where('deleted_at', null)
+            ->where('status', 'published')
+            ->where('id !=', $row['id'])
+            ->orderBy('RAND()')
+            ->limit(10)
+            ->get()
+            ->getResultArray();
+
+        // Map cover URL for others
+        $others = array_map(function ($r) {
+            $r['cover_url'] = $this->coverUrl($r['cover_image'] ?? null);
+            return $r;
+        }, $others);
+
         return $this->response->setJSON([
-            'status' => true,
-            'data'   => $row,
+            'status'     => true,
+            'data'       => $row,
+            'other_news' => $others
         ]);
     }
 

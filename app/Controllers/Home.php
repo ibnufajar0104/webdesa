@@ -8,4 +8,14 @@ class Home extends BaseController
     {
         return view('home/index');
     }
+
+    public function newsDetail($slug)
+    {
+        return view('home/news_detail', ['slug' => $slug]);
+    }
+
+    public function news()
+    {
+        return view('home/news');
+    }
 }

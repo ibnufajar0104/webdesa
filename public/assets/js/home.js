@@ -81,33 +81,121 @@ $(document).ready(function () {
 
 
     // --- Dynamic Menu ---
+    // --- Dynamic Menu ---
     function loadMenu() {
-        $.getJSON(`${API_BASE}/menu`, function (response) {
-            if (response.status && response.data) {
-                let html = '';
-                // Desktop
-                response.data.forEach(item => {
-                    const url = item.url;
-                    const label = item.label;
-                    const target = item.target || '_self';
-                    html += `<a href="${url}" target="${target}" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors uppercase tracking-wide leading-relaxed px-2 py-1">${label}</a>`;
-                });
-                $('#desktop-menu').html(html);
+        // Helper to normalize URL
+        const formatUrl = (url) => {
+            if (!url) return 'javascript:void(0)';
+            if (url.startsWith('http') || url.startsWith('//') || url.startsWith('#') || url.startsWith('javascript:')) {
+                return url;
+            }
+            // Ensure URL doesn't start with slash if we are appending to base_url which might already have trailing slash
+            // CodeIgniter base_url() usually matches valid URL.
+            // But let's handle "url" vs "/url"
 
-                // Mobile
-                let mobileHtml = '';
-                response.data.forEach(item => {
-                    mobileHtml += `<a href="${item.url}" class="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">${item.label}</a>`;
-                });
-                // Add default mobile items
-                mobileHtml += `
-                 <a href="#perangkat-section" class="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">Pemerintahan</a>
-                 <a href="#news-section" class="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">Berita</a>
-                 <a href="#gallery-section" class="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">Galeri</a>
+            // If BASE_URL is defined globaly
+            if (typeof BASE_URL !== 'undefined') {
+                // Remove leading slash from url to avoid double slash if BASE_URL has it, or just strictly join
+                const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
+                const cleanBase = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
+                return cleanBase + cleanUrl;
+            }
+
+            return url.startsWith('/') ? url : '/' + url;
+        };
+
+
+
+        // Mobile Renderer
+        const renderMobile = (items) => {
+            let mobileHtml = '';
+
+            const renderMobileItem = (item) => {
+                const hasChildren = item.children && item.children.length > 0;
+                const url = formatUrl(item.url);
+                const target = item.target || '_self';
+
+                if (hasChildren) {
+                    return `
+                        <div class="mobile-menu-item">
+                            <button class="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="$(this).next().slideToggle(200)">
+                                ${item.label}
+                                <svg class="w-4 h-4 text-gray-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="hidden pl-4 space-y-1 overflow-hidden transition-all duration-200">
+                                ${item.children.map(child => `
+                                    <a href="${formatUrl(child.url)}" target="${child.target || '_self'}" class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-slate-800/50 rounded-lg">
+                                        ${child.label}
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>`;
+                } else {
+                    return `
+                        <a href="${url}" target="${target}" class="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                            ${item.label}
+                        </a>`;
+                }
+            };
+
+            items.forEach(item => {
+                mobileHtml += renderMobileItem(item);
+            });
+
+            // Default Items
+            mobileHtml += `
+                 <div class="border-t border-gray-100 dark:border-slate-800 my-2"></div>
                  <a href="#footer-section" class="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">Kontak</a>`;
 
-                $('#mobile-menu-items').html(mobileHtml);
+            $('#mobile-menu-items').html(mobileHtml);
+        };
+
+        $.getJSON(`${API_BASE}/menu`, function (response) {
+            if (response.status && response.data) {
+                let desktopHtml = '';
+
+                // Helper for desktop dropdown
+                const renderDesktopItem = (item) => {
+                    const hasChildren = item.children && item.children.length > 0;
+                    const url = item.url ? item.url : 'javascript:void(0)';
+                    const target = item.target || '_self';
+
+                    if (hasChildren) {
+                        return `
+                        <div class="relative group">
+                            <button class="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors uppercase tracking-wide leading-relaxed px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50">
+                                ${item.label}
+                                <svg class="w-4 h-4 text-gray-400 group-hover:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <!-- Dropdown -->
+                            <div class="absolute top-full left-0 pt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50">
+                                <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-gray-100 dark:border-slate-800 p-2 space-y-1">
+                                    ${item.children.map(child => `
+                                        <a href="${child.url}" target="${child.target || '_self'}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-colors">
+                                            ${child.label}
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>`;
+                    } else {
+                        return `<a href="${url}" target="${target}" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors uppercase tracking-wide leading-relaxed px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50">${item.label}</a>`;
+                    }
+                };
+
+                response.data.forEach(item => {
+                    desktopHtml += renderDesktopItem(item);
+                });
+
+                $('#desktop-menu').html(desktopHtml);
+
+                // Mobile
+                renderMobile(response.data);
+            } else {
+                renderMobile([]);
             }
+        }).fail(function () {
+            renderMobile([]);
         });
     }
 
@@ -222,29 +310,30 @@ $(document).ready(function () {
         });
     }
 
-    // --- 1. Statistik Ringkas ---
+    // --- 1. Statistik Demografi (Consolidated) ---
     function loadStats() {
-        $.when(
-            $.getJSON(`${API_BASE}/penduduk/stats/overview`),
-            $.getJSON(`${API_BASE}/penduduk/stats/kk`)
-        ).done(function (overviewRes, kkRes) {
-            const popData = overviewRes[0] || {};
-            const kkData = kkRes[0] || {};
+        $.getJSON(`${API_BASE}/demografi`, function (response) {
+            if (response.status && response.data) {
+                const d = response.data;
 
-            const pop = popData.data?.total || 0;
-            const kk = kkData.data?.total_kk || 0;
+                // Format numbers logic
+                const fmt = (num) => Number(num || 0).toLocaleString('id-ID');
 
-            // Update Dynamic Stats
-            $('#stat-penduduk').text(Number(pop).toLocaleString('id-ID') + ' Jiwa');
-            $('#stat-kk').text(Number(kk).toLocaleString('id-ID') + ' KK');
+                // Wilayah Stats
+                $('#stat-jarak').text((d.jarak_ke_kabupaten || '0') + ' Km');
+                $('#stat-luas').text((d.luas_wilayah || '0') + ' Ha');
+                $('#stat-kepadatan').text((d.kepadatan || '0') + '/km²');
+                $('#stat-dusun').text(fmt(d.jumlah_dusun) + ' Dusun');
+                $('#stat-rt').text(fmt(d.jumlah_rt) + ' RT');
 
-            // Dummy Data is handled by static HTML, no need to inject here unless we want to randomness.
-            // Keeping it simple as requested.
-
+                // Penduduk Stats
+                $('#stat-penduduk').text(fmt(d.jumlah_penduduk) + ' Jiwa');
+                $('#stat-kk').text(fmt(d.jumlah_kk) + ' KK');
+            }
         }).fail(function () {
-            console.error('Failed to load stats');
-            $('#stat-penduduk').text('-');
-            $('#stat-kk').text('-');
+            console.error('Failed to load demografi stats');
+            const targetIds = ['#stat-jarak', '#stat-luas', '#stat-kepadatan', '#stat-dusun', '#stat-rt', '#stat-penduduk', '#stat-kk'];
+            targetIds.forEach(id => $(id).text('-'));
         });
     }
 
@@ -282,29 +371,31 @@ $(document).ready(function () {
                 container.html(html);
 
                 // Init Swiper
-                const swiper = new Swiper('#perangkat-slider', {
-                    slidesPerView: 2,
-                    spaceBetween: 16,
-                    loop: true,
-                    autoplay: {
-                        delay: 2500,
-                        disableOnInteraction: false,
-                    },
-                    breakpoints: {
-                        640: {
-                            slidesPerView: 3,
-                            spaceBetween: 20,
+                if ($('#perangkat-slider').length) {
+                    const swiper = new Swiper('#perangkat-slider', {
+                        slidesPerView: 2,
+                        spaceBetween: 16,
+                        loop: true,
+                        autoplay: {
+                            delay: 2500,
+                            disableOnInteraction: false,
                         },
-                        768: {
-                            slidesPerView: 4,
-                            spaceBetween: 24,
+                        breakpoints: {
+                            640: {
+                                slidesPerView: 3,
+                                spaceBetween: 20,
+                            },
+                            768: {
+                                slidesPerView: 4,
+                                spaceBetween: 24,
+                            },
+                            1024: {
+                                slidesPerView: 5,
+                                spaceBetween: 24,
+                            },
                         },
-                        1024: {
-                            slidesPerView: 5,
-                            spaceBetween: 24,
-                        },
-                    },
-                });
+                    });
+                }
 
             } else {
                 container.html('<div class="w-full text-center text-gray-500 py-4 text-sm">Belum ada data.</div>');
@@ -312,9 +403,9 @@ $(document).ready(function () {
             hideSkeleton(skeletonWrapper);
 
         }).fail(function () {
-             // In case of error, just hide skeleton (or show error state)
-             console.log('Failed load perangkat');
-             hideSkeleton(skeletonWrapper);
+            // In case of error, just hide skeleton (or show error state)
+            console.log('Failed load perangkat');
+            hideSkeleton(skeletonWrapper);
         });
     }
 
@@ -383,7 +474,7 @@ $(document).ready(function () {
                 response.data.forEach(item => {
                     const img = item.file_url || item.file_path;
                     const title = item.judul || 'Dokumentasi Desa';
-                    
+
                     if (img) {
                         html += `
                         <div class="swiper-slide">
@@ -401,25 +492,27 @@ $(document).ready(function () {
                 $(container).html(html);
 
                 // Init Swiper
-                const swiper = new Swiper('#gallery-slider', {
-                    slidesPerView: 1,
-                    spaceBetween: 16,
-                    loop: true,
-                    autoplay: {
-                        delay: 3000,
-                        disableOnInteraction: false,
-                    },
-                    breakpoints: {
-                         640: {
-                            slidesPerView: 2,
-                            spaceBetween: 20,
+                if ($('#gallery-slider').length) {
+                    const swiper = new Swiper('#gallery-slider', {
+                        slidesPerView: 1,
+                        spaceBetween: 16,
+                        loop: true,
+                        autoplay: {
+                            delay: 3000,
+                            disableOnInteraction: false,
                         },
-                        768: {
-                            slidesPerView: 3,
-                            spaceBetween: 24,
+                        breakpoints: {
+                            640: {
+                                slidesPerView: 2,
+                                spaceBetween: 20,
+                            },
+                            768: {
+                                slidesPerView: 3,
+                                spaceBetween: 24,
+                            },
                         },
-                    },
-                });
+                    });
+                }
 
                 $(skeleton).fadeOut(500, function () {
                     $('#gallery-slider').removeClass('opacity-0');
@@ -431,7 +524,7 @@ $(document).ready(function () {
             }
         }).fail(function () {
             $(skeleton).hide();
-             $('#gallery-slider').removeClass('opacity-0').html('<div class="text-center text-red-500 py-10 w-full">Gagal memuat galeri.</div>');
+            $('#gallery-slider').removeClass('opacity-0').html('<div class="text-center text-red-500 py-10 w-full">Gagal memuat galeri.</div>');
         });
     }
 
@@ -595,14 +688,18 @@ $(document).ready(function () {
     loadDocuments();
     loadProfile();
 
-    // Mobile Menu Toggle
-    $('#mobile-menu-btn').click(function () {
-        const menu = $('#mobile-menu');
-        const isOpen = !menu.hasClass('hidden');
-        if (isOpen) {
-            menu.addClass('hidden');
-        } else {
-            menu.removeClass('hidden');
+    // Mobile Menu Toggle (Robust)
+    $('#mobile-menu-btn').off('click').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent ensuring document click doesn't fire immediately
+        $('#mobile-menu').slideToggle(250);
+    });
+
+    // Close menu when clicking outside
+    $(document).on('click', function (e) {
+        // If click is NOT on menu AND NOT on button
+        if (!$(e.target).closest('#mobile-menu').length && !$(e.target).closest('#mobile-menu-btn').length) {
+            $('#mobile-menu').slideUp(200);
         }
     });
 });

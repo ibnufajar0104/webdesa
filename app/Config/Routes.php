@@ -17,7 +17,10 @@ $routes->get('logout', 'Auth::logout');
 
 // / langsung ke login
 // / to Home::index
+// / to Home::index
 $routes->get('/', 'Home::index');
+$routes->get('berita', 'Home::news');
+$routes->get('berita/(:segment)', 'Home::newsDetail/$1');
 
 // =======================
 // FILE HANDLER
