@@ -63,7 +63,7 @@ class Bpd extends BaseController
         $columns = [
             0 => 'id',
             1 => 'nama',
-            2 => 'nip',
+
             3 => 'nik',
             4 => 'jabatan_id',
             5 => 'status_aktif',
@@ -102,7 +102,7 @@ class Bpd extends BaseController
         if ($search !== '') {
             $builder->groupStart()
                 ->like('bpd.nama', $search)
-                ->orLike('bpd.nip', $search)
+
                 ->orLike('bpd.nik', $search)
                 ->orLike('master_jabatan.nama_jabatan', $search)
                 ->groupEnd();
@@ -128,7 +128,7 @@ class Bpd extends BaseController
         $bpd = [
             'id'            => '',
             'nama'          => old('nama'),
-            'nip'           => old('nip'),
+
             'nik'           => old('nik'),
             'jenis_kelamin' => old('jenis_kelamin') ?? 'L',
             'jabatan_id'    => old('jabatan_id'),
@@ -166,7 +166,7 @@ class Bpd extends BaseController
         $bpd = [
             'id'            => $row['id'],
             'nama'          => old('nama', $row['nama']),
-            'nip'           => old('nip', $row['nip']),
+
             'nik'           => old('nik', $row['nik']),
             'jenis_kelamin' => old('jenis_kelamin', $row['jenis_kelamin']),
             'jabatan_id'    => old('jabatan_id', $row['jabatan_id']),
@@ -208,7 +208,7 @@ class Bpd extends BaseController
 
         $data = [
             'nama'          => $this->request->getPost('nama'),
-            'nip'           => $this->request->getPost('nip'),
+
             'nik'           => $this->request->getPost('nik'),
             'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
             'jabatan_id'    => $this->request->getPost('jabatan_id') ?: null,
@@ -257,6 +257,48 @@ class Bpd extends BaseController
         }
 
         // UBAH: Redirect ke admin/bpd/detail
+        
+        // --- AUTO INSERT HISTORY LOGIC ---
+        // 1. Riwayat Jabatan
+        if (!empty($data['jabatan_id'])) {
+            $latestJabatan = $this->histJabatanModel
+                ->where('perangkat_id', $id)
+                ->orderBy('id', 'DESC') // or tmt_mulai DESC
+                ->first();
+
+            // Jika belum ada history, atau jabatan terakhir beda dengan yang baru diinput
+            if (!$latestJabatan || $latestJabatan['jabatan_id'] != $data['jabatan_id']) {
+                $this->histJabatanModel->insert([
+                    'perangkat_id' => $id,
+                    'jabatan_id'   => $data['jabatan_id'],
+                    'nama_unit'    => null, // Default
+                    'tmt_mulai'    => null,
+                    'sk_nomor'     => '-',
+                    'keterangan'   => '',
+                ]);
+            }
+        }
+
+        // 2. Riwayat Pendidikan
+        if (!empty($data['pendidikan_id'])) {
+            $latestPendidikan = $this->histPendidikanModel
+                ->where('perangkat_id', $id)
+                ->orderBy('id', 'DESC') // or create_at DESC
+                ->first();
+
+            // Jika belum ada history, atau pendidikan terakhir beda
+            if (!$latestPendidikan || $latestPendidikan['pendidikan_id'] != $data['pendidikan_id']) {
+                $this->histPendidikanModel->insert([
+                    'perangkat_id'  => $id,
+                    'pendidikan_id' => $data['pendidikan_id'],
+                    'nama_lembaga'  => '-',
+                    'jurusan'       => '-',
+                    'tahun_lulus'   => null,
+                ]);
+            }
+        }
+        // --- END AUTO INSERT HISTORY LOGIC ---
+
         return redirect()->to('admin/bpd/detail/' . $id)
             ->with('success', $msg);
     }
@@ -358,17 +400,16 @@ class Bpd extends BaseController
 
     public function savePendidikanHistory()
     {
-        // NOTE: Di view, input hidden name tetap 'perangkat_id' atau ubah jadi 'bpd_id'?
-        // Disini saya terima 'bpd_id' jika Anda mengubah view, atau fallback ke 'perangkat_id'
-        $bpdId = $this->request->getPost('bpd_id') ?? $this->request->getPost('perangkat_id');
-        $id    = $this->request->getPost('id');
+        // Ambil perangkat_id dari form
+        $perangkatId = $this->request->getPost('perangkat_id');
+        $id          = $this->request->getPost('id');
 
-        if (!$bpdId) {
-            return redirect()->back()->with('error', 'Data BPD tidak valid');
+        if (!$perangkatId) {
+            return redirect()->back()->with('error', 'Data BPD tidak valid (ID tidak ditemukan)');
         }
 
         $data = [
-            'bpd_id'        => $bpdId, // Column database harus bpd_id
+            'perangkat_id'  => $perangkatId,
             'pendidikan_id' => $this->request->getPost('pendidikan_id') ?: null,
             'nama_lembaga'  => $this->request->getPost('nama_lembaga'),
             'jurusan'       => $this->request->getPost('jurusan'),
@@ -407,15 +448,21 @@ class Bpd extends BaseController
             $msg = 'Riwayat pendidikan berhasil ditambahkan';
         }
 
-        return redirect()->to('admin/bpd/detail/' . $bpdId)
+        // Sync ke profile utama
+        $this->syncLatestToProfile($perangkatId);
+
+        return redirect()->to('admin/bpd/detail/' . $perangkatId)
             ->with('success', $msg);
     }
 
     public function deletePendidikanHistory()
     {
-        $id    = $this->request->getPost('id');
-        // Ambil ID parent untuk validasi (opsional)
-        $bpdId = $this->request->getPost('bpd_id') ?? $this->request->getPost('perangkat_id');
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(405);
+        }
+
+        $id = $this->request->getPost('id');
+        $perangkatId = $this->request->getPost('perangkat_id');
 
         if (!$id) {
             return $this->response->setJSON([
@@ -436,6 +483,13 @@ class Bpd extends BaseController
 
         $this->histPendidikanModel->delete($id);
 
+        // Sync ke profile utama jika perangkat_id ada
+        if (!empty($perangkatId)) {
+            $this->syncLatestToProfile($perangkatId);
+        } else if (!empty($row['perangkat_id'])) {
+            $this->syncLatestToProfile($row['perangkat_id']);
+        }
+
         return $this->response->setJSON([
             'status'   => true,
             'message'  => 'Riwayat pendidikan berhasil dihapus',
@@ -449,15 +503,15 @@ class Bpd extends BaseController
 
     public function saveJabatanHistory()
     {
-        $bpdId = $this->request->getPost('bpd_id') ?? $this->request->getPost('perangkat_id');
-        $id    = $this->request->getPost('id');
+        $perangkatId = $this->request->getPost('perangkat_id');
+        $id          = $this->request->getPost('id');
 
-        if (!$bpdId) {
+        if (!$perangkatId) {
             return redirect()->back()->with('error', 'Data BPD tidak valid');
         }
 
         $data = [
-            'bpd_id'      => $bpdId, // Column database harus bpd_id
+            'perangkat_id' => $perangkatId,
             'jabatan_id'  => $this->request->getPost('jabatan_id') ?: null,
             'nama_unit'   => $this->request->getPost('nama_unit'),
             'sk_nomor'    => $this->request->getPost('sk_nomor'),
@@ -498,13 +552,21 @@ class Bpd extends BaseController
             $msg = 'Riwayat jabatan berhasil ditambahkan';
         }
 
-        return redirect()->to('admin/bpd/detail/' . $bpdId)
+        // Sync ke profile utama
+        $this->syncLatestToProfile($perangkatId);
+
+        return redirect()->to('admin/bpd/detail/' . $perangkatId)
             ->with('success', $msg);
     }
 
     public function deleteJabatanHistory()
     {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(405);
+        }
+
         $id = $this->request->getPost('id');
+        $perangkatId = $this->request->getPost('perangkat_id');
 
         if (!$id) {
             return $this->response->setJSON([
@@ -525,11 +587,56 @@ class Bpd extends BaseController
 
         $this->histJabatanModel->delete($id);
 
+        // Sync ke profile utama
+        if (!empty($perangkatId)) {
+            $this->syncLatestToProfile($perangkatId);
+        } else if (!empty($row['perangkat_id'])) {
+            $this->syncLatestToProfile($row['perangkat_id']);
+        }
+
         return $this->response->setJSON([
             'status'   => true,
             'message'  => 'Riwayat jabatan berhasil dihapus',
             'newToken' => csrf_hash(),
         ]);
+    }
+
+    /**
+     * Sinkronisasi data profile utama (jabatan & pendidikan)
+     * berdasarkan riwayat terbaru.
+     */
+    private function syncLatestToProfile($perangkatId)
+    {
+        if (!$perangkatId) return;
+
+        $updateData = [];
+
+        // 1. Cek Jabatan Terakhir
+        $lastJabatan = $this->histJabatanModel
+            ->where('perangkat_id', $perangkatId)
+            ->orderBy('tmt_mulai', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if ($lastJabatan) {
+            $updateData['jabatan_id']  = $lastJabatan['jabatan_id'];
+            $updateData['tmt_jabatan'] = $lastJabatan['tmt_mulai'];
+        }
+
+        // 2. Cek Pendidikan Terakhir
+        $lastPendidikan = $this->histPendidikanModel
+            ->where('perangkat_id', $perangkatId)
+            ->orderBy('tahun_lulus', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if ($lastPendidikan) {
+            $updateData['pendidikan_id'] = $lastPendidikan['pendidikan_id'];
+        }
+
+        if (!empty($updateData)) {
+            $this->bpdModel->update($perangkatId, $updateData);
+        }
     }
 
     // ==========================

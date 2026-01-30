@@ -275,6 +275,58 @@ class FileHandler extends BaseController
         return $this->response->setBody(file_get_contents($filePath));
     }
 
+    public function bpd($filename = null)
+    {
+        if (!$filename) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Sanitasi nama file (anti path traversal)
+        $safeName = basename($filename);
+
+        // Hanya karakter aman
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $safeName)) {
+            return $this->response->setStatusCode(400, 'Invalid file name');
+        }
+
+        // Batasi ekstensi hanya gambar
+        $ext = strtolower(pathinfo($safeName, PATHINFO_EXTENSION));
+        $allowedExt = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+        if (!in_array($ext, $allowedExt, true)) {
+            return $this->response->setStatusCode(403, 'File type forbidden');
+        }
+
+        $filePath = WRITEPATH . 'uploads/bpd/' . $safeName;
+
+        if (!is_file($filePath)) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        // Deteksi mime type
+        $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+
+        // Izinkan MIME gambar saja
+        $allowedMime = [
+            'image/png',
+            'image/jpeg',
+            'image/gif',
+            'image/webp',
+        ];
+
+        if (!in_array($mimeType, $allowedMime, true)) {
+            return $this->response->setStatusCode(403, 'File type forbidden');
+        }
+
+        // Header untuk image (inline)
+        $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Content-Disposition', 'inline; filename="' . $safeName . '"')
+            ->setHeader('X-Content-Type-Options', 'nosniff')
+            ->setHeader('Cache-Control', 'public, max-age=604800'); // 7 hari
+
+        return $this->response->setBody(file_get_contents($filePath));
+    }
+
     public function dokumen($filename = null)
     {
         if (!$filename) {
@@ -326,6 +378,92 @@ class FileHandler extends BaseController
             ->setHeader('Content-Disposition', $disposition . '; filename="' . $safeName . '"')
             ->setHeader('X-Content-Type-Options', 'nosniff')
             ->setHeader('Cache-Control', 'public, max-age=604800'); // 7 hari
+
+        return $this->response->setBody(file_get_contents($filePath));
+    }
+    public function ijazah($filename = null)
+    {
+        if (!$filename) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        $safeName = basename($filename);
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $safeName)) {
+            return $this->response->setStatusCode(400, 'Invalid file name');
+        }
+
+        $filePath = WRITEPATH . 'uploads/ijazah/' . $safeName;
+
+        if (!is_file($filePath)) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+
+        $allowed = [
+            'image/png',
+            'image/jpeg',
+            'image/jpg',
+            'image/gif',
+            'image/webp',
+            'application/pdf',
+        ];
+
+        if (!in_array($mimeType, $allowed, true)) {
+            return $this->response->setStatusCode(403, 'File type forbidden');
+        }
+
+        // PDF ditampilkan inline
+        if ($mimeType === 'application/pdf') {
+            $this->response->setHeader('Content-Disposition', 'inline; filename="' . $safeName . '"');
+        }
+
+        $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Cache-Control', 'public, max-age=604800');
+
+        return $this->response->setBody(file_get_contents($filePath));
+    }
+
+    public function sk($filename = null)
+    {
+        if (!$filename) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        $safeName = basename($filename);
+        if (!preg_match('/^[A-Za-z0-9._-]+$/', $safeName)) {
+            return $this->response->setStatusCode(400, 'Invalid file name');
+        }
+
+        $filePath = WRITEPATH . 'uploads/sk/' . $safeName;
+
+        if (!is_file($filePath)) {
+            return $this->response->setStatusCode(404, 'File not found');
+        }
+
+        $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+
+        $allowed = [
+            'image/png',
+            'image/jpeg',
+            'image/jpg',
+            'image/gif',
+            'image/webp',
+            'application/pdf',
+        ];
+
+        if (!in_array($mimeType, $allowed, true)) {
+            return $this->response->setStatusCode(403, 'File type forbidden');
+        }
+
+        if ($mimeType === 'application/pdf') {
+            $this->response->setHeader('Content-Disposition', 'inline; filename="' . $safeName . '"');
+        }
+
+        $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Cache-Control', 'public, max-age=604800');
 
         return $this->response->setBody(file_get_contents($filePath));
     }

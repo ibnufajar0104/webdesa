@@ -15,7 +15,7 @@ class BpdModel extends Model
 
     protected $allowedFields    = [
         'nama',
-        'nip',
+
         'nik',
         'jenis_kelamin',
         'jabatan_id',

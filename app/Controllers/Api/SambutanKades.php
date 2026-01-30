@@ -78,6 +78,7 @@ class SambutanKades extends BaseController
         return [
             'id'         => (int)($row['id'] ?? 0),
             'judul'      => $row['judul'] ?? '',
+            'nama_kades' => $row['nama_kades'] ?? '',
             'isi'        => $row['isi'] ?? '',
             'foto_url'   => $fotoUrl,
             'updated_at' => $row['updated_at'] ?? null,

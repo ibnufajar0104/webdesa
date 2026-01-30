@@ -4,23 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SambutanKadesModel extends Model
+class DemografiModel extends Model
 {
-    protected $table            = 'sambutan_kades';
+    protected $table            = 'demografi';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-
     protected $allowedFields    = [
-        'judul',
-        'nama_kades', // Add this
-        'isi',
-        'foto_kades',
-        'is_active',
+        'jarak_ke_kabupaten',
+        'luas_wilayah',
+        'kepadatan'
     ];
-
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

@@ -67,15 +67,7 @@
                     </div>
 
                     <!-- NIP -->
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1" for="nip">
-                            NIP (opsional)
-                        </label>
-                        <input type="text" name="nip" id="nip"
-                            value="<?= esc($perangkat['nip'] ?? '') ?>"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs md:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                            placeholder="NIP jika ASN">
-                    </div>
+
 
                     <!-- NIK -->
                     <div>

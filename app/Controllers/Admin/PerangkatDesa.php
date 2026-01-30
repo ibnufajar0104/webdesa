@@ -246,6 +246,54 @@ class PerangkatDesa extends BaseController
             $msg = 'Data perangkat desa berhasil ditambahkan';
         }
 
+        // --- AUTO INSERT HISTORY LOGIC ---
+        // 1. Riwayat Jabatan
+        if (!empty($data['jabatan_id'])) {
+            $lastJabatan = $this->histJabatanModel
+                ->where('perangkat_id', $id)
+                ->orderBy('tmt_mulai', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->first();
+
+            // Insert jika belum ada history atau jabatan berbeda
+            if (!$lastJabatan || $lastJabatan['jabatan_id'] != $data['jabatan_id']) {
+                $jabatanData = [
+                    'perangkat_id' => $id,
+                    'jabatan_id'   => $data['jabatan_id'],
+                    'nama_unit'    => '', // Default
+                    'tmt_mulai'    => null,
+                    'tmt_selesai'  => null,
+                    'sk_nomor'     => null,
+                    'sk_tanggal'   => null,
+                    'keterangan'   => '',
+                ];
+                $this->histJabatanModel->insert($jabatanData);
+            }
+        }
+
+        // 2. Riwayat Pendidikan
+        if (!empty($data['pendidikan_id'])) {
+            $lastPendidikan = $this->histPendidikanModel
+                ->where('perangkat_id', $id)
+                ->orderBy('tahun_lulus', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->first();
+
+            // Insert jika belum ada history atau pendidikan berbeda
+            if (!$lastPendidikan || $lastPendidikan['pendidikan_id'] != $data['pendidikan_id']) {
+                $pendidikanData = [
+                    'perangkat_id'  => $id,
+                    'pendidikan_id' => $data['pendidikan_id'],
+                    'nama_lembaga'  => '-',
+                    'jurusan'       => null,
+                    'tahun_masuk'   => null,
+                    'tahun_lulus'   => null,
+                ];
+                $this->histPendidikanModel->insert($pendidikanData);
+            }
+        }
+        // --- END AUTO INSERT HISTORY LOGIC ---
+
         return redirect()->to('admin/perangkat-desa/detail/' . $id)
             ->with('success', $msg);
     }
@@ -389,6 +437,9 @@ class PerangkatDesa extends BaseController
             $msg = 'Riwayat pendidikan berhasil ditambahkan';
         }
 
+        // Sync ke profile utama
+        $this->syncLatestToProfile($perangkatId);
+
         return redirect()->to('admin/perangkat-desa/detail/' . $perangkatId)
             ->with('success', $msg);
     }
@@ -398,8 +449,9 @@ class PerangkatDesa extends BaseController
         $id          = $this->request->getPost('id');
         $perangkatId = $this->request->getPost('perangkat_id');
 
-        if (!$id || !$perangkatId) {
-            return $this->response->setJSON([
+        // Jika hanya ID yang dikirim
+        if (!$id) {
+             return $this->response->setJSON([
                 'status'   => false,
                 'message'  => 'ID tidak valid',
                 'newToken' => csrf_hash(),
@@ -416,6 +468,13 @@ class PerangkatDesa extends BaseController
         }
 
         $this->histPendidikanModel->delete($id);
+
+        // Sync ke profile utama jika perangkat_id ada
+        if (!empty($perangkatId)) {
+            $this->syncLatestToProfile($perangkatId);
+        } else if (!empty($row['perangkat_id'])) {
+            $this->syncLatestToProfile($row['perangkat_id']);
+        }
 
         return $this->response->setJSON([
             'status'   => true,
@@ -479,6 +538,9 @@ class PerangkatDesa extends BaseController
             $msg = 'Riwayat jabatan berhasil ditambahkan';
         }
 
+        // Sync ke profile utama
+        $this->syncLatestToProfile($perangkatId);
+
         return redirect()->to('admin/perangkat-desa/detail/' . $perangkatId)
             ->with('success', $msg);
     }
@@ -488,7 +550,7 @@ class PerangkatDesa extends BaseController
         $id          = $this->request->getPost('id');
         $perangkatId = $this->request->getPost('perangkat_id');
 
-        if (!$id || !$perangkatId) {
+        if (!$id) {
             return $this->response->setJSON([
                 'status'   => false,
                 'message'  => 'ID tidak valid',
@@ -506,6 +568,13 @@ class PerangkatDesa extends BaseController
         }
 
         $this->histJabatanModel->delete($id);
+
+         // Sync ke profile utama
+        if (!empty($perangkatId)) {
+            $this->syncLatestToProfile($perangkatId);
+        } else if (!empty($row['perangkat_id'])) {
+            $this->syncLatestToProfile($row['perangkat_id']);
+        }
 
         return $this->response->setJSON([
             'status'   => true,
@@ -536,5 +605,39 @@ class PerangkatDesa extends BaseController
             ->orderBy('urut', 'ASC')
             ->get()
             ->getResultArray();
+    }
+
+    private function syncLatestToProfile($perangkatId)
+    {
+        if (!$perangkatId) return;
+
+        $updateData = [];
+
+        // 1. Cek Jabatan Terakhir
+        $lastJabatan = $this->histJabatanModel
+            ->where('perangkat_id', $perangkatId)
+            ->orderBy('tmt_mulai', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if ($lastJabatan) {
+            $updateData['jabatan_id']  = $lastJabatan['jabatan_id'];
+            $updateData['tmt_jabatan'] = $lastJabatan['tmt_mulai'];
+        }
+
+        // 2. Cek Pendidikan Terakhir
+        $lastPendidikan = $this->histPendidikanModel
+            ->where('perangkat_id', $perangkatId)
+            ->orderBy('tahun_lulus', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if ($lastPendidikan) {
+            $updateData['pendidikan_id'] = $lastPendidikan['pendidikan_id'];
+        }
+
+        if (!empty($updateData)) {
+            $this->perangkatModel->update($perangkatId, $updateData);
+        }
     }
 }

@@ -131,50 +131,85 @@
             <?= csrf_field() ?>
             <input type="hidden" name="id" id="id">
 
+            <!-- 1. Label (Nama Menu) -->
             <div>
-                <label class="text-xs text-slate-600 dark:text-slate-300">Label</label>
+                <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Nama Menu</label>
                 <input id="label" name="label"
-                    class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
-                    placeholder="Contoh: Dashboard">
+                    class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                    placeholder="Contoh: Profil Desa">
+                <p class="mt-1 text-[10px] text-slate-400">Nama yang akan tampil di website.</p>
             </div>
 
+            <!-- 2. Parent (Induk) -->
             <div>
-                <label class="text-xs text-slate-600 dark:text-slate-300">Parent (kosong = menu utama)</label>
+                <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Induk Menu (Sub-menu dari...)</label>
                 <select id="parent_id" name="parent_id"
-                    class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm">
-                    <option value="">- Tanpa parent -</option>
+                    class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                    <option value="">- Jadikan Menu Utama -</option>
                     <?php foreach ($parents as $p): ?>
                         <option value="<?= (int)$p['id'] ?>"><?= esc($p['label']) ?></option>
                     <?php endforeach; ?>
                 </select>
+                <p class="mt-1 text-[10px] text-slate-400">Pilih menu lain jika ingin membuat sub-menu.</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <div class="border-t border-slate-100 dark:border-slate-800 my-2"></div>
+
+            <!-- 3. Source (Sumber Link) -->
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-4">
                 <div>
-                    <label class="text-xs text-slate-600 dark:text-slate-300">Aktif</label>
+                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Sumber Link</label>
+                    <select id="source_type" class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                        <option value="custom">Link Manual (Custom)</option>
+                        <option value="halaman">Halaman Statis (Profil, Visi Misi, dll)</option>
+                        <option value="berita">Berita / Artikel</option>
+                        <option value="dokumen">Dokumen Publik</option>
+                    </select>
+                    <p class="mt-1 text-[10px] text-slate-400">Pilih "Link Manual" jika ingin mengetik URL sendiri.</p>
+                </div>
+
+                <div id="box_content" class="hidden animate-fade-in-down">
+                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Pilih Konten</label>
+                    <select id="source_content" class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                        <option value="">- Pilih Judul -</option>
+                    </select>
+                    <div id="loading_content" class="text-[10px] text-primary-600 mt-1 hidden flex items-center gap-1">
+                        <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+                        Mengambil data...
+                    </div>
+                </div>
+
+                <!-- 4. URL Result -->
+                <div>
+                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Link URL</label>
+                    <div class="relative">
+                        <input id="url" name="url"
+                            class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 read-only:bg-slate-100 dark:read-only:bg-slate-800 read-only:text-slate-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                            placeholder="Contoh: profil/sejarah atau https://google.com">
+                    </div>
+                    <p class="mt-1 text-[10px] text-slate-400">Otomatis terisi jika memilih sumber di atas.</p>
+                </div>
+            </div>
+
+            <!-- 5. Options -->
+            <div class="grid grid-cols-2 gap-4 pt-1">
+                <div>
+                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Status Menu</label>
                     <select id="is_active" name="is_active"
-                        class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm">
-                        <option value="1">Aktif</option>
-                        <option value="0">Nonaktif</option>
+                        class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                        <option value="1">Tampilkan (Aktif)</option>
+                        <option value="0">Sembunyikan</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="text-xs text-slate-600 dark:text-slate-300">Buka di</label>
+                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Cara Buka</label>
                     <select id="target" name="target"
-                        class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm">
-                        <option value="_self">Tab yang sama</option>
-                        <option value="_blank">Tab baru</option>
+                        class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                        <option value="_self">Di Tab Ini (Normal)</option>
+                        <option value="_blank">Di Tab Baru (New Tab)</option>
                     </select>
                 </div>
-            </div>
-
-            <div>
-                <label class="text-xs text-slate-600 dark:text-slate-300">URL (route)</label>
-                <input id="url" name="url"
-                    class="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
-                    placeholder="admin/dashboard">
-                <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Jika menu tidak punya halaman, URL boleh kosong.</p>
             </div>
 
             <div class="flex items-center gap-2">
@@ -375,8 +410,97 @@
             frm.target.value = String(data.target ?? '_self');
         };
 
-        document.getElementById('btnAdd')?.addEventListener('click', () => setForm({}));
-        document.getElementById('btnReset')?.addEventListener('click', () => setForm({}));
+        document.getElementById('btnAdd')?.addEventListener('click', () => {
+            setForm({});
+            resetSource();
+        });
+        document.getElementById('btnReset')?.addEventListener('click', () => {
+            setForm({});
+            resetSource();
+        });
+
+        /* =========================
+           SOURCE LOGIC
+        ========================= */
+        const elSourceType = document.getElementById('source_type');
+        const elSourceContent = document.getElementById('source_content');
+        const elBoxContent = document.getElementById('box_content');
+        const elLoading = document.getElementById('loading_content');
+        const elUrl = document.getElementById('url');
+
+        // Cache data to avoid re-fetching
+        const cacheData = {
+            halaman: null,
+            berita: null,
+            dokumen: null
+        };
+
+        const resetSource = () => {
+             elSourceType.value = 'custom';
+             elBoxContent.classList.add('hidden');
+             elUrl.readOnly = false;
+        };
+
+        const loadContentData = async (type) => {
+            if (cacheData[type]) return renderOptions(cacheData[type]);
+
+            elLoading.classList.remove('hidden');
+            elSourceContent.disabled = true;
+
+            try {
+                const res = await fetch(baseUrl + 'admin/menu/source-data/' + type);
+                const json = await safeJson(res);
+                if (json.status) {
+                    cacheData[type] = json.data;
+                    renderOptions(json.data);
+                }
+            } catch (e) {
+                console.error(e);
+            } finally {
+                elLoading.classList.add('hidden');
+                elSourceContent.disabled = false;
+            }
+        };
+
+        const renderOptions = (items) => {
+            let html = '<option value="">- Pilih -</option>';
+            items.forEach(it => {
+                html += `<option value="${it.slug}">${it.label}</option>`;
+            });
+            elSourceContent.innerHTML = html;
+        };
+
+        elSourceType.addEventListener('change', () => {
+            const type = elSourceType.value;
+            elUrl.value = ''; // Reset URL upon changing type
+
+            if (type === 'custom') {
+                elBoxContent.classList.add('hidden');
+                elUrl.readOnly = false;
+            } else {
+                elBoxContent.classList.remove('hidden');
+                elUrl.readOnly = true;
+                loadContentData(type);
+            }
+        });
+
+        elSourceContent.addEventListener('change', () => {
+            const slug = elSourceContent.value;
+            const type = elSourceType.value;
+            
+            if (!slug) {
+                elUrl.value = '';
+                return;
+            }
+
+            // Prefix based on type
+            let prefix = '';
+            if (type === 'halaman') prefix = 'halaman/';
+            if (type === 'berita') prefix = 'berita/';
+            if (type === 'dokumen') prefix = 'dokumen/';
+
+            elUrl.value = prefix + slug;
+        });
 
         /* =========================
            EDIT (FETCH LATEST)

@@ -40,7 +40,7 @@ $p = $perangkat ?? [];
             <div class="flex items-start gap-3">
                 <div class="w-14 h-14 rounded-2xl bg-primary-100 text-primary-700 flex items-center justify-center text-sm font-semibold overflow-hidden dark:bg-primary-900/40 dark:text-primary-100">
                     <?php if (!empty($p['foto_file'])): ?>
-                        <img src="<?= base_url('file/perangkat/' . basename($p['foto_file'])) ?>" alt="Foto"
+                        <img src="<?= base_url('file/' . $p['foto_file']) ?>" alt="Foto"
                             class="w-full h-full object-cover">
                     <?php else: ?>
                         <?= strtoupper(substr((string)($p['nama'] ?? 'PD'), 0, 2)) ?>
@@ -55,12 +55,7 @@ $p = $perangkat ?? [];
                     </p>
 
                     <dl class="mt-2 space-y-1 text-[11px]">
-                        <div>
-                            <dt class="inline text-slate-500 dark:text-slate-400">NIP:</dt>
-                            <dd class="inline font-mono text-slate-800 dark:text-slate-100">
-                                <?= esc($p['nip'] ?? '-') ?>
-                            </dd>
-                        </div>
+
                         <div>
                             <dt class="inline text-slate-500 dark:text-slate-400">NIK:</dt>
                             <dd class="inline font-mono text-slate-800 dark:text-slate-100">
@@ -136,10 +131,17 @@ $p = $perangkat ?? [];
                 <h3 class="text-xs font-semibold text-slate-700 dark:text-slate-200">
                     Riwayat Pendidikan
                 </h3>
+                <button type="button" onclick="openModalPendidikan()"
+                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary-50 text-primary-700 text-[11px] font-medium hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    Tambah
+                </button>
             </div>
 
             <div class="overflow-x-auto mb-3">
-                <table class="min-w-full text-[11px] md:text-xs">
+                <table id="tablePendidikan" class="min-w-full text-[11px] md:text-xs">
                     <thead>
                         <tr class="bg-slate-50 text-slate-600 border-b border-slate-100 dark:bg-slate-900/60 dark:text-slate-200 dark:border-slate-800">
                             <th class="px-2 py-1.5 text-left font-medium">Pendidikan</th>
@@ -185,16 +187,18 @@ $p = $perangkat ?? [];
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-2 py-1.5 whitespace-nowrap">
-                                        <form action="<?= base_url('admin/bpd/pendidikan/delete') ?>" method="post" class="inline">
-                                            <?= csrf_field() ?>
-                                            <input type="hidden" name="id" value="<?= esc($h['id']) ?>">
-                                            <input type="hidden" name="perangkat_id" value="<?= esc($p['id']) ?>">
-                                            <button type="submit"
-                                                class="inline-flex items-center px-2 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] text-rose-700 hover:bg-rose-100 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
-                                                onclick="return confirm('Hapus riwayat pendidikan ini?')">
+                                        <div class="flex items-center gap-1">
+                                            <button type="button"
+                                                class="inline-flex items-center px-2 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] text-sky-700 hover:bg-sky-100 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20"
+                                                onclick='openModalPendidikan(<?= json_encode($h) ?>)'>
+                                                Edit
+                                            </button>
+                                            <button type="button"
+                                                class="btnDeletePendidikan inline-flex items-center px-2 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] text-rose-700 hover:bg-rose-100 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
+                                                data-id="<?= esc($h['id']) ?>">
                                                 Hapus
                                             </button>
-                                        </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -208,83 +212,6 @@ $p = $perangkat ?? [];
                     </tbody>
                 </table>
             </div>
-
-            <!-- Form tambah / edit riwayat pendidikan -->
-            <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <h4 class="text-[11px] font-semibold text-slate-600 mb-2 dark:text-slate-300">
-                    Tambah / Edit Riwayat Pendidikan
-                </h4>
-                <form action="<?= base_url('admin/bpd/pendidikan/save') ?>" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-5 gap-2 text-[11px]">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="perangkat_id" value="<?= esc($p['id']) ?>">
-                    <input type="hidden" name="id" value=""> <!-- untuk edit jika mau dikembangkan -->
-                    <input type="hidden" name="ijazah_file_old" value="">
-
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            Pendidikan
-                        </label>
-                        <select name="pendidikan_id"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-                            <option value="">- Pilih -</option>
-                            <?php foreach (($pendidikanMaster ?? []) as $pd): ?>
-                                <option value="<?= $pd['id'] ?>"><?= esc($pd['nama_pendidikan']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            Lembaga
-                        </label>
-                        <input type="text" name="nama_lembaga"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                            placeholder="Nama sekolah / kampus">
-                    </div>
-
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            Jurusan
-                        </label>
-                        <input type="text" name="jurusan"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                            placeholder="Opsional">
-                    </div>
-
-                    <div class="flex gap-1">
-                        <div class="w-1/2">
-                            <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                                Th. Masuk
-                            </label>
-                            <input type="number" name="tahun_masuk" min="1950" max="2100"
-                                class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-                        </div>
-                        <div class="w-1/2">
-                            <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                                Th. Lulus
-                            </label>
-                            <input type="number" name="tahun_lulus" min="1950" max="2100"
-                                class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            Ijazah (opsional)
-                        </label>
-                        <input type="file" name="ijazah_file"
-                            class="block w-full text-[11px] text-slate-700 dark:text-slate-100
-                                file:mr-1 file:rounded-lg file:border-0
-                                file:bg-slate-100 file:px-2 file:py-1
-                                hover:file:bg-slate-200
-                                dark:file:bg-slate-800 dark:hover:file:bg-slate-700">
-                        <button type="submit"
-                            class="mt-1 inline-flex items-center justify-center px-3 py-1.5 rounded-xl bg-primary-600 text-white text-[11px] font-medium hover:bg-primary-700">
-                            Simpan Riwayat
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
 
         <!-- Riwayat Jabatan -->
@@ -293,10 +220,17 @@ $p = $perangkat ?? [];
                 <h3 class="text-xs font-semibold text-slate-700 dark:text-slate-200">
                     Riwayat Jabatan
                 </h3>
+                <button type="button" onclick="openModalJabatan()"
+                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary-50 text-primary-700 text-[11px] font-medium hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    Tambah
+                </button>
             </div>
 
             <div class="overflow-x-auto mb-3">
-                <table class="min-w-full text-[11px] md:text-xs">
+                <table id="tableJabatan" class="min-w-full text-[11px] md:text-xs">
                     <thead>
                         <tr class="bg-slate-50 text-slate-600 border-b border-slate-100 dark:bg-slate-900/60 dark:text-slate-200 dark:border-slate-800">
                             <th class="px-2 py-1.5 text-left font-medium">Jabatan</th>
@@ -343,16 +277,18 @@ $p = $perangkat ?? [];
                                         <?= esc($h['keterangan'] ?? '-') ?>
                                     </td>
                                     <td class="px-2 py-1.5 whitespace-nowrap">
-                                        <form action="<?= base_url('admin/bpd/jabatan/delete') ?>" method="post" class="inline">
-                                            <?= csrf_field() ?>
-                                            <input type="hidden" name="id" value="<?= esc($h['id']) ?>">
-                                            <input type="hidden" name="perangkat_id" value="<?= esc($p['id']) ?>">
-                                            <button type="submit"
-                                                class="inline-flex items-center px-2 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] text-rose-700 hover:bg-rose-100 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
-                                                onclick="return confirm('Hapus riwayat jabatan ini?')">
+                                        <div class="flex items-center gap-1">
+                                            <button type="button"
+                                                class="inline-flex items-center px-2 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] text-sky-700 hover:bg-sky-100 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20"
+                                                onclick='openModalJabatan(<?= json_encode($h) ?>)'>
+                                                Edit
+                                            </button>
+                                            <button type="button"
+                                                class="btnDeleteJabatan inline-flex items-center px-2 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] text-rose-700 hover:bg-rose-100 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
+                                                data-id="<?= esc($h['id']) ?>">
                                                 Hapus
                                             </button>
-                                        </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -366,103 +302,208 @@ $p = $perangkat ?? [];
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
 
-            <!-- Form tambah / edit riwayat jabatan -->
-            <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <h4 class="text-[11px] font-semibold text-slate-600 mb-2 dark:text-slate-300">
-                    Tambah / Edit Riwayat Jabatan
-                </h4>
-                <form action="<?= base_url('admin/bpd/jabatan/save') ?>" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-6 gap-2 text-[11px]">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="perangkat_id" value="<?= esc($p['id']) ?>">
-                    <input type="hidden" name="id" value="">
-                    <input type="hidden" name="sk_file_old" value="">
+<!-- Modal Pendidikan -->
+<div id="modalPendidikan" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="w-full max-w-lg rounded-2xl bg-white shadow-xl dark:bg-slate-900 border border-slate-100 dark:border-slate-800 transform transition-all">
+            <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+                <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100" id="modalPendidikanTitle">
+                    Tambah Riwayat Pendidikan
+                </h3>
+                <button type="button" onclick="closeModalPendidikan()" class="text-slate-400 hover:text-slate-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                    </svg>
+                </button>
+            </div>
+            <form action="<?= base_url('admin/bpd/pendidikan/save') ?>" method="post" enctype="multipart/form-data" class="p-4 space-y-3">
+                <?= csrf_field() ?>
+                <input type="hidden" name="perangkat_id" value="<?= esc($p['id']) ?>">
+                <input type="hidden" name="id" id="pendidikan_id">
+                <input type="hidden" name="ijazah_file_old" id="ijazah_file_old">
 
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Pendidikan</label>
+                    <select name="pendidikan_id" id="pendidikan_pendidikan_id" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                        <option value="">- Pilih -</option>
+                        <?php foreach (($pendidikanMaster ?? []) as $pd): ?>
+                            <option value="<?= $pd['id'] ?>"><?= esc($pd['nama_pendidikan']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Lembaga</label>
+                    <input type="text" name="nama_lembaga" id="pendidikan_nama_lembaga" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Jurusan</label>
+                    <input type="text" name="jurusan" id="pendidikan_jurusan" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            Jabatan
-                        </label>
-                        <select name="jabatan_id"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Th. Masuk</label>
+                        <input type="number" name="tahun_masuk" id="pendidikan_tahun_masuk" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Th. Lulus</label>
+                        <input type="number" name="tahun_lulus" id="pendidikan_tahun_lulus" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">File Ijazah</label>
+                    <input type="file" name="ijazah_file" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
+                    <p class="mt-1 text-[10px] text-slate-400">Biarkan kosong jika tidak ingin mengubah file.</p>
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeModalPendidikan()" class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-3 py-1.5 rounded-xl bg-primary-600 text-white text-xs font-medium hover:bg-primary-700 focus:ring-2 focus:ring-primary-500/50">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Jabatan -->
+<div id="modalJabatan" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="w-full max-w-xl rounded-2xl bg-white shadow-xl dark:bg-slate-900 border border-slate-100 dark:border-slate-800 transform transition-all">
+            <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+                <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100" id="modalJabatanTitle">
+                    Tambah Riwayat Jabatan
+                </h3>
+                <button type="button" onclick="closeModalJabatan()" class="text-slate-400 hover:text-slate-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                    </svg>
+                </button>
+            </div>
+            <form action="<?= base_url('admin/bpd/jabatan/save') ?>" method="post" enctype="multipart/form-data" class="p-4 space-y-3">
+                <?= csrf_field() ?>
+                <input type="hidden" name="perangkat_id" value="<?= esc($p['id']) ?>">
+                <input type="hidden" name="id" id="jabatan_id">
+                <input type="hidden" name="sk_file_old" id="sk_file_old">
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Jabatan</label>
+                        <select name="jabatan_id" id="jabatan_jabatan_id" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
                             <option value="">- Pilih -</option>
                             <?php foreach (($jabatanList ?? []) as $jb): ?>
                                 <option value="<?= $jb['id'] ?>"><?= esc($jb['nama_jabatan']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Unit Kerja</label>
+                        <input type="text" name="nama_unit" id="jabatan_nama_unit" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            Unit Kerja
-                        </label>
-                        <input type="text" name="nama_unit"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                            placeholder="Misal: Pemerintah Desa Batilai">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">No. SK</label>
+                        <input type="text" name="sk_nomor" id="jabatan_sk_nomor" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
                     </div>
-
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            No. SK
-                        </label>
-                        <input type="text" name="sk_nomor"
-                            class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                            placeholder="Nomor SK">
+                         <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Tgl SK</label>
+                         <input type="date" name="sk_tanggal" id="jabatan_sk_tanggal" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
                     </div>
+                </div>
 
-                    <div class="flex gap-1">
-                        <div class="w-1/2">
-                            <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                                Tgl SK
-                            </label>
-                            <input type="date" name="sk_tanggal"
-                                class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-                        </div>
-                        <div class="w-1/2">
-                            <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                                TMT Mulai
-                            </label>
-                            <input type="date" name="tmt_mulai"
-                                class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-                        </div>
-                    </div>
-
-                    <div class="flex gap-1">
-                        <div class="w-1/2">
-                            <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                                TMT Selesai
-                            </label>
-                            <input type="date" name="tmt_selesai"
-                                class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-                        </div>
-                        <div class="w-1/2">
-                            <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                                Keterangan
-                            </label>
-                            <input type="text" name="keterangan"
-                                class="w-full rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500/70 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                                placeholder="Opsional">
-                        </div>
-                    </div>
-
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                            File SK (opsional)
-                        </label>
-                        <input type="file" name="sk_file"
-                            class="block w-full text-[11px] text-slate-700 dark:text-slate-100
-                                file:mr-1 file:rounded-lg file:border-0
-                                file:bg-slate-100 file:px-2 file:py-1
-                                hover:file:bg-slate-200
-                                dark:file:bg-slate-800 dark:hover:file:bg-slate-700">
-                        <button type="submit"
-                            class="mt-1 inline-flex items-center justify-center px-3 py-1.5 rounded-xl bg-primary-600 text-white text-[11px] font-medium hover:bg-primary-700">
-                            Simpan Riwayat
-                        </button>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">TMT Mulai</label>
+                        <input type="date" name="tmt_mulai" id="jabatan_tmt_mulai" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
                     </div>
-                </form>
-            </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">TMT Selesai</label>
+                         <input type="date" name="tmt_selesai" id="jabatan_tmt_selesai" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                    </div>
+                </div>
+
+                <div>
+                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">Keterangan</label>
+                     <input type="text" name="keterangan" id="jabatan_keterangan" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-200 mb-1">File SK</label>
+                    <input type="file" name="sk_file" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
+                     <p class="mt-1 text-[10px] text-slate-400">Biarkan kosong jika tidak ingin mengubah file.</p>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeModalJabatan()" class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-3 py-1.5 rounded-xl bg-primary-600 text-white text-xs font-medium hover:bg-primary-700 focus:ring-2 focus:ring-primary-500/50">
+                        Simpan
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="<?= base_url('assets/js/app-admin-helper.js') ?>"></script>
+
+<script>
+    const baseUrl = "<?= base_url() ?>";
+    const csrfName = "<?= csrf_token() ?>";
+    let csrfHash = "<?= csrf_hash() ?>";
+    const getCsrf = () => csrfHash;
+    const setCsrf = (token) => { csrfHash = token };
+
+    // Init Delete Actions
+    AppAdmin.initDeleteAction('#tablePendidikan', '.btnDeletePendidikan', baseUrl + '/admin/bpd/pendidikan/delete', getCsrf, setCsrf, csrfName);
+    AppAdmin.initDeleteAction('#tableJabatan', '.btnDeleteJabatan', baseUrl + '/admin/bpd/jabatan/delete', getCsrf, setCsrf, csrfName);
+
+    // Modal Helpers
+    function openModalPendidikan(data = null) {
+        document.getElementById('pendidikan_id').value = data ? data.id : '';
+        document.getElementById('pendidikan_pendidikan_id').value = data ? data.pendidikan_id : '';
+        document.getElementById('pendidikan_nama_lembaga').value = data ? data.nama_lembaga : '';
+        document.getElementById('pendidikan_jurusan').value = data ? data.jurusan : '';
+        document.getElementById('pendidikan_tahun_masuk').value = data ? data.tahun_masuk : '';
+        document.getElementById('pendidikan_tahun_lulus').value = data ? data.tahun_lulus : '';
+        document.getElementById('ijazah_file_old').value = data ? data.ijazah_file : '';
+        
+        document.getElementById('modalPendidikanTitle').innerText = data ? 'Edit Riwayat Pendidikan' : 'Tambah Riwayat Pendidikan';
+        document.getElementById('modalPendidikan').classList.remove('hidden');
+    }
+
+    function closeModalPendidikan() {
+        document.getElementById('modalPendidikan').classList.add('hidden');
+    }
+
+    function openModalJabatan(data = null) {
+        document.getElementById('jabatan_id').value = data ? data.id : '';
+        document.getElementById('jabatan_jabatan_id').value = data ? data.jabatan_id : '';
+        document.getElementById('jabatan_nama_unit').value = data ? data.nama_unit : '';
+        document.getElementById('jabatan_sk_nomor').value = data ? data.sk_nomor : '';
+        document.getElementById('jabatan_sk_tanggal').value = data ? data.sk_tanggal : '';
+        document.getElementById('jabatan_tmt_mulai').value = data ? data.tmt_mulai : '';
+        document.getElementById('jabatan_tmt_selesai').value = data ? data.tmt_selesai : '';
+        document.getElementById('jabatan_keterangan').value = data ? data.keterangan : '';
+        document.getElementById('sk_file_old').value = data ? data.sk_file : '';
+
+        document.getElementById('modalJabatanTitle').innerText = data ? 'Edit Riwayat Jabatan' : 'Tambah Riwayat Jabatan';
+        document.getElementById('modalJabatan').classList.remove('hidden');
+    }
+
+    function closeModalJabatan() {
+        document.getElementById('modalJabatan').classList.add('hidden');
+    }
+</script>
 
 <?= $this->endSection() ?>

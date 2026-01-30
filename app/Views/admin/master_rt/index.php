@@ -192,7 +192,13 @@ Master RT
     const csrfName = "<?= csrf_token() ?>";
     let csrfHash = "<?= csrf_hash() ?>";
     $(function() {
+        const baseUrl = "<?= rtrim(base_url(), '/') ?>/";
+        const csrfName = "<?= csrf_token() ?>";
+        let csrfHash = "<?= csrf_hash() ?>";
 
+        // Fungsi getter/setter agar helper bisa update csrf
+        const getCsrf = () => csrfHash;
+        const setCsrf = (newToken) => { csrfHash = newToken; };
 
         const modal = document.getElementById('modalRt');
         const modalTitle = document.getElementById('modalTitle');
@@ -201,116 +207,46 @@ Master RT
         const noRtField = document.getElementById('no_rt');
         const aktifField = document.getElementById('is_active');
 
-        // DataTables
-        let table = $('#tableRt').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: baseUrl + 'admin/master-rt/datatable',
-                type: 'POST',
-                data: function(d) {
-                    d[csrfName] = csrfHash;
-                    d.filter_status = $('#filterStatus').val();
-                }
+        const columns = [
+            { // No
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: 'INDEX',
+                className: 'px-3 py-2 whitespace-nowrap'
             },
-            order: [
-                [2, 'asc']
-            ],
-            language: {
-                processing: "Memproses...",
-                search: "Cari:",
-                lengthMenu: "Tampilkan _MENU_ data",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-                infoFiltered: "(difilter dari total _MAX_ data)",
-                loadingRecords: "Memuat data...",
-                zeroRecords: "Tidak ada data yang cocok",
-                emptyTable: "Tidak ada data",
-                paginate: {
-                    first: "«",
-                    last: "»",
-                    previous: "&lt;",
-                    next: "&gt;"
-                }
+            { // Dusun
+                data: 'nama_dusun',
+                className: 'px-3 py-2 whitespace-nowrap'
             },
-            columns: [{
-                    data: null,
-                    orderable: false,
-                    searchable: false,
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                    className: 'px-3 py-2 whitespace-nowrap'
-                },
-                {
-                    data: 'nama_dusun',
-                    render: function(v, type, row) {
-                        if (!v) return '-';
-                        const kode = row.kode_dusun ? ` <span class="text-[11px] text-slate-400">(${row.kode_dusun})</span>` : '';
-                        return `<span class="text-slate-800 dark:text-slate-100">${v}</span>${kode}`;
-                    },
-                    className: 'px-3 py-2 whitespace-nowrap'
-                },
+            { // No RT
+                data: 'no_rt',
+                className: 'px-3 py-2 whitespace-nowrap text-slate-800 dark:text-slate-100'
+            },
+            { // Status
+                data: 'is_active',
+                className: 'px-3 py-2 whitespace-nowrap'
+            },
+            { // Aksi
+                data: 'action',
+                orderable: false,
+                searchable: false,
+                className: 'px-3 py-2 whitespace-nowrap'
+            }
+        ];
 
-                {
-                    data: 'no_rt',
-                    render: function(data) {
-                        return data ?? '-';
-                    },
-                    className: 'px-3 py-2 whitespace-nowrap text-slate-800 dark:text-slate-100'
-                },
-                {
-                    data: 'is_active',
-                    render: function(val) {
-                        if (parseInt(val) === 1) {
-                            return '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700">Aktif</span>';
-                        }
-                        return '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-700">Nonaktif</span>';
-                    },
-                    className: 'px-3 py-2 whitespace-nowrap'
-                },
-                {
-                    data: null,
-                    orderable: false,
-                    searchable: false,
-                    render: function(row) {
-                        return `
-                            <div class="flex items-center gap-1.5">
-                                <button type="button"
-                                    class="btnEdit inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 focus:outline-none focus:ring-1 focus:ring-sky-400/70 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20"
-                                    data-id="${row.id}"
-                                    data-id_dusun="${row.id_dusun ?? ''}"
-                                    data-no_rt="${row.no_rt ?? ''}"
-                                    data-active="${row.is_active}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                        class="w-3.5 h-3.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m16.862 4.487 1.687 1.688a1.875 1.875 0 0 1 0 2.652L8.21 19.167A4.5 4.5 0 0 1 6.678 20l-2.135.534A.75.75 0 0 1 4 19.808l.534-2.135a4.5 4.5 0 0 1 1.334-2.531l10.338-10.338a1.875 1.875 0 0 1 2.652 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M16.5 4.5 19.5 7.5" />
-                                    </svg>
-                                    <span>Edit</span>
-                                </button>
-
-                                <button type="button"
-                                    class="btnDelete inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-rose-200 bg-rose-50 text-[11px] font-medium text-rose-700 hover:bg-rose-100 focus:outline-none focus:ring-1 focus:ring-rose-400/70 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"
-                                    data-id="${row.id}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        fill="currentColor" class="size-4">
-                                        <path fill-rule="evenodd"
-                                            d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    <span>Hapus</span>
-                                </button>
-                            </div>
-                        `;
-                    },
-                    className: 'px-3 py-2 whitespace-nowrap'
-                }
-            ]
-        });
+        // Init DataTable via Helper
+        let table = AppAdmin.initDataTable(
+            '#tableRt',
+            baseUrl + 'admin/master-rt/datatable',
+            columns,
+            getCsrf,
+            csrfName,
+            [[2, 'asc']], // Order by No RT
+            function(d) {
+                d.filter_status = $('#filterStatus').val();
+            }
+        );
 
         // Filter status
         $('#filterStatus').on('change', function() {
@@ -321,6 +257,17 @@ Master RT
             $('#filterStatus').val('');
             table.draw();
         });
+
+        // Init Delete Action
+        AppAdmin.initDeleteAction(
+            '#tableRt',
+            '.btnDelete',
+            baseUrl + 'admin/master-rt/delete',
+            getCsrf,
+            setCsrf,
+            csrfName,
+            table
+        );
 
         // Modal helpers
         window.openAddModal = async function() {
@@ -372,62 +319,6 @@ Master RT
         // Bind edit button
         $('#tableRt').on('click', '.btnEdit', function() {
             openEditModalFromRow(this);
-        });
-
-        // Hapus dengan AJAX + Swal (butuh SweetAlert2 sudah ada di layout)
-        $('#tableRt').on('click', '.btnDelete', function() {
-            let id = $(this).data('id');
-
-            Swal.fire({
-                title: 'Hapus data RT?',
-                text: 'Data yang dihapus tidak dapat dikembalikan.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#e11d48'
-            }).then((result) => {
-                if (!result.isConfirmed) return;
-
-                $.ajax({
-                    url: baseUrl + 'admin/master-rt/delete',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        id: id,
-                        [csrfName]: csrfHash
-                    },
-                    success: function(res) {
-                        if (res.newToken) {
-                            csrfHash = res.newToken;
-                        }
-
-                        if (res.status) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: res.message || 'Data RT berhasil dihapus',
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                            table.draw(false);
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: res.message || 'Gagal menghapus data'
-                            });
-                        }
-                    },
-                    error: function() {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: 'Terjadi kesalahan saat menghapus data'
-                        });
-                    }
-                });
-            });
         });
     });
 

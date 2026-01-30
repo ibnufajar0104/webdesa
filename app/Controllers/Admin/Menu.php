@@ -128,4 +128,52 @@ class Menu extends BaseController
             'data'   => $row,
         ]);
     }
+
+    /**
+     * Mengambil data sumber untuk dropdown (halaman, berita, dokumen)
+     */
+    public function sourceData($type)
+    {
+        $data = [];
+
+        if ($type === 'halaman') {
+            $model = new \App\Models\PageModel();
+            // Ambil semua halaman aktif
+            $rows = $model->select('id, title, slug')->where('status', 'published')->findAll();
+            foreach ($rows as $r) {
+                $data[] = [
+                    'id'    => $r['id'],
+                    'label' => $r['title'],
+                    'slug'  => $r['slug'],
+                ];
+            }
+        } elseif ($type === 'berita') {
+            $model = new \App\Models\NewsModel();
+            // Ambil berita publish latest 50 misalnya, atau semua
+            $rows = $model->select('id, title, slug')->where('status', 'published')->orderBy('created_at', 'DESC')->findAll(100);
+            foreach ($rows as $r) {
+                $data[] = [
+                    'id'    => $r['id'],
+                    'label' => $r['title'],
+                    'slug'  => $r['slug'],
+                ];
+            }
+        } elseif ($type === 'dokumen') {
+            $model = new \App\Models\DokumenModel();
+            // Ambil dokumen
+            $rows = $model->select('id, judul, slug')->orderBy('created_at', 'DESC')->findAll(100);
+            foreach ($rows as $r) {
+                $data[] = [
+                    'id'    => $r['id'],
+                    'label' => $r['judul'], // dokumen pakai judul
+                    'slug'  => $r['slug'],
+                ];
+            }
+        }
+
+        return $this->response->setJSON([
+            'status' => true,
+            'data'   => $data,
+        ]);
+    }
 }

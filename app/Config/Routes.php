@@ -28,6 +28,7 @@ $routes->group('file', static function ($routes) {
     $routes->get('banner/(:any)',    'FileHandler::banner/$1');
     $routes->get('ktp/(:any)',       'FileHandler::ktp/$1');
     $routes->get('perangkat/(:any)', 'FileHandler::perangkat/$1');
+    $routes->get('bpd/(:any)',       'FileHandler::bpd/$1');
     $routes->get('ijazah/(:any)',    'FileHandler::ijazah/$1');
     $routes->get('sk/(:any)',        'FileHandler::sk/$1');
     $routes->get('galery/(:any)',    'FileHandler::galery/$1');
@@ -238,6 +239,7 @@ $routes->group('admin', [
     // Manajemen Menu (dedup: reorder dobel dihapus)
     $routes->group('menu', static function ($routes) {
         $routes->get('/',                  'Menu::index');
+        $routes->get('source-data/(:segment)', 'Menu::sourceData/$1'); // Add this line
         $routes->get('(:num)',             'Menu::show/$1');
         $routes->post('save',              'Menu::save');
         $routes->post('reorder',           'Menu::reorder');
@@ -254,6 +256,12 @@ $routes->group('admin', [
         $routes->get('edit/(:num)', 'KategoriDokumen::edit/$1');
         $routes->post('save',       'KategoriDokumen::save');
         $routes->post('delete',     'KategoriDokumen::delete');
+    });
+
+    // Demografi
+    $routes->group('demografi', static function ($routes) {
+        $routes->get('/',     'Demografi::index');
+        $routes->post('save', 'Demografi::save');
     });
 
     // Dokumen
@@ -334,6 +342,7 @@ $routes->group('api', [
     $routes->get('sambutan-kades',        'SambutanKades::index');
     $routes->get('jam-pelayanan',          'JamPelayanan::index');
     $routes->get('kontak', 'Kontak::index');   // ambil kontak aktif
+    $routes->get('demografi', 'Demografi::index');
 
 
 });

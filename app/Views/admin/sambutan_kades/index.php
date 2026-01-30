@@ -34,6 +34,19 @@ Sambutan Kepala Desa
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Kolom teks -->
                 <div class="space-y-4 md:col-span-2">
+                    <!-- Nama Kades -->
+                    <div class="space-y-1.5">
+                        <label for="nama_kades"
+                            class="text-xs font-medium text-slate-700 dark:text-slate-200">
+                            Nama Kepala Desa <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" name="nama_kades" id="nama_kades"
+                            value="<?= old('nama_kades', $data['nama_kades'] ?? '') ?>"
+                            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm
+                                   focus:outline-none focus:ring-2 focus:ring-primary-500/60 focus:border-primary-500
+                                   dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
+                            placeholder="Contoh: Budi Santoso">
+                    </div>
                     <!-- Judul sambutan -->
                     <div class="space-y-1.5">
                         <label for="judul"

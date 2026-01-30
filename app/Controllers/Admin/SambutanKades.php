@@ -44,6 +44,10 @@ class SambutanKades extends BaseController
                 'label' => 'Judul sambutan',
                 'rules' => 'required|min_length[3]|max_length[150]',
             ],
+            'nama_kades' => [
+                'label' => 'Nama Kepala Desa',
+                'rules' => 'required|min_length[3]|max_length[150]',
+            ],
             'isi' => [
                 'label' => 'Isi sambutan',
                 'rules' => 'required|min_length[10]',
@@ -98,6 +102,7 @@ class SambutanKades extends BaseController
 
         $data = [
             'judul'      => $this->request->getPost('judul'),
+            'nama_kades' => $this->request->getPost('nama_kades'),
             'isi'        => $this->request->getPost('isi'),
             'foto_kades' => $fotoName,
             'is_active'  => (int) $this->request->getPost('is_active'),

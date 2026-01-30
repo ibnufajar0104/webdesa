@@ -56,76 +56,67 @@ class MasterRt extends BaseController
      */
     public function datatable()
     {
-        if (! $this->request->isAJAX()) {
-            return $this->response->setStatusCode(405);
-        }
-
-        $request = $this->request;
-
-        $draw   = (int) $request->getPost('draw');
-        $start  = (int) $request->getPost('start');
-        $length = (int) $request->getPost('length');
-        $search = $request->getPost('search')['value'] ?? '';
-
-        $order = $request->getPost('order') ?? [];
-        if (isset($order[0]['column'])) {
-            $orderColumnIdx = (int) $order[0]['column'];
-            $orderDir       = (($order[0]['dir'] ?? 'asc') === 'desc') ? 'desc' : 'asc';
-        } else {
-            $orderColumnIdx = 2;
-            $orderDir       = 'asc';
-        }
-
-        // mapping kolom datatable (sesuai urutan kolom yang tampil)
-        $columns = [
-            0 => 'rt.id',
-            1 => 'd.nama_dusun',
-            2 => 'rt.no_rt',
-            3 => 'rt.is_active',
-        ];
-        $orderColumn = $columns[$orderColumnIdx] ?? 'rt.no_rt';
-
-        // total tanpa filter/search (soft delete)
-        $recordsTotal = $this->model
-            ->where('deleted_at', null)
-            ->countAllResults();
-
         // builder dengan join (alias rt hanya sekali!)
         $builder = $this->db->table('rt rt');
         $builder->select('rt.id, rt.id_dusun, rt.no_rt, rt.is_active, d.nama_dusun, d.kode_dusun');
         $builder->join('dusun d', 'd.id = rt.id_dusun', 'left');
         $builder->where('rt.deleted_at', null);
 
-        // filter status RT
-        $filterStatus = $request->getPost('filter_status');
-        if ($filterStatus !== null && $filterStatus !== '') {
-            $builder->where('rt.is_active', (int) $filterStatus);
-        }
+        return $this->processDataTable(
+            $builder,
+            [
+                0 => 'rt.id',
+                1 => 'd.nama_dusun',
+                2 => 'rt.no_rt',
+                3 => 'rt.is_active',
+            ],
+            ['rt.no_rt', 'd.nama_dusun', 'd.kode_dusun'],
+            function ($row) {
+                // Format RT
+                $noRt = $row['no_rt'] ?? '-';
+                
+                // Format Dusun + Kode
+                $namaDusun = $row['nama_dusun'] ?? '-';
+                if (!empty($row['kode_dusun'])) {
+                    $namaDusun .= ' <span class="text-[11px] text-slate-400">(' . esc($row['kode_dusun']) . ')</span>';
+                }
 
-        // search global
-        if ($search !== '') {
-            $builder->groupStart()
-                ->like('rt.no_rt', $search)
-                ->orLike('d.nama_dusun', $search)
-                ->orLike('d.kode_dusun', $search)
-                ->groupEnd();
-        }
+                // Status Badge
+                $status = ((int)$row['is_active'] === 1)
+                    ? '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700">Aktif</span>'
+                    : '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-700">Nonaktif</span>';
 
-        // hitung filtered (pakai false supaya builder tidak di-reset)
-        $recordsFiltered = $builder->countAllResults(false);
+                // Action Buttons (Manual Edit + Helper Delete)
+                $btnEdit = '<button type="button" class="btnEdit inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 focus:outline-none focus:ring-1 focus:ring-sky-400/70 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20" 
+                    data-id="' . $row['id'] . '" 
+                    data-id_dusun="' . $row['id_dusun'] . '" 
+                    data-no_rt="' . $row['no_rt'] . '" 
+                    data-active="' . $row['is_active'] . '">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687 1.688a1.875 1.875 0 0 1 0 2.652L8.21 19.167A4.5 4.5 0 0 1 6.678 20l-2.135.534A.75.75 0 0 1 4 19.808l.534-2.135a4.5 4.5 0 0 1 1.334-2.531l10.338-10.338a1.875 1.875 0 0 1 2.652 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 4.5 19.5 7.5" /></svg>
+                    <span>Edit</span>
+                </button>';
 
-        // order & limit
-        $builder->orderBy($orderColumn, $orderDir)
-            ->limit($length, $start);
+                $btnDelete = btn_delete($row['id']);
 
-        $data = $builder->get()->getResultArray();
+                $action = '<div class="flex items-center gap-1.5">' . $btnEdit . $btnDelete . '</div>';
 
-        return $this->response->setJSON([
-            'draw'            => $draw,
-            'recordsTotal'    => $recordsTotal,
-            'recordsFiltered' => $recordsFiltered,
-            'data'            => $data,
-        ]);
+                return [
+                    'id'         => $row['id'],
+                    'nama_dusun' => $namaDusun,
+                    'no_rt'      => $noRt,
+                    'is_active'  => $status,
+                    'action'     => $action,
+                ];
+            },
+            ['rt.no_rt' => 'asc'],
+            function ($builder) {
+                $request = \Config\Services::request();
+                $filterStatus = $request->getPost('filter_status');
+                if ($filterStatus !== null && $filterStatus !== '') {
+                    $builder->where('rt.is_active', (int)$filterStatus);
+                }
+            }
+        );
     }
 
 

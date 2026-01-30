@@ -89,7 +89,7 @@ Daftar Anggota BPD
                     class="bg-slate-50 text-slate-600 border-b border-slate-100 dark:bg-slate-900/60 dark:text-slate-200 dark:border-slate-800">
                     <th class="px-3 py-2 text-left font-medium">#</th>
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Nama</th>
-                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">NIP / NIK</th>
+                    <th class="px-3 py-2 text-left font-medium whitespace-nowrap">NIK</th>
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Jabatan</th>
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Kontak</th>
                     <th class="px-3 py-2 text-left font-medium whitespace-nowrap">Status</th>
@@ -168,11 +168,11 @@ Daftar Anggota BPD
                 {
                     data: null,
                     render: function(row) {
-                        const nip = row.nip || '-';
+
+
                         const nik = row.nik || '-';
                         return `
                             <div class="flex flex-col">
-                                <span class="text-xs text-slate-800 dark:text-slate-100 font-mono">${nip}</span>
                                 <span class="text-[11px] text-slate-500 dark:text-slate-400 font-mono">NIK: ${nik}</span>
                             </div>
                         `;

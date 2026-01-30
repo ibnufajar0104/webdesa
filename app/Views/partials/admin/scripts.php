@@ -1,3 +1,4 @@
+<script src="<?= base_url('assets/js/app-admin-helper.js') ?>"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // =========================

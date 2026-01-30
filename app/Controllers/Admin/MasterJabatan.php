@@ -29,73 +29,60 @@ class MasterJabatan extends BaseController
      */
     public function datatable()
     {
-        if (! $this->request->isAJAX()) {
-            return $this->response->setStatusCode(405);
-        }
+        return $this->processDataTable(
+            $this->model->builder()->where('deleted_at', null),
+            [
+                0 => 'id',
+                1 => 'nama_jabatan',
+                2 => 'kode_jabatan',
+                3 => 'urut',
+                4 => 'is_active',
+            ],
+            ['nama_jabatan', 'kode_jabatan'], // Searchable columns
+            function ($row) {
+                // Formatting data
+                $kode = $row['kode_jabatan'] ?: '-';
+                $urut = $row['urut'] ?? 0;
+                
+                // Status badge
+                $status = ((int)$row['is_active'] === 1)
+                    ? '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700">Aktif</span>'
+                    : '<span class="inline-flex px-2 py-0.5 rounded-full text-[11px] bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-700">Nonaktif</span>';
 
-        $request = $this->request;
+                // Action Buttons
+                $btnEdit = '<button type="button" class="btnEdit inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-sky-200 bg-sky-50 text-[11px] font-medium text-sky-700 hover:bg-sky-100 focus:outline-none focus:ring-1 focus:ring-sky-400/70 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/20" 
+                    data-id="' . $row['id'] . '" 
+                    data-nama="' . esc($row['nama_jabatan']) . '" 
+                    data-kode="' . esc($row['kode_jabatan']) . '" 
+                    data-urut="' . $row['urut'] . '" 
+                    data-active="' . $row['is_active'] . '">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687 1.688a1.875 1.875 0 0 1 0 2.652L8.21 19.167A4.5 4.5 0 0 1 6.678 20l-2.135.534A.75.75 0 0 1 4 19.808l.534-2.135a4.5 4.5 0 0 1 1.334-2.531l10.338-10.338a1.875 1.875 0 0 1 2.652 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 4.5 19.5 7.5" /></svg>
+                    <span>Edit</span>
+                </button>';
 
-        $draw   = (int) $request->getPost('draw');
-        $start  = (int) $request->getPost('start');
-        $length = (int) $request->getPost('length');
-        $search = $request->getPost('search')['value'] ?? '';
+                $btnDelete = btn_delete($row['id']); // Helper standard delete button
 
-        $order = $request->getPost('order') ?? [];
-        if (! empty($order[0]['column'])) {
-            $orderColumnIdx = (int) $order[0]['column'];
-            $orderDir       = ($order[0]['dir'] === 'desc') ? 'desc' : 'asc';
-        } else {
-            $orderColumnIdx = 3; // default urut
-            $orderDir       = 'asc';
-        }
+                $action = '<div class="flex items-center gap-1.5">' . $btnEdit . $btnDelete . '</div>';
 
-        $columns = [
-            0 => 'id',
-            1 => 'nama_jabatan',
-            2 => 'kode_jabatan',
-            3 => 'urut',
-            4 => 'is_active',
-        ];
-        $orderColumn = $columns[$orderColumnIdx] ?? 'urut';
-
-        // total tanpa filter/search
-        $recordsTotal = $this->model
-            ->where('deleted_at', null)
-            ->countAllResults();
-
-        // base builder
-        $builder = $this->model->builder();
-        $builder->where('deleted_at', null);
-
-        // filter status (opsional)
-        $filterStatus = $request->getPost('filter_status');
-        if ($filterStatus !== null && $filterStatus !== '') {
-            $builder->where('is_active', (int) $filterStatus);
-        }
-
-        // search global
-        if ($search !== '') {
-            $builder->groupStart()
-                ->like('nama_jabatan', $search)
-                ->orLike('kode_jabatan', $search)
-                ->groupEnd();
-        }
-
-        // hitung filtered
-        $recordsFiltered = $builder->countAllResults(false);
-
-        // order & limit
-        $builder->orderBy($orderColumn, $orderDir)
-            ->limit($length, $start);
-
-        $data = $builder->get()->getResultArray();
-
-        return $this->response->setJSON([
-            'draw'            => $draw,
-            'recordsTotal'    => $recordsTotal,
-            'recordsFiltered' => $recordsFiltered,
-            'data'            => $data,
-        ]);
+                return [
+                    'id'           => $row['id'],
+                    'nama_jabatan' => esc($row['nama_jabatan']),
+                    'kode_jabatan' => $kode,
+                    'urut'         => $urut,
+                    'is_active'    => $status,
+                    'action'       => $action,
+                ];
+            },
+            ['urut' => 'asc'], // Default Order
+            function ($builder) {
+                // Additional filter logic if needed (e.g. from POST)
+                $request = \Config\Services::request(); // or $this->request
+                $filterStatus = $request->getPost('filter_status');
+                if ($filterStatus !== null && $filterStatus !== '') {
+                    $builder->where('is_active', (int)$filterStatus);
+                }
+            }
+        );
     }
 
     /**
