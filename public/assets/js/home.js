@@ -249,13 +249,13 @@ $(document).ready(function () {
     }
 
 
-    // --- 2. Perangkat Desa ---
+    // --- 2. Perangkat Desa (Swiper) ---
     function loadPerangkat() {
         const containerSelector = '#perangkat-container';
         const container = $(containerSelector);
         const skeletonWrapper = '#perangkat-section';
 
-        $.getJSON(`${API_BASE}/perangkat`, { limit: 6 }, function (response) {
+        $.getJSON(`${API_BASE}/perangkat`, { limit: 12 }, function (response) {
             if (response.status && response.data && response.data.length > 0) {
                 let html = '';
                 response.data.forEach(item => {
@@ -263,30 +263,58 @@ $(document).ready(function () {
                     const jabatan = item.jabatan || 'Perangkat Desa';
                     const img = item.foto_url || item.photo_url || item.cover_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name);
 
-                    // Official Profile Card
+                    // Swiper Slide
                     html += `
-                    <div class="group relative rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 aspect-[3/4] hover:shadow-lg transition-all duration-300">
-                        <img src="${img}" alt="${name}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random'">
-                        
-                        <!-- Gradient Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/90 via-transparent to-transparent opacity-90"></div>
-                        
-                        <div class="absolute bottom-0 left-0 w-full p-4">
-                            <h3 class="font-bold text-white text-sm leading-tight line-clamp-1 mb-1">${name}</h3>
-                            <p class="text-emerald-200 text-xs font-medium truncate uppercase tracking-wide opacity-90">${jabatan}</p>
+                    <div class="swiper-slide">
+                         <div class="group relative rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 aspect-[3/4] hover:shadow-lg transition-all duration-300">
+                            <img src="${img}" alt="${name}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105 select-none pointer-events-none" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random'">
+                            
+                            <!-- Gradient Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/90 via-transparent to-transparent opacity-90"></div>
+                            
+                            <div class="absolute bottom-0 left-0 w-full p-4">
+                                <h3 class="font-bold text-white text-sm leading-tight line-clamp-1 mb-1">${name}</h3>
+                                <p class="text-emerald-200 text-xs font-medium truncate uppercase tracking-wide opacity-90">${jabatan}</p>
+                            </div>
                         </div>
                     </div>`;
                 });
                 container.html(html);
 
+                // Init Swiper
+                const swiper = new Swiper('#perangkat-slider', {
+                    slidesPerView: 2,
+                    spaceBetween: 16,
+                    loop: true,
+                    autoplay: {
+                        delay: 2500,
+                        disableOnInteraction: false,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 3,
+                            spaceBetween: 20,
+                        },
+                        768: {
+                            slidesPerView: 4,
+                            spaceBetween: 24,
+                        },
+                        1024: {
+                            slidesPerView: 5,
+                            spaceBetween: 24,
+                        },
+                    },
+                });
+
             } else {
-                container.html('<div class="col-span-full text-center text-gray-500 w-full py-4 text-sm">Belum ada data.</div>');
+                container.html('<div class="w-full text-center text-gray-500 py-4 text-sm">Belum ada data.</div>');
             }
             hideSkeleton(skeletonWrapper);
 
         }).fail(function () {
-            container.html('<div class="col-span-full text-center text-red-500 w-full py-4 text-xs">Gagal memuat.</div>');
-            hideSkeleton(skeletonWrapper);
+             // In case of error, just hide skeleton (or show error state)
+             console.log('Failed load perangkat');
+             hideSkeleton(skeletonWrapper);
         });
     }
 
@@ -344,45 +372,66 @@ $(document).ready(function () {
         });
     }
 
-    // --- 4. Galeri ---
+    // --- 4. Galeri (Swiper) ---
     function loadGallery() {
         const container = '#gallery-container';
         const skeleton = '#gallery-skeleton';
 
-        $.getJSON(`${API_BASE}/gallery/latest`, { limit: 10 }, function (response) {
+        $.getJSON(`${API_BASE}/gallery/latest`, { limit: 12 }, function (response) {
             if (response.status && response.data && response.data.length > 0) {
-                let html = '<div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">';
+                let html = '';
                 response.data.forEach(item => {
                     const img = item.file_url || item.file_path;
                     const title = item.judul || 'Dokumentasi Desa';
-                    const caption = item.caption || '';
-
+                    
                     if (img) {
                         html += `
-                        <div class="break-inside-avoid relative group rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
-                            <img src="${img}" alt="${title}" class="w-full h-auto" loading="lazy">
-                            
-                            <!-- Simple Overlay -->
-                            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <p class="text-white text-sm font-medium truncate">${title}</p>
+                        <div class="swiper-slide">
+                            <div class="relative group rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 aspect-video">
+                                <img src="${img}" alt="${title}" class="w-full h-full object-cover select-none pointer-events-none" loading="lazy">
+                                
+                                <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <p class="text-white text-sm font-medium truncate">${title}</p>
+                                </div>
                             </div>
                         </div>`;
                     }
                 });
-                html += '</div>';
 
                 $(container).html(html);
+
+                // Init Swiper
+                const swiper = new Swiper('#gallery-slider', {
+                    slidesPerView: 1,
+                    spaceBetween: 16,
+                    loop: true,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    },
+                    breakpoints: {
+                         640: {
+                            slidesPerView: 2,
+                            spaceBetween: 20,
+                        },
+                        768: {
+                            slidesPerView: 3,
+                            spaceBetween: 24,
+                        },
+                    },
+                });
+
                 $(skeleton).fadeOut(500, function () {
-                    $(container).removeClass('opacity-0');
+                    $('#gallery-slider').removeClass('opacity-0');
                 });
 
             } else {
                 $(skeleton).hide();
-                $(container).removeClass('opacity-0').html('<div class="text-center text-gray-500 py-10">Belum ada foto galeri.</div>');
+                $('#gallery-slider').removeClass('opacity-0').html('<div class="text-center text-gray-500 py-10 w-full">Belum ada foto galeri.</div>');
             }
         }).fail(function () {
             $(skeleton).hide();
-            $(container).removeClass('opacity-0').html('<div class="text-center text-red-500 py-10">Gagal memuat galeri.</div>');
+             $('#gallery-slider').removeClass('opacity-0').html('<div class="text-center text-red-500 py-10 w-full">Gagal memuat galeri.</div>');
         });
     }
 

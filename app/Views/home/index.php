@@ -38,6 +38,8 @@
         /* Smooth theme transition */
         html, body { transition: background-color 0.3s, color 0.3s; }
     </style>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col min-h-screen font-sans antialiased">
 
@@ -339,7 +341,11 @@
                  <div class="w-16 h-1 bg-emerald-500 mx-auto mt-4 rounded-full"></div>
             </div>
 
-            <div id="perangkat-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 content-loaded" style="display:none;"></div>
+            <div id="perangkat-slider" class="swiper w-full content-loaded" style="display:none;">
+                <div class="swiper-wrapper" id="perangkat-container">
+                    <!-- Slides injected by JS -->
+                </div>
+            </div>
 
             <!-- Skeleton Loader -->
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 skeleton-loader">
@@ -413,7 +419,11 @@
                 <div class="w-16 h-1 bg-emerald-500 mx-auto mt-4 rounded-full"></div>
             </div>
             
-            <div id="gallery-container" class="opacity-0 transition-opacity duration-1000"></div>
+            <div id="gallery-slider" class="swiper w-full opacity-0 transition-opacity duration-1000">
+                <div class="swiper-wrapper" id="gallery-container">
+                     <!-- Slides input here -->
+                </div>
+            </div>
 
             <!-- Skeleton Loader -->
             <div id="gallery-skeleton" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
@@ -525,6 +535,7 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="<?= base_url('assets/js/home.js') ?>"></script>
 </body>
 </html>
