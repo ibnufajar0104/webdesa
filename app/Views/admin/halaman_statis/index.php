@@ -55,7 +55,7 @@ Halaman Statis
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-<script src="<?= base_url('assets/js/app-admin-helper.js') ?>"></script>
+
 
 <script>
     $(function() {
@@ -83,6 +83,13 @@ Halaman Statis
             },
             { // status
                 data: 'status',
+                render: function(data) {
+                    let color = data === 'published' ?
+                        'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700' :
+                        'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/60 dark:text-slate-200 dark:border-slate-700';
+                    let label = data === 'published' ? 'Published' : 'Draft';
+                    return `<span class="inline-flex px-2 py-0.5 rounded-full border text-[11px] ${color}">${label}</span>`;
+                },
                 className: 'px-3 py-2 whitespace-nowrap'
             },
             { // updated_at

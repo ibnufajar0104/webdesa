@@ -79,9 +79,21 @@ class Pages extends BaseController
             ]);
         }
 
+        // Fetch related pages (active, excluding current)
+        // Adjust limit as needed
+        $related = $this->pageModel
+            ->select('id, title, slug, updated_at')
+            ->where('id !=', $row['id'])
+            ->where('deleted_at', null)
+            ->where('status', 'published')
+            ->orderBy('updated_at', 'DESC')
+            ->limit(10)
+            ->find();
+
         return $this->response->setJSON([
             'status' => true,
             'data'   => $row,
+            'related_pages' => $related
         ]);
     }
 

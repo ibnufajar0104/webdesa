@@ -12,6 +12,28 @@ class Menu extends BaseController
     public function __construct()
     {
         $this->menu = new MenuModel();
+        helper('url');
+    }
+
+    /**
+     * Helper to ensure URL is absolute
+     */
+    private function ensureAbsoluteUrl(?string $url): string
+    {
+        if (empty($url)) {
+            return 'javascript:void(0)';
+        }
+
+        // Check for external or special protocols
+        if (preg_match('/^(http|https|ftp|mailto|tel|#|javascript:|\/\/)/', $url)) {
+            return $url;
+        }
+
+        // It's internal, ensure it starts with site_url
+        // Remove leading slash to avoid double slashes if site_url has one (though CodeIgniter handles this usually)
+        $cleanUrl = ltrim($url, '/');
+        
+        return site_url($cleanUrl);
     }
 
     /**
@@ -36,6 +58,12 @@ class Menu extends BaseController
         }
 
         $rows = $builder->get()->getResultArray();
+
+        // Process URLs
+        foreach ($rows as &$row) {
+            $row['url'] = $this->ensureAbsoluteUrl($row['url']);
+        }
+        unset($row);
 
         // Build tree
         $tree = $this->buildTree($rows);
@@ -68,6 +96,12 @@ class Menu extends BaseController
 
         $rows = $builder->get()->getResultArray();
 
+        // Process URLs
+        foreach ($rows as &$row) {
+            $row['url'] = $this->ensureAbsoluteUrl($row['url']);
+        }
+        unset($row);
+
         return $this->response->setJSON([
             'status' => true,
             'data'   => $rows,
@@ -89,6 +123,12 @@ class Menu extends BaseController
             ->orderBy('sort_order', 'ASC')
             ->get()
             ->getResultArray();
+
+        // Process URLs
+        foreach ($rows as &$row) {
+            $row['url'] = $this->ensureAbsoluteUrl($row['url']);
+        }
+        unset($row);
 
         return $this->response->setJSON([
             'status' => true,

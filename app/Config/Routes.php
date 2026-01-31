@@ -19,8 +19,17 @@ $routes->get('logout', 'Auth::logout');
 // / to Home::index
 // / to Home::index
 $routes->get('/', 'Home::index');
+$routes->get('/home', 'Home::index');
+$routes->get('/beranda', 'Home::index');
 $routes->get('berita', 'Home::news');
 $routes->get('berita/(:segment)', 'Home::newsDetail/$1');
+$routes->get('halaman/search',  'Page::search');
+$routes->get('halaman/(:segment)',  'Page::detail/$1');
+$routes->get('dokumen', 'Dokumen::index');
+$routes->get('galeri', 'Galeri::index');
+$routes->get('statistik/penduduk', 'Statistik::penduduk');
+$routes->get('statistik/penerima-bantuan', 'Statistik::bantuan');
+$routes->get('statistik/tren-data', 'Statistik::tren_data');
 
 // =======================
 // FILE HANDLER

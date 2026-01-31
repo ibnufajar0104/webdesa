@@ -356,22 +356,22 @@
         </div>
     </section>
 
-    <!-- Dokumen (Dark Professional) -->
-    <section id="dokumen-section" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+    <!-- Dokumen (Light Professional) -->
+    <section id="dokumen-section" class="py-20 bg-slate-50 dark:bg-slate-900 relative overflow-hidden transition-colors">
         <!-- Background Accent -->
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-slate-800/30 transform skew-x-12 translate-x-1/4"></div>
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-emerald-500/5 dark:bg-slate-800/30 transform skew-x-12 translate-x-1/4"></div>
 
         <div class="max-w-5xl mx-auto px-4 relative z-10">
             <div class="text-center mb-12">
-                 <span class="text-emerald-400 font-bold tracking-wider uppercase text-xs">Transparansi Publik</span>
-                 <h2 class="text-3xl md:text-4xl font-bold mt-2 text-white font-serif">Dokumen & Regulasi</h2>
-                 <p class="mt-4 text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">Akses langsung ke dokumen resmi desa, peraturan, dan laporan anggaran sebagai wujud transparansi pemerintahan.</p>
+                 <span class="text-emerald-600 dark:text-emerald-400 font-bold tracking-wider uppercase text-xs">Transparansi Publik</span>
+                 <h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900 dark:text-white font-serif">Dokumen & Regulasi</h2>
+                 <p class="mt-4 text-slate-600 dark:text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">Akses langsung ke dokumen resmi desa, peraturan, dan laporan anggaran sebagai wujud transparansi pemerintahan.</p>
             </div>
 
             <!-- Search Filter -->
              <div class="max-w-md mx-auto mb-8 relative">
-                <input type="text" id="dokumen-search" placeholder="Cari dokumen atau regulasi..." class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:bg-slate-800 transition-all">
-                <svg class="w-6 h-6 text-slate-500 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="dokumen-search" placeholder="Cari dokumen atau regulasi..." class="w-full pl-12 pr-4 py-3 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-slate-800 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-sm">
+                <svg class="w-6 h-6 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
              </div>
 
             <!-- Modern Document List -->
@@ -380,18 +380,18 @@
             <!-- Skeleton Loader -->
             <div id="dokumen-skeleton" class="space-y-4">
                 <?php for($i=0; $i<3; $i++): ?>
-                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 flex items-center gap-4 skeleton-dark">
-                    <div class="w-12 h-12 bg-slate-700 rounded skeleton"></div>
+                <div class="bg-white dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700 flex items-center gap-4 skeleton-loader">
+                    <div class="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded skeleton"></div>
                     <div class="flex-1 space-y-2">
-                        <div class="h-4 bg-slate-700 rounded w-1/3 skeleton"></div>
-                        <div class="h-3 bg-slate-700 rounded w-1/4 skeleton"></div>
+                        <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3 skeleton"></div>
+                        <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/4 skeleton"></div>
                     </div>
                 </div>
                 <?php endfor; ?>
             </div>
 
             <div class="mt-10 text-center">
-                <a href="#" class="inline-flex items-center text-emerald-400 hover:text-emerald-300 font-semibold transition text-sm">
+                <a href="/dokumen" class="inline-flex items-center text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold transition text-sm">
                     Lihat Arsip Lengkap
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </a>
@@ -459,6 +459,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>const BASE_URL = "<?= base_url() ?>";</script>
-    <script src="<?= base_url('assets/js/home.js') ?>"></script>
+    <script src="<?= base_url('assets/js/home.js?v=' . time()) ?>"></script>
 </body>
 </html>

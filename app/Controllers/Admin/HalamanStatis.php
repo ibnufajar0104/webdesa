@@ -83,7 +83,7 @@ class HalamanStatis extends BaseController
                     'id'         => $row['id'],
                     'title'      => esc($row['title']),
                     'slug'       => esc($row['slug']),
-                    'status'     => status_badge($row['status']),
+                    'status'     => $row['status'],
                     'updated_at' => $row['updated_at'] ? date('d/m/Y H:i', strtotime($row['updated_at'])) : '-',
                     'action'     => $action,
                 ];

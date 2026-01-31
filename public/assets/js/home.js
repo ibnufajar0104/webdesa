@@ -80,7 +80,7 @@ $(document).ready(function () {
     initTheme();
 
 
-    // --- Dynamic Menu ---
+
     // --- Dynamic Menu ---
     function loadMenu() {
         // Helper to normalize URL
@@ -548,22 +548,22 @@ $(document).ready(function () {
                         iconHtml = '<svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>';
                     }
 
-                    // Official Dark Item
+                    // Official Item (Green Touches)
                     html += `
-                    <div class="group bg-slate-800 rounded-lg p-5 border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-750 transition-all duration-300 flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-lg bg-slate-700/50 flex items-center justify-center shrink-0">
+                    <div class="group bg-white dark:bg-slate-800 rounded-lg p-5 border border-emerald-100 dark:border-emerald-900/30 hover:shadow-md hover:border-emerald-300 dark:hover:border-emerald-700 transition-all duration-300 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0 border border-emerald-100 dark:border-emerald-800">
                             ${iconHtml}
                         </div>
 
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-900/30 px-2 py-0.5 rounded">${category}</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">${category}</span>
                                 ${year ? `<span class="text-xs text-slate-500">${year}</span>` : ''}
                             </div>
-                            <h3 class="text-white font-medium text-base truncate pr-2 group-hover:text-emerald-300 transition-colors">${title}</h3>
+                            <h3 class="font-bold text-slate-800 dark:text-white text-base truncate pr-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">${title}</h3>
                         </div>
 
-                        <a href="${url}" target="_blank" class="p-2 text-slate-400 hover:text-white bg-slate-700 hover:bg-emerald-600 rounded-full transition-all">
+                        <a href="${url}" target="_blank" class="p-2 text-emerald-600 dark:text-emerald-400 hover:text-white bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-600 dark:hover:bg-emerald-600 rounded-full transition-all border border-emerald-100 dark:border-emerald-800">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         </a>
                     </div>`;
