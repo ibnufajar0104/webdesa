@@ -9,27 +9,47 @@
 
 <!-- Hero Section -->
 <!-- Hero Section -->
-<section class="relative py-16 overflow-hidden bg-gradient-to-br from-emerald-600 to-teal-800 dark:from-slate-900 dark:to-slate-800">
-    <!-- Different Pattern: Wave -->
-    <div class="absolute inset-x-0 bottom-0 opacity-10 pointer-events-none">
-        <svg class="w-full h-24" viewBox="0 0 100 100" preserveAspectRatio="none">
-             <path d="M0 50 Q 50 100 100 50 L 100 100 L 0 100 Z" fill="white" />
-        </svg>
+<section class="relative pt-12 pb-24 overflow-hidden bg-gradient-to-br from-emerald-600 to-teal-900 dark:from-slate-900 dark:to-slate-900">
+    <!-- Background Patterns -->
+    <div class="absolute inset-0 pointer-events-none">
+        <!-- Light Mode Accents -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 mix-blend-overlay dark:hidden"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-400/20 rounded-full blur-3xl -ml-20 dark:hidden"></div>
+        
+        <!-- Dark Mode Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/20 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40"></div>
     </div>
     
-    <div class="container mx-auto px-4 relative z-10 text-center text-white">
-        <h1 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
-             <?= $page['title'] ?>
-        </h1>
-        <div class="text-emerald-100 dark:text-slate-400 text-lg md:text-xl max-w-2xl mx-auto flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <span><?= \CodeIgniter\I18n\Time::parse($page['updated_at'])->toLocalizedString('d MMMM yyyy') ?></span>
+    <!-- Abstract Pattern Overlay -->
+    <div class="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-cover"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl">
+            <!-- Left: Text Content -->
+            <div class="text-left space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm self-start shadow-sm">
+                    <span class="flex h-1.5 w-1.5 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-200 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-300"></span>
+                    </span>
+                    <span class="text-[10px] font-bold tracking-wide text-emerald-100 uppercase">Informasi Desa</span>
+                </div>
+
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-sm">
+                    <?= $page['title'] ?>
+                </h1>
+
+                <div class="text-emerald-100/90 leading-relaxed max-w-lg border-l-2 border-emerald-400/30 pl-4 font-medium flex items-center gap-2">
+                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                     <span>Diposting pada <?= \CodeIgniter\I18n\Time::parse($page['created_at'])->toLocalizedString('d MMMM yyyy') ?></span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Content Section -->
-<section class="py-16 bg-white dark:bg-slate-900 relative">
+<section class="py-16 bg-white dark:bg-slate-900 relative -mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
             

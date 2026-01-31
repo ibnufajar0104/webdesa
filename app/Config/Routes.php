@@ -30,6 +30,7 @@ $routes->get('galeri', 'Galeri::index');
 $routes->get('statistik/penduduk', 'Statistik::penduduk');
 $routes->get('statistik/penerima-bantuan', 'Statistik::bantuan');
 $routes->get('statistik/tren-data', 'Statistik::tren_data');
+$routes->get('kontak', 'Kontak::index');
 
 // =======================
 // FILE HANDLER
@@ -151,6 +152,14 @@ $routes->group('admin', [
     $routes->group('kontak', static function ($routes) {
         $routes->get('/',     'Kontak::index');
         $routes->post('save', 'Kontak::save');
+    });
+
+    // Aduan
+    $routes->group('aduan', static function ($routes) {
+        $routes->get('/',          'Aduan::index');
+        $routes->post('datatable', 'Aduan::datatable');
+        $routes->get('detail/(:num)', 'Aduan::detail/$1');
+        $routes->post('delete',    'Aduan::delete');
     });
 
     // Banner
@@ -354,6 +363,7 @@ $routes->group('api', [
     $routes->get('sambutan-kades',        'SambutanKades::index');
     $routes->get('jam-pelayanan',          'JamPelayanan::index');
     $routes->get('kontak', 'Kontak::index');   // ambil kontak aktif
+    $routes->post('kontak/kirim', 'Kontak::kirim'); // Kirim aduan
     $routes->get('demografi', 'Demografi::index');
 
 

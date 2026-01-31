@@ -78,20 +78,21 @@
     <div class="relative z-30 -mt-24 mb-20 px-4">
         <div class="max-w-6xl mx-auto">
             <!-- Main Search -->
-            <div class="relative max-w-3xl mx-auto mb-8 shadow-2xl rounded-full">
-                <input type="text" id="hero-search-input" placeholder="Apa yang ingin Anda cari di desa ini?" 
+            <form action="/berita" method="GET" class="relative max-w-3xl mx-auto mb-8 shadow-2xl rounded-full">
+                <input type="hidden" name="page" value="1">
+                <input type="text" name="q" id="hero-search-input" placeholder="Apa yang ingin Anda cari di desa ini?" 
                     class="w-full pl-8 pr-16 py-5 rounded-full bg-white dark:bg-slate-800 border-none text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 text-lg shadow-lg">
-                <button id="hero-search-btn" class="absolute right-2 top-2 bottom-2 px-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition-colors font-semibold flex items-center gap-2 group">
+                <button type="submit" class="absolute right-2 top-2 bottom-2 px-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition-colors font-semibold flex items-center gap-2 group">
                     <span class="hidden md:inline">Cari</span>
                     <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
-            </div>
+            </form>
 
             <!-- Shortcut Menu Grid -->
             <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 p-6 md:p-8">
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
                     <!-- 1. Profil -->
-                    <a href="/profil" class="group flex flex-col items-center gap-3 hover:-translate-y-1 transition duration-300">
+                    <a href="/halaman/tentang-desa" class="group flex flex-col items-center gap-3 hover:-translate-y-1 transition duration-300">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-blue-500/20 transition-all">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </div>
@@ -114,12 +115,12 @@
                         <span class="text-xs font-bold text-gray-700 dark:text-gray-300 tracking-wide text-center uppercase">Dokumen</span>
                     </a>
 
-                    <!-- 4. Foto (Galeri) -->
+                    <!-- 4. Galeri -->
                     <a href="/galeri" class="group flex flex-col items-center gap-3 hover:-translate-y-1 transition duration-300">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-purple-500/20 transition-all">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         </div>
-                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300 tracking-wide text-center uppercase">Foto</span>
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300 tracking-wide text-center uppercase">Galeri</span>
                     </a>
 
                     <!-- 5. Stat Penduduk -->
@@ -131,22 +132,22 @@
                     </a>
 
                     <!-- 6. Stat Bantuan -->
-                    <a href="/statistik/bantuan" class="group flex flex-col items-center gap-3 hover:-translate-y-1 transition duration-300">
+                    <a href="/statistik/penerima-bantuan" class="group flex flex-col items-center gap-3 hover:-translate-y-1 transition duration-300">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/30 dark:to-rose-800/30 text-rose-600 dark:text-rose-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-rose-500/20 transition-all">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                         </div>
                         <span class="text-xs font-bold text-gray-700 dark:text-gray-300 tracking-wide text-center uppercase">Bantuan</span>
                     </a>
 
-                    <!-- 7. Lapor -->
-                    <a href="/lapor" class="group flex flex-col items-center gap-3 hover:-translate-y-1 transition duration-300">
+                    <!-- 7. Kontak -->
+                    <a href="/kontak" class="group flex flex-col items-center gap-3 hover:-translate-y-1 transition duration-300">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 text-red-600 dark:text-red-400 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/20 transition-all">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                         </div>
-                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300 tracking-wide text-center uppercase">Lapor</span>
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300 tracking-wide text-center uppercase">Kontak</span>
                     </a>
-                </div>
-            </div>
+        </div>
+    </div>
         </div>
     </div>
     <!-- Stats Section (Redesigned - Wide 1 Row) -->
@@ -235,7 +236,7 @@
                              <img src="https://ui-avatars.com/api/?name=Kepala+Desa" alt="Kepala Desa" class="w-full h-full object-cover" id="sambutan-foto">
                              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
                              <div class="absolute bottom-6 left-6 text-white">
-                                 <p class="font-bold text-lg">Nama Kepala Desa</p>
+                                 <p class="font-bold text-lg" id="sambutan-nama">Nama Kepala Desa</p>
                                  <p class="text-emerald-300 text-sm">Kepala Desa Batilai</p>
                              </div>
                          </div>

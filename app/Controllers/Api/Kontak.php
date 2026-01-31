@@ -3,90 +3,86 @@
 namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
-use App\Models\KontakModel;
+use CodeIgniter\API\ResponseTrait;
+use App\Models\AduanModel;
 
 class Kontak extends BaseController
 {
-    protected KontakModel $model;
+    use ResponseTrait;
 
-    public function __construct()
-    {
-        $this->model = new KontakModel();
-    }
-
-    /**
-     * GET /api/kontak
-     * Ambil single kontak desa yang aktif
-     */
     public function index()
     {
-        $row = $this->model
-            ->where('is_active', 1)
-            ->orderBy('id', 'ASC')
-            ->first();
-
-        if (!$row) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Kontak desa tidak ditemukan',
-                ]);
+        $model = new \App\Models\KontakModel();
+        $kontak = $model->where('is_active', 1)->first();
+        if (!$kontak) {
+            $kontak = $model->first();
         }
-
-        return $this->response->setJSON([
+        
+        // Wrap in array for consistency with other APIs if needed, or just return object
+        // home.js expects response.data to be the object or array of objects
+        // If query returns single row, we might wrap it.
+        // Let's check home.js 'loadProfile':
+        // const d = response.data; const data = Array.isArray(d) ? d[0] : d;
+        // So single object is fine.
+        
+        return $this->respond([
             'status' => true,
-            'data'   => $this->mapRow($row),
+            'data'   => $kontak
         ]);
     }
 
-    // =========================
-    // Helpers
-    // =========================
-    private function mapRow(array $row): array
+    public function kirim()
     {
-        return [
-            'alamat'   => $row['alamat'] ?? '',
-            'telepon'  => $this->norm($row['telepon'] ?? null),
-            'whatsapp' => $this->normWa($row['whatsapp'] ?? null),
-            'email'    => $this->norm($row['email'] ?? null),
-            'website'  => $this->normUrl($row['website'] ?? null),
-            'maps'     => $this->normUrl($row['link_maps'] ?? null),
-        ];
-    }
-
-    private function norm(?string $v): ?string
-    {
-        $v = trim((string) $v);
-        return $v === '' ? null : $v;
-    }
-
-    private function normUrl(?string $v): ?string
-    {
-        $v = trim((string) $v);
-        if ($v === '') return null;
-
-        // auto tambahkan https:// kalau admin lupa
-        if (!preg_match('~^https?://~i', $v)) {
-            $v = 'https://' . $v;
-        }
-        return $v;
-    }
-
-    private function normWa(?string $v): ?array
-    {
-        $v = trim((string) $v);
-        if ($v === '') return null;
-
-        // normalisasi nomor WA (62xxxxxxxxxx)
-        $num = preg_replace('/[^0-9]/', '', $v);
-        if (strpos($num, '0') === 0) {
-            $num = '62' . substr($num, 1);
+        // 1. Brute Force Protection (Throttling)
+        // Allow 3 requests every 60 seconds per IP
+        $throttler = \Config\Services::throttler();
+        $ip = $this->request->getIPAddress();
+        
+        if ($throttler->check(md5($ip . 'aduan'), 2, 60) === false) {
+             return $this->failTooManyRequests('Terlalu banyak permintaan. Silakan coba lagi dalam beberapa menit.');
         }
 
-        return [
-            'number' => $num,
-            'link'   => 'https://wa.me/' . $num,
+        // 2. Validation
+        $rules = [
+            'email' => 'required|valid_email|max_length[255]',
+            'wa'    => 'required|numeric|max_length[20]',
+            'pesan' => 'required|min_length[10]|max_length[5000]',
+            'nama'  => 'permit_empty|max_length[100]'
         ];
+
+        if (!$this->validate($rules)) {
+            return $this->fail($this->validator->getErrors());
+        }
+
+        // 3. Sanitization (XSS Protection for Input)
+        // We strip tags to ensure no HTML is stored for this simple text field.
+        $pesan = strip_tags($this->request->getVar('pesan'));
+        $nama  = strip_tags($this->request->getVar('nama'));
+        $email = strip_tags($this->request->getVar('email'));
+        $wa    = strip_tags($this->request->getVar('wa'));
+
+        $data = [
+            'nama'       => $nama,
+            'email'      => $email,
+            'wa'         => $wa,
+            'pesan'      => $pesan,
+        ];
+
+        // Add System Info
+        $data['ip_address'] = $ip;
+        $data['user_agent'] = $this->request->getUserAgent()->getAgentString();
+        $data['status']     = 'pending';
+
+        // Save
+        $model = new AduanModel();
+        if ($model->insert($data)) {
+            return $this->respondCreated(['status' => true, 'message' => 'Laporan Anda berhasil dikirim. Kami akan segera menindaklanjutinya.']);
+        } else {
+            // Return validation errors from model if any
+            if ($model->errors()) {
+                return $this->fail($model->errors());
+            }
+            return $this->failServerError('Gagal menyimpan data.');
+        }
     }
 }

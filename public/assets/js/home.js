@@ -53,19 +53,9 @@ $(document).ready(function () {
     });
 
     // Search Handler (Global Redirect)
-    function handleSearch(query) {
-        if (query && query.trim().length > 0) {
-            window.location.href = '/berita?q=' + encodeURIComponent(query);
-        }
-    }
+    // Search Handler (Global Redirect) - Removed in favor of HTML form
+    // The main hero search is now a standard <form> submission to /berita
 
-    $('#hero-search-input').on('keypress', function (e) {
-        if (e.which === 13) handleSearch($(this).val());
-    });
-
-    $('#hero-search-btn').click(function () {
-        handleSearch($('#hero-search-input').val());
-    });
 
     // Document Search (Client-side Filter)
     $('#dokumen-search').on('keyup', function () {
@@ -298,10 +288,12 @@ $(document).ready(function () {
             if (response.status && response.data) {
                 const data = response.data;
                 const judul = data.judul || 'Sambutan Kepala Desa';
+                const nama = data.nama_kades || 'Kepala Desa';
                 const isi = data.isi ? data.isi.replace(/\n/g, '<br>') : '<p>Sedang memuat konten...</p>';
-                const foto = data.foto_url || 'https://ui-avatars.com/api/?name=Kepala+Desa';
+                const foto = data.foto_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nama);
 
                 $('#sambutan-judul').text(judul);
+                $('#sambutan-nama').text(nama);
                 $('#sambutan-isi').html(isi);
                 $('#sambutan-foto').attr('src', foto);
                 // Background effect removed in new design, but safer to keep selection valid
@@ -602,8 +594,17 @@ $(document).ready(function () {
 
                     // WhatsApp Logic
                     if (data.whatsapp) {
-                        const waLink = data.whatsapp.link || (data.whatsapp.number ? `https://wa.me/${data.whatsapp.number}` : '#');
-                        const waNumber = data.whatsapp.number || 'Chat WhatsApp';
+                        let waNumber = '';
+                        let waLink = '#';
+
+                        if (typeof data.whatsapp === 'object') {
+                            waNumber = data.whatsapp.number || 'Chat WhatsApp';
+                            waLink = data.whatsapp.link || (data.whatsapp.number ? `https://wa.me/${data.whatsapp.number.replace(/[^0-9]/g, '')}` : '#');
+                        } else {
+                            // Assume string
+                            waNumber = data.whatsapp;
+                            waLink = `https://wa.me/${data.whatsapp.replace(/[^0-9]/g, '')}`;
+                        }
 
                         // Top Bar
                         $('#contact-wa-link').attr('href', waLink);
@@ -613,11 +614,18 @@ $(document).ready(function () {
                     }
 
                     // Maps Logic
-                    if (data.maps) {
-                        if (data.maps.includes('<iframe')) {
-                            // Extract only the iframe tag to avoid printing surrounding text/URLs
-                            const iframeMatch = data.maps.match(/<iframe.*?>.*?<\/iframe>/i);
-                            const iframeHtml = iframeMatch ? iframeMatch[0] : data.maps;
+                    // Maps Logic
+                    // Field from API is 'link_maps'
+                    const mapData = data.link_maps || data.maps || data.maps_embed;
+
+                    if (mapData) {
+                        if (mapData.includes('<iframe')) {
+                            // Extract only the iframe tag
+                            const iframeMatch = mapData.match(/<iframe.*?>.*?<\/iframe>/i);
+                            let iframeHtml = iframeMatch ? iframeMatch[0] : mapData;
+
+                            // Clean escaped quotes if present (common in some DB storage)
+                            iframeHtml = iframeHtml.replace(/\\"/g, '"');
 
                             $('#map-container').empty().append(iframeHtml);
 
@@ -628,12 +636,8 @@ $(document).ready(function () {
                                 .addClass('w-full h-full border-0 rounded-xl block');
                         } else {
                             // Case: API returns URL string
-                            $('#map-iframe').attr('src', data.maps);
+                            $('#map-iframe').attr('src', mapData);
                         }
-                    } else if (data.maps_embed) {
-                        // Fallback: If API provides full embed code
-                        $('#map-container').html(data.maps_embed);
-                        $('#map-container iframe').addClass('w-full h-full rounded-xl opacity-80 hover:opacity-100 transition duration-500');
                     }
                 }
             }

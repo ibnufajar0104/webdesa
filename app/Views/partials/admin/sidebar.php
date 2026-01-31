@@ -200,6 +200,13 @@ $menus = [
         'icon'  => 'kontak',
     ],
     [
+        'type'  => 'link',
+        'key'   => 'aduan',
+        'label' => 'Aduan & Aspirasi',
+        'url'   => 'admin/aduan',
+        'icon'  => 'chat', 
+    ],
+    [
         'type'  => 'header',
         'label' => 'Pengaturan',
     ],

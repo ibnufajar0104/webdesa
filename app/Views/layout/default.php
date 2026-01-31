@@ -109,5 +109,6 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>const BASE_URL = "<?= base_url() ?>";</script>
     <script src="<?= base_url('assets/js/home.js') ?>"></script>
+    <?= $this->renderSection('scripts') ?>
 </body>
 </html>

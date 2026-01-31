@@ -3,21 +3,63 @@
 <?= $this->section('content') ?>
 
 <!-- Hero Section (Premium Gradient) -->
-<section class="relative py-16 overflow-hidden bg-gradient-to-br from-emerald-600 to-teal-800 dark:from-slate-900 dark:to-slate-800">
-    <div class="absolute inset-0 opacity-10 pointer-events-none">
-        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
-        </svg>
+<!-- Hero Section (Premium Gradient) -->
+<section class="relative pt-12 pb-24 overflow-hidden bg-gradient-to-br from-emerald-600 to-teal-900 dark:from-slate-900 dark:to-slate-900">
+    <!-- Background Patterns -->
+    <div class="absolute inset-0 pointer-events-none">
+        <!-- Light Mode Accents -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 mix-blend-overlay dark:hidden"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-400/20 rounded-full blur-3xl -ml-20 dark:hidden"></div>
+        
+        <!-- Dark Mode Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black/20 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40"></div>
     </div>
-    <div class="container mx-auto px-4 relative z-10 text-center text-white">
-        <h1 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight"><?= esc($title) ?></h1>
-        <p class="text-emerald-100 dark:text-slate-400 text-lg md:text-xl max-w-2xl mx-auto">
-            Akses terbuka dokumen publik, regulasi, dan laporan pertanggungjawaban pemerintah desa.
-        </p>
+    
+    <!-- Abstract Pattern Overlay -->
+    <div class="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-cover"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+            <!-- Left: Text Content -->
+            <div class="w-full md:w-2/3 text-left space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm self-start shadow-sm">
+                    <span class="flex h-1.5 w-1.5 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-200 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-300"></span>
+                    </span>
+                    <span class="text-[10px] font-bold tracking-wide text-emerald-100 uppercase">Data & Regulasi</span>
+                </div>
+
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-sm">
+                    Dokumen Publik <br>
+                    <span class="text-emerald-100">Desa Batilai</span>
+                </h1>
+
+                <p class="text-sm md:text-base text-emerald-100/90 leading-relaxed max-w-lg border-l-2 border-emerald-400/30 pl-4 font-medium">
+                    Akses terbuka dokumen publik, regulasi, dan laporan pertanggungjawaban pemerintah desa.
+                </p>
+            </div>
+
+            <!-- Right: Glass Card -->
+             <div class="w-full md:w-auto">
+                <div class="flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-xl ring-1 ring-white/10 hover:bg-white/15 transition-colors">
+                    <div class="p-3 bg-white/20 rounded-xl text-white shadow-inner">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <!-- We can show total documents if available, or just generic label -->
+                        <span class="block text-xs text-emerald-100 uppercase tracking-wider font-bold">Arsip Digital</span>
+                        <span class="text-xl font-bold text-white tracking-tight">Transparan <span class="text-sm font-medium text-emerald-200">& Akuntabel</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="py-12 bg-white dark:bg-slate-950 min-h-screen">
+<section class="py-12 bg-white dark:bg-slate-950 min-h-screen -mt-10">
     <div class="container mx-auto px-4 -mt-20 relative z-20">
         <div class="flex flex-col lg:flex-row gap-8">
             
