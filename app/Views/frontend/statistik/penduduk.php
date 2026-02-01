@@ -211,75 +211,127 @@ $totalP = $getVal($overview['gender'] ?? [], 'P');
             </div>
         </div>
 
-        <!-- 3. Charts Bar & Pie -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
-            <!-- Usia (Bar Chart) -->
-             <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100">Sebaran Usia</h3>
-                    <span class="text-xs font-medium px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-lg">Demografi</span>
-                </div>
-                
-                <?php if(!empty($overview['usia'])): ?>
-                    <div class="space-y-4">
-                        <?php 
-                        // Find Max Value for Bar Percentage
-                        $maxVal = 0;
-                        foreach($overview['usia'] as $r) {
-                            if(is_numeric($r['total'])) $maxVal = max($maxVal, $r['total']);
-                        }
+        <!-- 3. Demografi Charts (Rearranged Layout) -->
+        <div class="space-y-8">
 
-                        foreach($overview['usia'] as $r): 
-                             $count = $r['total'];
-                             $label = $r['label'];
-                             $num = is_numeric($count) ? $count : 0; // for graph width
-                             $percent = ($maxVal > 0) ? ($num / $maxVal) * 100 : 0;
-                             
-                             // Gradient colors based on percentage
-                             $barColor = $percent > 70 ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 
-                                        ($percent > 40 ? 'bg-gradient-to-r from-emerald-400 to-teal-300' : 'bg-slate-300 dark:bg-slate-700');
-                             $textColor = $percent > 70 ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400';
-                        ?>
-                        <div class="group">
-                            <div class="flex justify-between text-sm mb-1.5">
-                                <span class="font-medium text-slate-700 dark:text-slate-300 group-hover:text-emerald-600 transition-colors"><?= esc($label) ?> Tahun</span>
-                                <span class="font-bold <?= $textColor ?>"><?= $fmt($count) ?></span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full h-3 dark:bg-slate-800 overflow-hidden">
-                                <div class="<?= $barColor ?> h-3 rounded-full transition-all duration-1000 ease-out group-hover:brightness-110" style="width: <?= $percent ?>%"></div>
-                            </div>
+            <!-- Row 1: Usia & Agama -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Sebaran Usia (Large) -->
+                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm h-full flex flex-col min-h-[500px]">
+                    <div class="flex items-center justify-between mb-6 shrink-0">
+                        <h3 class="font-bold text-2xl text-slate-800 dark:text-slate-100">Sebaran Usia</h3>
+                        <div class="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-sm font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800">
+                            Dominan: <?= !empty($overview['usia']) ? esc($overview['usia'][0]['label']) : '-' ?> Thn
                         </div>
-                        <?php endforeach; ?>
                     </div>
-                <?php else: ?>
-                    <div class="flex flex-col items-center justify-center py-12 text-center text-slate-400">
-                        <svg class="w-12 h-12 mb-3 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        <p>Data usia belum tersedia.</p>
+                    
+                    <?php if(!empty($overview['usia'])): ?>
+                        <div class="space-y-3 custom-scrollbar overflow-y-auto flex-grow pr-2 max-h-[600px]">
+                            <?php 
+                            $maxVal = 0;
+                            $totalUsia = 0;
+                            foreach($overview['usia'] as $r) {
+                                $val = is_numeric($r['total']) ? (int)$r['total'] : 0;
+                                $maxVal = max($maxVal, $val);
+                                $totalUsia += $val;
+                            }
+
+                            foreach($overview['usia'] as $r): 
+                                 $count = $r['total'];
+                                 $label = $r['label'];
+                                 $num = is_numeric($count) ? (int)$count : 0; 
+                                 $percent = ($maxVal > 0) ? ($num / $maxVal) * 100 : 0;
+                                 $share = ($totalUsia > 0) ? ($num / $totalUsia) * 100 : 0;
+                                 
+                                 $barColor = $percent > 70 ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 
+                                            ($percent > 40 ? 'bg-gradient-to-r from-emerald-400 to-teal-300' : 'bg-slate-300 dark:bg-slate-700');
+                                 $textColor = $percent > 70 ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400';
+                            ?>
+                            <div class="group">
+                                <div class="flex justify-between text-sm mb-1.5">
+                                    <span class="font-medium text-slate-600 dark:text-slate-300 w-20"><?= esc($label) ?> Thn</span>
+                                    <div class="flex-grow mx-3 pt-2">
+                                         <div class="w-full bg-slate-100 rounded-full h-2 dark:bg-slate-800 overflow-hidden">
+                                            <div class="<?= $barColor ?> h-2 rounded-full transition-all duration-1000 ease-out group-hover:brightness-110" style="width: <?= $percent ?>%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right w-16">
+                                         <span class="font-bold <?= $textColor ?>"><?= $fmt($count) ?></span>
+                                         <span class="text-xs text-slate-400 ml-1 block sm:inline">(<?= round($share, 1) ?>%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="flex flex-col items-center justify-center p-12 text-center text-slate-400 h-full">
+                            <p>Data usia belum tersedia.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Agama (Standard) -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm h-full">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100">Agama</h3>
+                        <div class="w-10 h-10 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                        </div>
                     </div>
-                <?php endif; ?>
+                    
+                    <div class="space-y-4 overflow-y-auto custom-scrollbar max-h-[500px] pr-2">
+                         <?php if(!empty($overview['agama'])): ?>
+                            <?php 
+                            $totalAgama = 0;
+                            foreach($overview['agama'] as $r) {
+                                if(is_numeric($r['total'])) $totalAgama += $r['total'];
+                            }
+
+                            foreach($overview['agama'] as $r): 
+                                 $count = $r['total'];
+                                 $label = $r['label'];
+                                 $num = is_numeric($count) ? $count : 0;
+                                 $percentA = ($totalAgama > 0) ? ($num / $totalAgama) * 100 : 0;
+                            ?>
+                            <div class="relative">
+                                 <div class="flex items-center justify-between mb-1 z-10 relative">
+                                    <span class="text-sm font-semibold text-slate-700 dark:text-slate-200"><?= esc($label) ?></span>
+                                    <span class="text-sm font-bold text-slate-800 dark:text-slate-100"><?= $fmt($count) ?> <span class="text-xs text-slate-400 font-normal ml-0.5">(<?= round($percentA, 1) ?>%)</span></span>
+                                </div>
+                                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+                                    <div class="bg-rose-500 h-2 rounded-full" style="width: <?= $percentA ?>%"></div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                             <p class="text-slate-400 text-sm text-center">Data tidak tersedia.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Pendidikan & Pekerjaan Tabs Container -->
-            <div class="space-y-8">
-                
-                <!-- Pendidikan (Card Style with icons) -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
+            <!-- Row 2: Pendidikan & Pekerjaan -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Pendidikan (Standard) -->
+                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm h-full">
                     <div class="flex items-center justify-between mb-6">
                          <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100">Pendidikan Terakhir</h3>
-                         <div class="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
+                         <div class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" /></svg>
                          </div>
                     </div>
 
-                    <div class="overflow-hidden">
+                    <div class="overflow-y-auto custom-scrollbar max-h-[500px] pr-2">
                         <table class="w-full text-sm text-left">
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                                 <?php if(!empty($overview['pendidikan'])): ?>
                                     <?php foreach($overview['pendidikan'] as $r): ?>
                                     <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                                         <td class="py-3 pl-2 text-slate-700 dark:text-slate-300 font-medium"><?= esc($r['label']) ?></td>
-                                        <td class="py-3 pr-2 text-right font-bold text-indigo-600 dark:text-indigo-400 group-hover:scale-105 transition-transform origin-right"><?= $fmt($r['total']) ?></td>
+                                        <td class="py-3 pr-2 text-right font-bold text-indigo-600 dark:text-indigo-400"><?= $fmt($r['total']) ?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -290,82 +342,33 @@ $totalP = $getVal($overview['gender'] ?? [], 'P');
                     </div>
                 </div>
 
-                <!-- Pekerjaan (Scrollable with gradient fade) -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm relative">
-                     <div class="flex items-center justify-between mb-6">
-                         <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100">Pekerjaan Utama</h3>
-                          <div class="p-2 bg-amber-50 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                <!-- Pekerjaan (Large) -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm h-full flex flex-col min-h-[500px] relative">
+                     <div class="flex items-center justify-between mb-6 shrink-0">
+                         <h3 class="font-bold text-2xl text-slate-800 dark:text-slate-100">Pekerjaan Utama</h3>
+                          <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                          </div>
                     </div>
                     
-                    <div class="max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                    <div class="overflow-y-auto custom-scrollbar flex-grow pr-2 max-h-[600px]">
                         <table class="w-full text-sm text-left">
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 border-t border-slate-100 dark:border-slate-800">
                                 <?php if(!empty($overview['pekerjaan'])): ?>
                                     <?php foreach($overview['pekerjaan'] as $r): ?>
                                     <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                        <td class="py-2.5 pl-2 text-slate-700 dark:text-slate-300"><?= esc($r['label']) ?></td>
-                                        <td class="py-2.5 pr-2 text-right font-medium text-slate-800 dark:text-slate-200"><?= $fmt($r['total']) ?></td>
+                                        <td class="py-3.5 pl-2 text-slate-700 dark:text-slate-300 font-medium"><?= esc($r['label']) ?></td>
+                                        <td class="py-3.5 pr-2 text-right font-bold text-slate-800 dark:text-slate-100"><?= $fmt($r['total']) ?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <tr><td colspan="2" class="py-4 text-center text-slate-400">Data Kosong</td></tr>
+                                    <tr><td colspan="2" class="py-12 text-center text-slate-400">Data Kosong</td></tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
-                    <!-- Fade effect custom CSS if needed, or simple utility -->
-                    <div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white dark:from-slate-900 to-transparent pointer-events-none rounded-b-3xl"></div>
-                </div>
-
-            </div>
-
-            <!-- Agama (Circular/List Style) -->
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm lg:col-span-2">
-                <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                    Statistik Keagamaan
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                     <?php if(!empty($overview['agama'])): ?>
-                        <?php 
-                        // Total numeric only for percentage calculation
-                        $totalAgama = 0;
-                        foreach($overview['agama'] as $r) {
-                            if(is_numeric($r['total'])) $totalAgama += $r['total'];
-                        }
-
-                        foreach($overview['agama'] as $r): 
-                             $count = $r['total'];
-                             $label = $r['label'];
-                             $num = is_numeric($count) ? $count : 0;
-                             $percentA = ($totalAgama > 0) ? ($num / $totalAgama) * 100 : 0;
-                        ?>
-                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all">
-                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-200"><?= esc($label) ?></span>
-                                <span class="text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                    <?php if(is_numeric($count)): ?>
-                                        <?= round($percentA, 1) ?>%
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </span>
-                            </div>
-                            <div class="flex items-end gap-2">
-                                <span class="text-2xl font-bold text-slate-800 dark:text-slate-100"><?= $fmt($count) ?></span>
-                                <span class="text-xs text-slate-500 mb-1.5">Penganut</span>
-                            </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1 mt-3">
-                                <div class="bg-rose-500 h-1 rounded-full" style="width: <?= $percentA ?>%"></div>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                         <p class="text-slate-400 text-sm col-span-3 text-center">Data tidak tersedia.</p>
-                    <?php endif; ?>
+                    <!-- Fade element -->
+                    <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white dark:from-slate-900 to-transparent pointer-events-none rounded-b-3xl"></div>
                 </div>
             </div>
 
@@ -421,7 +424,7 @@ $totalP = $getVal($overview['gender'] ?? [], 'P');
                             <thead class="bg-slate-50/50 text-slate-500 dark:text-slate-400 sticky top-0 backdrop-blur-sm">
                                 <tr>
                                     <th class="py-3 px-6 font-medium">RT</th>
-                                    <th class="py-3 px-6 font-medium">Link Dusun</th>
+                                    <th class="py-3 px-6 font-medium">Dusun</th>
                                     <th class="py-3 px-6 text-right font-medium">Populasi</th>
                                 </tr>
                             </thead>

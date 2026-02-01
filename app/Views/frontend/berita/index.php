@@ -105,7 +105,7 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>const BASE_URL = "<?= base_url() ?>";</script>
-    <script src="<?= base_url('assets/js/home.js') ?>"></script>
+    <script src="<?= base_url('assets/js/home.js?v=' . time()) ?>"></script>
     <script>
         $(document).ready(function() {
             const API_BASE = "<?= base_url('api/news') ?>";

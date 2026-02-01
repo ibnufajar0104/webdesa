@@ -5,8 +5,14 @@
 
 $(document).ready(function () {
     // API Endpoints
+    // API Endpoints
+    // Use global BASE_URL if available (defined in layout), otherwise fallback to root
+    const baseUrl = (typeof BASE_URL !== 'undefined') ? BASE_URL : '';
+    // Ensure no double slashes if BASE_URL ends with /
+    const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    const API_BASE = `${cleanBaseUrl}/api`;
+
     const textApi = 'val';
-    const API_BASE = '/api';
     const FALLBACK_IMAGE = 'https://via.placeholder.com/400x300?text=No+Image';
 
     // --- Utility Functions ---
@@ -85,7 +91,7 @@ $(document).ready(function () {
 
             // If BASE_URL is defined globaly
             if (typeof BASE_URL !== 'undefined') {
-                // Remove leading slash from url to avoid double slash if BASE_URL has it, or just strictly join
+                // Remove leading slash from url to avoid double slash if BASE_URL has it, or jumasihst strictly join
                 const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
                 const cleanBase = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
                 return cleanBase + cleanUrl;
@@ -101,6 +107,8 @@ $(document).ready(function () {
             let mobileHtml = '';
 
             const renderMobileItem = (item) => {
+
+
                 const hasChildren = item.children && item.children.length > 0;
                 const url = formatUrl(item.url);
                 const target = item.target || '_self';
@@ -108,7 +116,7 @@ $(document).ready(function () {
                 if (hasChildren) {
                     return `
                         <div class="mobile-menu-item">
-                            <button class="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="$(this).next().slideToggle(200)">
+                            <button class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onclick="$(this).next().slideToggle(200)">
                                 ${item.label}
                                 <svg class="w-4 h-4 text-gray-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
@@ -122,7 +130,7 @@ $(document).ready(function () {
                         </div>`;
                 } else {
                     return `
-                        <a href="${url}" target="${target}" class="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <a href="${url}" target="${target}" class="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
                             ${item.label}
                         </a>`;
                 }
@@ -133,9 +141,7 @@ $(document).ready(function () {
             });
 
             // Default Items
-            mobileHtml += `
-                 <div class="border-t border-gray-100 dark:border-slate-800 my-2"></div>
-                 <a href="#footer-section" class="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">Kontak</a>`;
+
 
             $('#mobile-menu-items').html(mobileHtml);
         };
@@ -681,6 +687,36 @@ $(document).ready(function () {
     }
 
     // --- Init ---
+
+    // Mobile Menu Toggle (Moved to top to priority execution)
+    $('#mobile-menu-btn').off('click').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const menu = $('#mobile-nav-overlay');
+        const isVisible = menu.is(':visible');
+
+        if (!isVisible) {
+            // OPEN MENU
+            menu.removeClass('hidden').hide().slideDown(250);
+        } else {
+            // CLOSE MENU
+            menu.slideUp(250, function () {
+                menu.addClass('hidden');
+            });
+        }
+    });
+
+    // Close menu when clicking outside
+    $(document).on('click', function (e) {
+        // If click is NOT on menu AND NOT on button
+        if (!$(e.target).closest('#mobile-nav-overlay').length && !$(e.target).closest('#mobile-menu-btn').length) {
+            $('#mobile-nav-overlay').slideUp(200, function () {
+                $(this).addClass('hidden');
+            });
+        }
+    });
+
     loadMenu();
     loadBanner();
     loadServiceHours();
@@ -691,19 +727,4 @@ $(document).ready(function () {
     loadGallery();
     loadDocuments();
     loadProfile();
-
-    // Mobile Menu Toggle (Robust)
-    $('#mobile-menu-btn').off('click').on('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation(); // Prevent ensuring document click doesn't fire immediately
-        $('#mobile-menu').slideToggle(250);
-    });
-
-    // Close menu when clicking outside
-    $(document).on('click', function (e) {
-        // If click is NOT on menu AND NOT on button
-        if (!$(e.target).closest('#mobile-menu').length && !$(e.target).closest('#mobile-menu-btn').length) {
-            $('#mobile-menu').slideUp(200);
-        }
-    });
 });

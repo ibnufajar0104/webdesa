@@ -114,7 +114,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Reusing home.js for navbar logic -->
     <script>const BASE_URL = "<?= base_url() ?>";</script>
-    <script src="<?= base_url('assets/js/home.js') ?>"></script> 
+    <script src="<?= base_url('assets/js/home.js?v=' . time()) ?>"></script> 
     
     <script>
         const SLUG = "<?= $slug ?>";

@@ -104,7 +104,7 @@ $totalProgram = isset($byBantuan) ? count($byBantuan) : 0;
                  <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
                     <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 100%"></div>
                 </div>
-                <p class="text-xs text-slate-400 mt-2">Terdata dalam sistem kesejahteraan desa</p>
+                <p class="text-xs text-slate-400 mt-2">Penerima Manfaat</p>
             </div>
 
             <!-- Total Program -->

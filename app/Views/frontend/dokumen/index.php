@@ -1,5 +1,8 @@
 <?= $this->extend('layout/default') ?>
 
+<?= $this->section('meta') ?>
+<title><?= $title ?? 'Dokumen Publik' ?> - Desa Batilai</title>
+<?= $this->endSection() ?>
 <?= $this->section('content') ?>
 
 <!-- Hero Section (Premium Gradient) -->

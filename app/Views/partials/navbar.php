@@ -8,9 +8,8 @@
                         <img src="<?= base_url('logo.png') ?>" alt="Logo Desa" class="w-12 h-12 object-contain group-hover:scale-105 transition duration-300">
                         <div class="flex flex-col">
                             <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-none font-serif">Desa Batilai</h1>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="w-8 h-[2px] bg-primary"></span>
-                                <p class="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-semibold tracking-wide uppercase">Kec. Takisung Kab. Tanah Laut</p>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 font-semibold tracking-wide uppercase leading-tight">Kec. Takisung Kab. Tanah Laut</p>
                             </div>
                         </div>
                     </a>
@@ -34,7 +33,7 @@
                 </div>
 
                 <!-- Mobile menu button -->
-                <div class="flex items-center lg:hidden gap-3">
+                <div class="flex items-center lg:hidden gap-1.5">
                      <button id="mobile-theme-btn" class="text-gray-500 hover:text-amber-500 dark:text-gray-400 p-1">
                         <svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         <svg class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
@@ -49,9 +48,14 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu (Moved Outside Nav for Z-Index Safety) -->
-    <div id="mobile-menu" class="lg:hidden fixed top-20 left-0 w-full bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-xl hidden z-[9999] max-h-[calc(100vh-80px)] overflow-y-auto">
-        <div class="px-4 pt-2 pb-4 space-y-1 shadow-inner bg-gray-50/50 dark:bg-slate-900/50">
-             <div id="mobile-menu-items"></div>
+    <!-- Mobile Menu (Floating Card Style) -->
+    <div id="mobile-nav-overlay" class="lg:hidden fixed top-[88px] left-4 right-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-2xl rounded-2xl hidden overflow-y-auto ring-1 ring-black/5" style="z-index: 99999; max-height: calc(100vh - 100px);">
+        <div class="p-2 space-y-1">
+             <div id="mobile-menu-items">
+                <!-- Dynamic Menu -->
+             </div>
         </div>
     </div>
+
+  
+    

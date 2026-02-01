@@ -118,8 +118,8 @@ class PendudukStats extends BaseController
         if ($level === 'rt') {
             $builder = $this->basePenduduk($f)
                 ->select('dusun.id as dusun_id, dusun.nama_dusun, rt.id as rt_id, rt.no_rt, COUNT(*) as total', false)
-                ->join('rt', 'rt.id = penduduk.rt_id', 'left')
-                ->join('dusun', 'dusun.id = rt.id_dusun', 'left')
+                ->join('rt', 'rt.id = penduduk.rt_id AND rt.deleted_at IS NULL', 'inner')
+                ->join('dusun', 'dusun.id = rt.id_dusun AND dusun.deleted_at IS NULL', 'inner')
                 ->groupBy('dusun.id, dusun.nama_dusun, rt.id, rt.no_rt')
                 ->orderBy('dusun.nama_dusun', 'asc')
                 ->orderBy('rt.no_rt', 'asc');
@@ -133,8 +133,8 @@ class PendudukStats extends BaseController
         // default dusun
         $builder = $this->basePenduduk($f)
             ->select('dusun.id as dusun_id, dusun.nama_dusun, COUNT(*) as total', false)
-            ->join('rt', 'rt.id = penduduk.rt_id', 'left')
-            ->join('dusun', 'dusun.id = rt.id_dusun', 'left')
+            ->join('rt', 'rt.id = penduduk.rt_id AND rt.deleted_at IS NULL', 'inner')
+            ->join('dusun', 'dusun.id = rt.id_dusun AND dusun.deleted_at IS NULL', 'inner')
             ->groupBy('dusun.id, dusun.nama_dusun')
             ->orderBy('dusun.nama_dusun', 'asc');
 
@@ -283,7 +283,7 @@ class PendudukStats extends BaseController
 
         // filter wilayah (sesuai struktur kamu: rt.id_dusun)
         if (!empty($f['dusun_id'])) {
-            $b->join('rt', 'rt.id = penduduk.rt_id', 'left')
+            $b->join('rt', 'rt.id = penduduk.rt_id AND rt.deleted_at IS NULL', 'inner')
                 ->where('rt.id_dusun', (int)$f['dusun_id']);
         }
         if (!empty($f['rt_id'])) {
@@ -327,7 +327,7 @@ class PendudukStats extends BaseController
     {
         $rows = $this->basePenduduk($f)
             ->select("$labelField as label, COUNT(*) as total", false)
-            ->join($table, $on, 'left')
+            ->join($table, "$on AND $table.deleted_at IS NULL", 'inner')
             ->groupBy($labelField)
             ->orderBy('total', 'desc')
             ->get()->getResultArray();

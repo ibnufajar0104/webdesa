@@ -108,7 +108,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>const BASE_URL = "<?= base_url() ?>";</script>
-    <script src="<?= base_url('assets/js/home.js') ?>"></script>
+    <script src="<?= base_url('assets/js/home.js?v=' . time()) ?>"></script>
     <?= $this->renderSection('scripts') ?>
 </body>
 </html>

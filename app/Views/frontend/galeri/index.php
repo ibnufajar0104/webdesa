@@ -1,5 +1,8 @@
 <?= $this->extend('layout/default') ?>
 
+<?= $this->section('meta') ?>
+<title><?= $title ?? 'Galeri Kegiatan' ?> - Desa Batilai</title>
+<?= $this->endSection() ?>
 <?= $this->section('content') ?>
 
 <!-- Profile Header (Instagram Style) -->
