@@ -34,6 +34,7 @@ writable/cache/*
 writable/logs/*
 writable/session/*
 writable/debugbar/*
+writable/uploads/*
 
 
 # Kecualikan file index.html agar direktori tetap terbentuk
