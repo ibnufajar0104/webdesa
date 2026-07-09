@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Berita & Artikel - Desa Batilai</title>
-    <meta name="description" content="Informasi terkini dan berita seputar Desa Batilai, Kecamatan Pelaihari.">
+    <meta name="description" content="Informasi terkini dan berita seputar Desa Batilai, Kecamatan Takisung.">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>

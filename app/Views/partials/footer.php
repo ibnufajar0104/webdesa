@@ -9,7 +9,7 @@
                         Desa Batilai
                     </h3>
                     <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                        Website resmi Desa Batilai, Kecamatan Pelaihari, Kabupaten Tanah Laut. Media informasi, transparansi dan pelayanan publik berbasis digital.
+                        Website resmi Desa Batilai, Kecamatan Takisung, Kabupaten Tanah Laut. Media informasi, transparansi dan pelayanan publik berbasis digital.
                     </p>
                   
                 </div>

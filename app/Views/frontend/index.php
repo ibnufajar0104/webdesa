@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desa Batilai - Kecamatan Pelaihari</title>
-    <meta name="description" content="Website Resmi Desa Batilai, Kecamatan Pelaihari. Informasi pemerintahan desa, berita, dan layanan publik.">
+    <title>Desa Batilai - Kecamatan Takisung</title>
+    <meta name="description" content="Website Resmi Desa Batilai, Kecamatan Takisung. Informasi pemerintahan desa, berita, dan layanan publik.">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,11 +53,6 @@
     <header class="relative bg-slate-900 h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden" id="hero-section">
         <!-- Slider Container -->
         <div id="hero-slider" class="absolute inset-0 w-full h-full z-0">
-             <!-- Static Fallback / Placeholder -->
-             <div class="absolute inset-0">
-                 <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2813&auto=format&fit=crop" class="w-full h-full object-cover">
-                 <div class="absolute inset-0 bg-slate-900/40"></div>
-             </div>
         </div>
         
         <!-- Slider Controls -->
@@ -237,7 +232,7 @@
              <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-slate-800 dark:to-slate-800 rounded-3xl p-6 md:p-8 shadow-sm border border-emerald-100 dark:border-slate-700">
                  <div class="flex flex-col md:flex-row gap-10 items-center">
                       <div class="md:w-1/3 shrink-0">
-                         <div class="relative rounded-2xl overflow-hidden shadow-xl aspect-[3/4] max-w-sm mx-auto transform rotate-2 hover:rotate-0 transition-all duration-300">
+                         <div class="relative rounded-2xl overflow-hidden shadow-xl aspect-[3/4] max-w-sm mx-auto hover:scale-[1.02] transition-all duration-300">
                              <img src="https://ui-avatars.com/api/?name=Kepala+Desa" alt="Kepala Desa" class="w-full h-full object-cover" id="sambutan-foto">
                              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
                              <div class="absolute bottom-6 left-6 text-white">
@@ -416,7 +411,7 @@
                         Desa Batilai
                     </h3>
                     <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                        Website resmi Desa Batilai, Kecamatan Pelaihari, Kabupaten Tanah Laut. Media informasi, transparansi dan pelayanan publik berbasis digital.
+                        Website resmi Desa Batilai, Kecamatan Takisung, Kabupaten Tanah Laut. Media informasi, transparansi dan pelayanan publik berbasis digital.
                     </p>
                     <div class="flex space-x-4 hidden">
                         <a href="#" class="text-slate-400 hover:text-white transition"><span class="sr-only">Facebook</span><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path></svg></a>

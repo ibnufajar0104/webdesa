@@ -148,7 +148,8 @@ class CreatePendudukAndMasters extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('rw_id', 'rw', 'id', 'CASCADE', 'CASCADE');
+        // Hubungan dinonaktifkan agar tidak berelasi langsung (foreign key dihapus)
+        // $this->forge->addForeignKey('rw_id', 'rw', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('rt', true);
 
         // Dummy RT (mengasumsikan id RW berurutan dari insert RW)
